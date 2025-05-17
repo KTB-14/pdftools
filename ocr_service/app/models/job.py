@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional  # 👈 ajoute Optional ici
 
 class JobStatus(str, Enum):
     queued = "queued"
@@ -18,4 +18,4 @@ class JobOut(BaseModel):
 class StatusOut(BaseModel):
     job_id: str
     status: JobStatus
-    details: str = None  # optionnel : message d’erreur ou progression
+    details: Optional[str] = None  # 👈 change ici (Optional[str])

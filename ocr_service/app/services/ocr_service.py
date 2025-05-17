@@ -7,16 +7,27 @@ from ..utils.logger import logger
 
 class OCRService:
     def __init__(self, job_id: str):
+        self.job_id = job_id
         self.job_dir = OCR_ROOT / job_id
         self.input_dir = self.job_dir / INPUT_SUBDIR
         self.output_dir = self.job_dir / OUTPUT_SUBDIR
+        self.status_file = self.job_dir / "status.json"
         os.makedirs(self.output_dir, exist_ok=True)
 
+    def _write_status(self, status: str, details: str = None):
+        data = {
+            "job_id": self.job_id,
+            "status": status,
+            "details": details
+        }
+        try:
+            with open(self.status_file, "w") as f:
+                json.dump(data, f)
+        except Exception as e:
+            logger.error(f"Failed to write status.json: {e}")
+
     def process(self) -> None:
-        """
-        Parcourt chaque PDF dans input_dir, applique l'OCR et enregistre dans output_dir.
-        Enregistre aussi un fichier status.json pour suivre l'état du job.
-        """
+        self._write_status("processing", "OCR started")
         try:
             for filename in os.listdir(self.input_dir):
                 input_path = self.input_dir / filename
@@ -26,28 +37,13 @@ class OCRService:
                     str(input_path),
                     str(output_path),
                     deskew=True,
-                    optimize=3  # compression
+                    optimize=3
                 )
                 logger.info(f"OCR done for {input_path}")
-            
-            # ✅ Sauvegarder le statut du job après succès
-            status = {
-                "job_id": self.job_dir.name,
-                "status": "done"
-            }
-            with open(self.job_dir / "status.json", "w") as f:
-                json.dump(status, f)
+
+            self._write_status("done", "OCR completed successfully")
 
         except Exception as e:
             logger.error(f"Error OCRing {input_path}: {e}")
-
-            # ❌ Enregistrer aussi l'erreur dans status.json
-            status = {
-                "job_id": self.job_dir.name,
-                "status": "error",
-                "details": str(e)
-            }
-            with open(self.job_dir / "status.json", "w") as f:
-                json.dump(status, f)
-            
+            self._write_status("error", str(e))
             raise
