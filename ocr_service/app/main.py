@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from .api import upload, status, download
-from .config import OCR_ROOT
+from .config import OCR_ROOT, BASE_DIR
 import os
 
 app = FastAPI(title="OCR Service")
@@ -10,7 +11,10 @@ app = FastAPI(title="OCR Service")
 os.makedirs(OCR_ROOT, exist_ok=True)
 
 # Monter le dossier frontend (pour accéder au formulaire HTML)
-app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+# app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+#from .config import BASE_DIR
+#app.mount("/frontend", StaticFiles(directory=BASE_DIR.parent / "ocr_frontend"), name="frontend")
 
 # Enregistrement des routes API
 app.include_router(upload.router, prefix="", tags=["upload"])
