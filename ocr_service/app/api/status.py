@@ -1,18 +1,17 @@
 from fastapi import APIRouter, HTTPException
-from ..models.job import StatusOut, JobStatus
-from celery.result import AsyncResult
-from worker.tasks import celery_app
+import json
+from pathlib import Path
+from ..config import OCR_ROOT
+
 
 router = APIRouter()
 
-@router.get("/status/{job_id}", response_model=StatusOut)
+@router.get("/status/{job_id}")
 def get_status(job_id: str):
-    result = AsyncResult(job_id, app=celery_app)
-    state = result.state.lower()
+    status_path = OCR_ROOT / job_id / "status.json"
 
-    try:
-        status = JobStatus(state)
-    except ValueError:
+    if not status_path.exists():
         raise HTTPException(status_code=404, detail="Job non trouvé")
 
-    return StatusOut(job_id=job_id, status=status, details=str(result.info) if result.info else None)
+    with open(status_path) as f:
+        return json.load(f)

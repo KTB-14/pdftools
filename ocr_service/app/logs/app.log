@@ -1,0 +1,2 @@
+[2025-05-17 14:56:26,369] INFO in ocr_service: OCR processing C:\Users\kbroo\Documents\GitHub\Stage\ocr_service\ocr_files\b306e335303e464da33d1bd9b349543f\input_ocr\Ubuntu Server CLI cheat sheet 2024 v6.pdf
+[2025-05-17 14:56:26,462] ERROR in ocr_service: Error OCRing C:\Users\kbroo\Documents\GitHub\Stage\ocr_service\ocr_files\b306e335303e464da33d1bd9b349543f\input_ocr\Ubuntu Server CLI cheat sheet 2024 v6.pdf: Could not find program 'tesseract' on the PATH
