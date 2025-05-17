@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>OCR Service Upload</title>
+</head>
+<body>
+    <h1>Envoyer vos fichiers PDF pour OCR</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" accept="application/pdf" multiple required>
+        <button type="submit">Envoyer</button>
+    </form>
+    <p>Après envoi, vous recevrez un <code>job_id</code> pour consulter le statut et télécharger l’archive.</p>
+</body>
+</html>
