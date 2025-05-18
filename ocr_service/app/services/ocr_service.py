@@ -42,7 +42,8 @@ class OCRService:
                     str(input_path),
                     str(output_path),
                     deskew=True,
-                    optimize=3
+                    optimize=3,
+                    skip_text=True
                 )
                 logger.info(f"OCR done for {output_path}")
 
