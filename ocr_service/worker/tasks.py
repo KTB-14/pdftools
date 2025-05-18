@@ -14,7 +14,6 @@ celery_app = Celery(
 def ocr_task(self, job_id: str):
     """
     Tâche principale : OCR + compression + archivage.
-    Utilise le job_id fourni comme identifiant Celery.
     """
     try:
         self.update_state(state="PROCESSING", meta="Démarrage du traitement OCR")
@@ -23,6 +22,5 @@ def ocr_task(self, job_id: str):
         archive = ZipService.make_archive(job_id)
         return {"archive_path": archive}
     except Exception as exc:
-        # Marque le job en erreur et interrompt
         self.update_state(state=states.FAILURE, meta=str(exc))
         raise Ignore()

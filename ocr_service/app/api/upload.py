@@ -10,20 +10,26 @@ router = APIRouter()
 
 @router.post("/upload", response_model=JobOut)
 async def upload_files(files: List[UploadFile] = File(...)):
-    job_id = generate_job_id()
-    job_input_dir = OCR_ROOT / job_id / INPUT_SUBDIR
-    job_input_dir.mkdir(parents=True, exist_ok=True)
+    job_id      = generate_job_id()
+    job_dir     = OCR_ROOT / job_id
+    job_in_dir  = job_dir / INPUT_SUBDIR
 
-    # Sauvegarde des fichiers
+    # création des dossiers
+    try:
+        job_in_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        raise HTTPException(500, f"Erreur création dossier: {e}")
+
+    # Sauvegarde fichiers
     for file in files:
-        dest = job_input_dir / file.filename
-        with dest.open("wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        dest = job_in_dir / file.filename
+        with dest.open("wb") as buf:
+            shutil.copyfileobj(file.file, buf)
 
-    # Lancer la tâche asynchrone Celery
+    # Lancement Celery
     try:
         ocr_task.delay(job_id)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erreur Celery: {e}")
+        raise HTTPException(500, f"Erreur Celery: {e}")
 
     return JobOut(job_id=job_id)

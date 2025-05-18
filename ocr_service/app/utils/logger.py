@@ -1,21 +1,24 @@
 import logging
 from logging.handlers import RotatingFileHandler
-import os
+from pathlib import Path
+from ..config import LOG_DIR
 
-LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
-os.makedirs(LOG_DIR, exist_ok=True)
+# assure que logs/ existe
+Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
 
+# Initialise le logger
 logger = logging.getLogger("ocr_service")
 logger.setLevel(logging.INFO)
 
+# Configure le RotatingFileHandler vers Stage/logs/ocr.log
+logfile = Path(LOG_DIR) / "ocr.log"
 handler = RotatingFileHandler(
-    filename=os.path.join(LOG_DIR, "app.log"),
-    maxBytes=10*1024*1024,
+    filename=str(logfile),
+    maxBytes=30 * 1024 * 1024,
     backupCount=5,
     encoding="utf-8"
 )
-formatter = logging.Formatter(
-    "[%(asctime)s] %(levelname)s in %(module)s: %(message)s"
-)
+
+formatter = logging.Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
