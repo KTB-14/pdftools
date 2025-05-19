@@ -1,0 +1,31 @@
+# === BACKEND ASGI ===
+fastapi
+uvicorn
+
+# === WORKER / TASKS ===
+celery=
+redis
+
+# === OCR ENGINE ===
+ocrmypdf
+reportlab
+
+# OCRmyPDF - internal deps
+pdfminer.six
+Pillow0
+img2pdf
+coloredlogs
+python-docx
+
+# === UTILITAIRES ===
+python-multipart
+python-dotenv
+
+# === LOGGING ROTATIF ===
+loguru
+
+# === UUID + temps + types ===
+pydantic
+typing-extensions
+
+
