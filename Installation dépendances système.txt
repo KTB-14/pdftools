@@ -1,0 +1,105 @@
+#1-Installer toutes les dépendances système (OCR, compression, etc.)
+
+sudo apt install -y \
+  python3 python3-pip python3-venv \
+  redis-server \
+  tesseract-ocr tesseract-ocr-fra tesseract-ocr-eng \
+  ghostscript pngquant \
+  libtiff-tools \
+  libjpeg-dev libpng-dev zlib1g-dev \
+  libopenjp2-7-dev libtiff-dev libfreetype6-dev \
+  liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev \
+  leptonica-dev libleptonica-dev \
+  autoconf automake libtool
+
+#------------------------------------------------
+
+#2-Installer jbig2enc (meilleur taux de compression)
+
+cd /media
+sudo git clone https://github.com/agl/jbig2enc.git
+cd jbig2enc
+sudo ./autogen.sh && sudo ./configure
+sudo make -j$(nproc)
+sudo make install
+
+#------------------------------------------------
+
+#3-Préparer l’environnement Python (installation propre)
+cd /media/Stage
+pip install -r requirements.txt
+
+#------------------------------------------------
+
+#4-Lancer Redis
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+
+#------------------------------------------------
+
+#5-Créer les services systemd
+#-------------------------
+#5.1-ocr-api.service (FastAPI backend)
+
+# /etc/systemd/system/ocr-api.service
+[Unit]
+Description=OCR FastAPI backend
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/Stage
+ExecStart=/usr/bin/python3 /usr/local/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+User=homeserver
+Group=homeserver
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+#-------------------------
+
+#5.2-celery-ocr.service (worker background)
+# /etc/systemd/system/celery-ocr.service
+[Unit]
+Description=Celery Worker for OCR Service
+After=network.target redis-server.service
+
+[Service]
+WorkingDirectory=/opt/Stage
+ExecStart=/usr/bin/celery -A worker.tasks worker --loglevel=info --concurrency=2
+User=homeserver
+Group=homeserver
+Restart=on-failure
+MemoryMax=800M
+
+[Install]
+WantedBy=multi-user.target
+
+#------------------------------------------------
+
+#6-Activer et démarrer les services
+
+sudo systemctl daemon-reload
+sudo systemctl enable ocr-api celery-ocr
+sudo systemctl start ocr-api celery-ocr
+sudo systemctl status ocr-api celery-ocr
+
+#------------------------------------------------
+
+#7-Configuration finale de sécurité
+
+Vérifie que ocr_files/ a les bons droits :
+sudo chown -R homeserver:homeserver /opt/Stage/ocr_files
+sudo chmod -R 755 /opt/Stage/ocr_files
+
+Vérifie les logs :
+sudo journalctl -u ocr-api -f
+sudo journalctl -u celery-ocr -f
+
+#------------------------------------------------
+
+#8-Installer Flower pour monitorer les workers :
+pip install flower
+celery -A worker.tasks flower --port=5555
+
+
