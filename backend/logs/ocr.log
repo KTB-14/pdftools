@@ -1,0 +1,2814 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 3, in <module>
+    from pydantic import BaseSettings, Field
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/__init__.py", line 426, in __getattr__
+    return _getattr_migration(attr_name)
+  File "/usr/local/lib/python3.10/dist-packages/pydantic/_migration.py", line 296, in wrapper
+    raise PydanticImportError(
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.11/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.11/u/import-error
+[2025-05-20 22:55:34,571] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 22:55:34,860] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 22:55:34,861] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 22:55:34,864] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 22:55:34,864] INFO in main: 🎯 CORS activé pour : ['*']
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+[2025-05-20 23:08:58,695] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:08:58,987] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:08:58,988] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:08:58,991] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:08:58,991] INFO in main: 🎯 CORS activé pour : ['*']
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+Traceback (most recent call last):
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 482, in __call__
+    field_value = self.prepare_field_value(field_name, field, field_value, value_is_complex)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 120, in prepare_field_value
+    raise e
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/providers/env.py", line 117, in prepare_field_value
+    value = self.decode_complex_value(field_name, field, value)
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 186, in decode_complex_value
+    return json.loads(value)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1442, in __call__
+    return self.main(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1363, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 1226, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/usr/local/lib/python3.10/dist-packages/click/core.py", line 794, in invoke
+    return callback(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 413, in main
+    run(
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/main.py", line 580, in run
+    server.run()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/usr/local/lib/python3.10/dist-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/pdftools/backend/app/main.py", line 4, in <module>
+    from app.api import upload, status, download
+  File "/opt/pdftools/backend/app/api/upload.py", line 5, in <module>
+    from app.utils.id_generator import generate_job_id
+  File "/opt/pdftools/backend/app/utils/id_generator.py", line 1, in <module>
+    from app.logger import logger  # si tu veux logguer sa création
+  File "/opt/pdftools/backend/app/logger.py", line 4, in <module>
+    from app.config import config
+  File "/opt/pdftools/backend/app/config.py", line 39, in <module>
+    config = Config()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 177, in __init__
+    **__pydantic_self__._settings_build_values(
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/main.py", line 408, in _settings_build_values
+    source_state = source()
+  File "/home/homeserver/.local/lib/python3.10/site-packages/pydantic_settings/sources/base.py", line 484, in __call__
+    raise SettingsError(
+pydantic_settings.exceptions.SettingsError: error parsing value for field "ALLOWED_ORIGINS" from source "EnvSettingsSource"
+[2025-05-20 23:12:34,389] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:12:34,389] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:12:34,769] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:12:34,769] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:12:34,770] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:12:34,770] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:12:34,774] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:12:34,774] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:12:34,774] INFO in main: 🎯 CORS activé pour : ['*']
+[2025-05-20 23:12:34,774] INFO in main: 🎯 CORS activé pour : ['*']
+INFO:     Started server process [17725]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     192.168.1.155:34956 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     192.168.1.155:34956 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     192.168.1.155:41024 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [17725]
+[2025-05-20 23:16:26,272] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:16:26,272] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:16:26,698] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:16:26,702] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:16:26,702] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:16:26,702] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:16:26,702] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:16:26,706] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:16:26,706] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:16:26,706] INFO in main: 🎯 CORS activé pour : ['*']
+[2025-05-20 23:16:26,706] INFO in main: 🎯 CORS activé pour : ['*']
+INFO:     Started server process [18161]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[2025-05-20 23:16:52,548] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18161]
+[2025-05-20 23:21:35,081] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:21:35,081] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:21:35,488] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:21:35,488] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:21:35,488] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:21:35,488] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:21:35,492] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:21:35,492] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:21:35,492] INFO in main: 🎯 CORS activé pour : ['*']
+[2025-05-20 23:21:35,492] INFO in main: 🎯 CORS activé pour : ['*']
+INFO:     Started server process [18714]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[2025-05-20 23:21:35,799] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18714]
+[2025-05-20 23:25:04,755] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:25:04,755] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:25:05,152] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:25:05,175] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:25:05,175] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:25:05,175] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:25:05,175] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:25:05,179] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:25:05,179] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:25:05,179] INFO in main: 🎯 CORS activé pour : ['*']
+[2025-05-20 23:25:05,179] INFO in main: 🎯 CORS activé pour : ['*']
+INFO:     Started server process [19195]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [19195]
+[2025-05-20 23:29:28,391] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:29:28,391] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:29:28,799] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:29:28,799] INFO in main: 🚀 Démarrage de l'application FastAPI PDFTools
+[2025-05-20 23:29:28,800] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:29:28,800] INFO in main: Dossier OCR_ROOT vérifié/créé à : /opt/pdftools/data/jobs
+[2025-05-20 23:29:28,804] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:29:28,804] INFO in main: ✅ Routes API enregistrées : /upload, /status, /download
+[2025-05-20 23:29:28,804] INFO in main: 🎯 CORS activé pour : ['*']
+[2025-05-20 23:29:28,804] INFO in main: 🎯 CORS activé pour : ['*']
+INFO:     Started server process [19866]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[2025-05-20 23:29:28,966] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:34:55,046] INFO in logger: ✅ Logger initialisé — Niveau : INFO — Fichier : /opt/pdftools/backend/logs/ocr.log
+[2025-05-20 23:34:55,046] INFO in purge_old_jobs: 🧹 Lancement de la purge des anciens jobs...
+[2025-05-20 23:34:55,046] INFO in purge_old_jobs: ✅ Purge terminée — 0 job(s) supprimé(s)
+INFO:     192.168.1.155:39430 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
