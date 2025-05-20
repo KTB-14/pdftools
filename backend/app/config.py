@@ -1,32 +1,42 @@
-import os
+# app/config.py
+
+from pydantic import BaseSettings, Field
+from typing import List
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Chargement des variables définies dans le fichier .env
-load_dotenv()
+class Config(BaseSettings):
+    # === Dossiers principaux ===
+    BASE_DIR: Path = Path(__file__).resolve().parents[2]
+    OCR_ROOT: Path = BASE_DIR / "data" / "jobs"
+    FRONTEND_DIR: Path = BASE_DIR / "frontend"
+    LOG_DIR: Path = BASE_DIR / "backend" / "logs"
 
-# Répertoire racine du projet (pdftools/)
-BASE_DIR = Path(__file__).resolve().parents[2]
+    # === Sous-dossiers des jobs ===
+    INPUT_SUBDIR: str = "input_ocr"
+    OUTPUT_SUBDIR: str = "output_ocr"
+    ZIP_SUBDIR: str = "archives"
+    STATUS_FILENAME: str = "status.json"
 
-# === CHEMINS D’ACCES CENTRALISÉS ===
+    # === Celery / Redis ===
+    CELERY_BROKER_URL: str = "redis://localhost:6379/0"
+    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/1"
 
-JOBS_DIR     = BASE_DIR / "data" / "jobs"          # Dossier de stockage des fichiers PDF
-FRONTEND_DIR = BASE_DIR / "frontend"               # Répertoire contenant index.html
-LOG_DIR      = BASE_DIR / "backend" / "logs"       # Répertoire des logs (backoffice)
+    # === Config OCR ===
+    JOB_TTL_SECONDS: int = 1800
 
-# === SOUS-DOSSIERS DES JOBS ===
-INPUT_SUBDIR   = "input_ocr"
-OUTPUT_SUBDIR  = "output_ocr"
-ZIP_SUBDIR     = "archives"
-STATUS_FILENAME = "status.json"
+    # === Logging ===
+    LOG_LEVEL: str = "INFO"
 
-# === CELERY / REDIS ===
-CELERY_BROKER_URL      = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND  = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
+    # === CORS ===
+    ALLOWED_ORIGINS: List[str] = Field(default=["*"])
 
-# === GESTION DU TEMPS DE VIE DES JOBS ===
-JOB_TTL_SECONDS = int(os.getenv("JOB_TTL_SECONDS", 1800))  # par défaut : 30 minutes
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
-# Création automatique des dossiers critiques
-JOBS_DIR.mkdir(parents=True, exist_ok=True)
-LOG_DIR.mkdir(parents=True, exist_ok=True)
+# Instance globale utilisable partout dans le projet
+config = Config()
+
+# Création automatique des dossiers critiques (optionnel ici, mais utile)
+config.OCR_ROOT.mkdir(parents=True, exist_ok=True)
+config.LOG_DIR.mkdir(parents=True, exist_ok=True)

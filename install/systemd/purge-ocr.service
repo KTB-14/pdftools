@@ -1,0 +1,7 @@
+[Unit]
+Description=Purge des jobs OCR expirés
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/python3 /opt/pdftools/backend/scripts/purge_old_jobs.py
+WorkingDirectory=/opt/pdftools

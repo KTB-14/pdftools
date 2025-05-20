@@ -2,29 +2,21 @@ import os
 import json
 from pathlib import Path
 import ocrmypdf
-from app.config import JOBS_ROOT, INPUT_SUBDIR, OUTPUT_SUBDIR, STATUS_FILENAME
+from app.config import config
 from app.logger import logger
 
 class OCRService:
-    """
-    Service métier dédié au traitement OCR et à la compression de fichiers PDF
-    à l’aide de la bibliothèque ocrmypdf.
-    """
-
     def __init__(self, job_id: str):
         self.job_id = job_id
-        self.job_dir = JOBS_ROOT / job_id
-        self.input_dir = self.job_dir / INPUT_SUBDIR
-        self.output_dir = self.job_dir / OUTPUT_SUBDIR
-        self.status_file = self.job_dir / STATUS_FILENAME
+        self.job_dir = config.OCR_ROOT / job_id
+        self.input_dir = self.job_dir / config.INPUT_SUBDIR
+        self.output_dir = self.job_dir / config.OUTPUT_SUBDIR
+        self.status_file = self.job_dir / config.STATUS_FILENAME
 
-        # Assure que le dossier de sortie existe
         os.makedirs(self.output_dir, exist_ok=True)
+        logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
 
     def _write_status(self, status: str, details: str = None):
-        """
-        Écrit un fichier status.json pour tracer l’état du job à tout moment.
-        """
         data = {
             "job_id": self.job_id,
             "status": status,
@@ -33,41 +25,41 @@ class OCRService:
         try:
             with open(self.status_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
+            logger.info(f"[{self.job_id}] 📝 Status mis à jour : {status}")
         except Exception as e:
-            logger.error(f"Échec écriture status.json pour {self.job_id} : {e}")
+            logger.exception(f"[{self.job_id}] ❌ Échec écriture status.json : {e}")
 
     def process(self) -> None:
-        """
-        Exécute le traitement OCR sur chaque fichier PDF du dossier input_ocr.
-        Chaque fichier est converti et compressé en suffixant _compressed.pdf.
-        """
         self._write_status("processing", "OCR en cours")
+        logger.info(f"[{self.job_id}] 🚀 Début du traitement OCR")
 
         try:
-            for filename in os.listdir(self.input_dir):
-                input_path = self.input_dir / filename
+            files = list(os.listdir(self.input_dir))
+            if not files:
+                raise FileNotFoundError("Aucun fichier PDF trouvé dans le dossier d'entrée")
 
-                # Nom de sortie avec suffixe
+            for filename in files:
+                input_path = self.input_dir / filename
                 stem = Path(filename).stem
                 ext = Path(filename).suffix
-                output_path = self.output_dir / f"{stem}_compressed{ext}"
+                out_name = f"{stem}_compressed{ext}"
+                output_path = self.output_dir / out_name
 
-                logger.info(f"OCR processing {input_path} → {output_path}")
+                logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
-                # Appel OCRmyPDF avec options standard
                 ocrmypdf.ocr(
                     str(input_path),
                     str(output_path),
                     deskew=True,
                     optimize=3,
-                    skip_text=True  # Ne refait pas l’OCR si du texte existe déjà
+                    skip_text=True
                 )
 
-                logger.info(f"✔ OCR terminé : {output_path}")
+                logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
             self._write_status("done", "Traitement OCR terminé avec succès")
 
         except Exception as e:
-            logger.error(f"❌ Erreur OCR : {e}")
+            logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
             self._write_status("error", str(e))
             raise

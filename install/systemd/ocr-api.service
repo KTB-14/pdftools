@@ -1,0 +1,17 @@
+[Unit]
+Description=FastAPI backend for PDFTools OCR
+After=network.target
+
+[Service]
+User=homeserver
+Group=homeserver
+WorkingDirectory=/opt/pdftools/backend
+EnvironmentFile=/opt/pdftools/.env
+ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host ${API_HOST} --port ${API_PORT}
+Restart=always
+
+StandardOutput=append:/opt/pdftools/backend/logs/ocr.log
+StandardError=append:/opt/pdftools/backend/logs/ocr.log
+
+[Install]
+WantedBy=multi-user.target

@@ -3,15 +3,11 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class JobStatus(str, Enum):
-    """
-    Enumération des différents états possibles d’un job OCR.
-    Permet de valider et structurer les statuts retournés au frontend.
-    """
-    queued = "queued"               # Tâche en file d'attente
-    processing = "processing"       # Tâche en cours de traitement
-    done = "done"                   # Traitement terminé avec succès
-    done_with_errors = "done_with_errors"  # Terminé mais partiellement échoué
-    error = "error"                 # Échec du traitement
+    queued = "queued"
+    processing = "processing"
+    done = "done"
+    done_with_errors = "done_with_errors"
+    error = "error"
 
 class JobCreate(BaseModel):
     """
