@@ -1,0 +1,20 @@
+[Unit]
+Description=OCR FastAPI backend
+After=network.target
+
+[Service]
+# Dossier de travail principal (racine du projet)
+WorkingDirectory=/opt/pdftools
+
+# Lancement de l’API FastAPI avec Uvicorn
+ExecStart=/usr/bin/python3 /usr/local/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+
+# L'utilisateur Linux autorisé à exécuter le service (à adapter selon le serveur)
+User=homeserver
+Group=homeserver
+
+# Redémarre automatiquement en cas d’échec
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

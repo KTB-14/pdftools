@@ -1,0 +1,29 @@
+# === BACKEND (API REST) ===
+fastapi
+uvicorn[standard]
+
+# === WORKER & FILES ===
+celery
+redis
+
+# === OCR ENGINE ===
+ocrmypdf
+reportlab
+
+# OCRmyPDF — dépendances internes
+pdfminer.six
+Pillow
+img2pdf
+coloredlogs
+python-docx
+
+# === FICHIERS & FORMULAIRES ===
+python-multipart
+python-dotenv
+
+# === VALIDATION, STRUCTURES ===
+pydantic
+typing-extensions
+
+# === LOGGING ===
+loguru
