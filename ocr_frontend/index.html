@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OCR Service – Téléverser PDF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    #drop-area {
+      border: 3px dashed #999;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #fff;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    #drop-area.highlight { background: #e0f7fa; }
+    input[type="file"] { display: none; }
+    #fileElemLabel {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    #submit-btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #submit-btn:hover { background-color: #218838; }
+    #status, #job-id, #download-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>OCR Service – Dépôt de PDF</h1>
+
+  <form id="upload-form">
+    <div id="drop-area">
+      <p>Glissez vos fichiers PDF ici</p>
+      <label id="fileElemLabel" for="fileElem">Ou cliquez pour choisir</label>
+      <input type="file" id="fileElem" multiple accept="application/pdf">
+      <div id="fileList"></div>
+    </div>
+    <div style="text-align: center;">
+      <button type="submit" id="submit-btn">Lancer le traitement OCR</button>
+    </div>
+  </form>
+
+  <div id="job-id"></div>
+  <div id="status"></div>
+  <div id="download-link" class="hidden"></div>
+
+  <script>
+    const BACKEND_URL = "http://192.168.1.127:8000"; // <== ADRESSE  DU  BACKEND 
+
+    const dropArea = document.getElementById("drop-area");
+    const fileElem = document.getElementById("fileElem");
+    const fileList = document.getElementById("fileList");
+    let filesToUpload = [];
+
+    ["dragenter", "dragover"].forEach(eventName => {
+      dropArea.addEventListener(eventName, (e) => {
+        e.preventDefault(); dropArea.classList.add("highlight");
+      }, false);
+    });
+
+    ["dragleave", "drop"].forEach(eventName => {
+      dropArea.addEventListener(eventName, (e) => {
+        e.preventDefault(); dropArea.classList.remove("highlight");
+      }, false);
+    });
+
+    dropArea.addEventListener("drop", (e) => {
+      filesToUpload = [...e.dataTransfer.files];
+      displayFileList();
+    });
+
+    fileElem.addEventListener("change", (e) => {
+      filesToUpload = [...e.target.files];
+      displayFileList();
+    });
+
+    function displayFileList() {
+      fileList.innerHTML = "";
+      filesToUpload.forEach(file => {
+        const div = document.createElement("div");
+        div.textContent = file.name;
+        fileList.appendChild(div);
+      });
+    }
+
+    document.getElementById("upload-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      if (filesToUpload.length === 0) {
+        alert("Veuillez sélectionner au moins un fichier PDF.");
+        return;
+      }
+
+      const formData = new FormData();
+      filesToUpload.forEach(file => {
+        formData.append("files", file);
+      });
+
+      document.getElementById("status").textContent = "Téléversement en cours...";
+      document.getElementById("download-link").classList.add("hidden");
+      document.getElementById("job-id").textContent = "";
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/upload`, {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        const jobId = data.job_id;
+        document.getElementById("job-id").innerHTML = `🆔 Job ID : <strong>${jobId}</strong>`;
+        checkStatus(jobId);
+      } catch (err) {
+        document.getElementById("status").textContent = "Erreur lors de l'envoi.";
+      }
+    });
+
+    async function checkStatus(jobId) {
+      document.getElementById("status").textContent = "Traitement en cours...";
+
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch(`${BACKEND_URL}/status/${jobId}`);
+          const data = await res.json();
+          if (data.status === "done" || data.status === "done_with_errors") {
+            clearInterval(interval);
+            document.getElementById("status").textContent = "✅ Traitement terminé";
+            document.getElementById("download-link").classList.remove("hidden");
+            document.getElementById("download-link").innerHTML =
+              `<a href="${BACKEND_URL}/download/${jobId}" target="_blank">📥 Télécharger l’archive ZIP</a>`;
+          } else if (data.status === "error") {
+            clearInterval(interval);
+            document.getElementById("status").textContent = "❌ Erreur pendant le traitement";
+          } else {
+            document.getElementById("status").textContent = `⏳ Statut : ${data.status}`;
+          }
+        } catch (err) {
+          clearInterval(interval);
+          document.getElementById("status").textContent = "⚠️ Erreur lors de la vérification du statut.";
+        }
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
