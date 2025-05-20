@@ -73,7 +73,8 @@
   <div id="download-link" class="hidden"></div>
 
   <script>
-    const BACKEND_URL = "http://192.168.1.127:8000"; // <== ADRESSE  DU  BACKEND 
+    // Adresse de l’API — peut être modifiée dynamiquement
+    const BACKEND_URL = window.BACKEND_URL || "http://192.168.1.127:8000";
 
     const dropArea = document.getElementById("drop-area");
     const fileElem = document.getElementById("fileElem");
