@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "========================================================"
+echo "========= DEBUT SCRIPT - UNINSTALL_SYSTEMD.SH =========="
+echo "========================================================"
+
 echo "Suppression des services systemd PDFTools..."
 
 # Fichiers à supprimer
@@ -37,3 +41,7 @@ systemctl daemon-reexec
 systemctl daemon-reload
 
 echo "Désinstallation terminée."
+
+echo "========================================================"
+echo "========== FIN SCRIPT - UNINSTALL_SYSTEMD.SH ==========="
+echo "========================================================"

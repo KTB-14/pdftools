@@ -19,7 +19,3 @@
 - **ocrmypdf** (OCR & compression PDF)
 - **Uvicorn** (serveur ASGI)
 - **HTML/JavaScript** (frontend simple)
-
-## Arborescence
-
-Voir `install/README_INSTALL.md` pour l'installation et `backend/requirements.txt` pour les dépendances Python.

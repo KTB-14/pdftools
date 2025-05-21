@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "========================================================"
+echo "=========== DEBUT SCRIPT - INSTALL_PYTHON.SH ==========="
+echo "========================================================"
 
 echo "=== Installation des dépendances Python pour PDFTools ==="
 
@@ -24,3 +27,7 @@ else
   echo "❌ Une erreur est survenue lors de l'installation des dépendances."
   exit 1
 fi
+
+echo "========================================================"
+echo "============ FIN SCRIPT - INSTALL_PYTHON.SH ============"
+echo "========================================================"

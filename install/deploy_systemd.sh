@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "========================================================"
+echo "===== ===== DEBUT SCRIPT - DEPLOY_SYSTEMD.SH ===== ====="
+echo "========================================================"
 
 echo "Déploiement des fichiers systemd pour PDFTools..."
 
@@ -39,3 +42,7 @@ systemctl status celery-ocr.service --no-pager
 systemctl list-timers --all | grep purge-ocr
 
 echo "Déploiement terminé avec succès."
+
+echo "========================================================"
+echo "===== ====== FIN SCRIPT - DEPLOY_SYSTEMD.SH ====== ====="
+echo "========================================================"
