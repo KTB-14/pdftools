@@ -22,10 +22,10 @@ logger.info(f"Dossier OCR_ROOT vérifié/créé à : {config.OCR_ROOT}")
 #     logger.warning(f" Impossible de monter le frontend depuis {config.FRONTEND_DIR} : {e}")
 
 # Inclusion des routes API
-app.include_router(upload.router, prefix="", tags=["Upload"])
-app.include_router(status.router, prefix="", tags=["Status"])
-app.include_router(download.router, prefix="", tags=["Download"])
-logger.info("✅ Routes API enregistrées : /upload, /status, /download")
+app.include_router(upload.router, prefix="/api", tags=["Upload"])
+app.include_router(status.router, prefix="/api", tags=["Status"])
+app.include_router(download.router, prefix="/api", tags=["Download"])
+logger.info("✅ Routes API enregistrées : /api/upload, /api/status, /api/download")
 
 # Middleware CORS (autorise les appels externes à l’API)
 app.add_middleware(

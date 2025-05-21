@@ -1,37 +1,39 @@
 #!/bin/bash
 echo "========================================================"
+echo "========================================================"
 echo "======== DEBUT SCRIPT - INSTALL_DEPENDENCIES.SH ========"
+echo "========================================================"
 echo "========================================================"
 
 echo "=== [1/3] Mise à jour du système ==="
 sudo apt update && sudo apt upgrade -y
 
 echo "===================================================="
+echo "===================================================="
 
 echo "=== [2/3] Installation des dépendances système ==="
-sudo apt update && sudo apt install -y \
 
 echo "--- Langage & environnement Python ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv \
 
 echo "--- Services essentiels ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   redis-server \
   git 
 
 echo "--- OCR (Reconnaissance de texte) ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   tesseract-ocr \
   tesseract-ocr-fra \
   tesseract-ocr-eng \
   ocrad 
 
 echo "--- Outils PDF ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   ghostscript \
   unpaper \
   qpdf \
@@ -40,7 +42,7 @@ sudo apt update && sudo apt install -y \
   xpdf 
 
 echo "--- Optimisation d'images ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   pngquant \
   imagemagick \
   libjpeg-dev \
@@ -56,25 +58,25 @@ sudo apt update && sudo apt install -y \
   libheif1 
 
 echo "--- Typographie (PDF lisibles, polices) ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   fonts-dejavu \
   fonts-liberation 
 
 echo "--- Métadonnées, formats de fichiers ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   exiftool \
   libimage-exiftool-perl \
   libmagic1 \
   libpoppler-cpp-dev 
 
 echo "--- Librairies de rendu texte / PDF ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   libharfbuzz-dev \
   libfribidi-dev \
   libxcb1-dev
 
 echo "--- Sécurité, compression, cryptographie ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   libssl-dev \
   libffi-dev \
   zlib1g-dev \
@@ -82,17 +84,22 @@ sudo apt update && sudo apt install -y \
   cups 
 
 echo "--- Compilation & outils de build ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   build-essential \
   autoconf \
   automake \
   libtool 
 
 echo "--- Debug & développement avancé ---"
-sudo apt update && sudo apt install -y \
+sudo apt install -y \
   inkscape \
   strace
 
+echo "--- Frontend Environnement ---"
+sudo apt install -y \
+  nginx 
+
+echo "===================================================="
 echo "===================================================="
 
 echo "=== [3/3] Clonage et compilation de jbig2enc ==="
@@ -114,6 +121,9 @@ sudo make install
 
 echo "✅ Installation système terminée avec succès."
 
+
+echo "========================================================"
 echo "========================================================"
 echo "====+==== FIN SCRIPT - INSTALL_DEPENDENCIES.SH ====+===="
+echo "========================================================"
 echo "========================================================"
