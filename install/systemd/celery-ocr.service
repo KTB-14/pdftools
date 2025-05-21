@@ -3,8 +3,6 @@ Description=Celery Worker for PDFTools OCR
 After=network.target redis.service
 
 [Service]
-User=homeserver
-Group=homeserver
 WorkingDirectory=/opt/pdftools/backend
 
 ExecStart=/usr/bin/python3 -m celery -A worker.tasks worker --loglevel=INFO
