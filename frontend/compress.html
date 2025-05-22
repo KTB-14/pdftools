@@ -2,22 +2,29 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OCR & Compression – PDFTools</title>
   <link rel="stylesheet" href="assets/css/style.css" />
+  <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
   <header>
     <h1>OCR & Compression PDF</h1>
-    <a href="index.html" class="back">← Retour</a>
+    <a href="index.html" class="back">← Retour à l'accueil</a>
   </header>
 
   <main class="upload-section">
     <div id="dropzone" class="dropzone">
-      <p>Glissez-déposez votre PDF ici<br/>ou</p>
+      <p>
+        Glissez-déposez votre PDF ici<br/>
+        <span class="text-sm text-gray-500">ou</span>
+      </p>
       <button id="selectFile">Sélectionner un fichier</button>
       <input type="file" id="fileInput" accept="application/pdf" hidden />
+      <p class="text-sm text-gray-500 mt-4">
+        Format accepté : PDF uniquement<br/>
+        Taille maximum : 10 Mo
+      </p>
     </div>
 
     <div id="status" class="status hidden">
@@ -26,9 +33,15 @@
     </div>
 
     <div id="downloadLink" class="hidden">
-      <a id="resultLink" href="#" download>📥 Télécharger le PDF OCRisé</a>
+      <a id="resultLink" href="#" download>
+        <span>📥</span> Télécharger le PDF OCRisé
+      </a>
     </div>
   </main>
+
+  <footer>
+    <small>© PDFTools by KTB-14 – Tous droits réservés</small>
+  </footer>
 
   <script src="assets/js/compress.js"></script>
 </body>

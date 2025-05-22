@@ -1,9 +1,9 @@
-// Redirige à la page choisie ou affiche un message
+// Gestion des cartes désactivées
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('click', e => {
     if (card.classList.contains('disabled')) {
-      alert('Service à venir bientôt !');
       e.preventDefault();
+      alert('Ce service sera bientôt disponible !');
     }
   });
 });
