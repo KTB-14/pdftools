@@ -1,47 +1,69 @@
+
 #!/bin/bash
-echo "========================================================"
-echo "========================================================"
-echo "======== DEBUT SCRIPT - INSTALL_DEPENDENCIES.SH ========"
-echo "========================================================"
-echo "========================================================"
 
-echo "=== [1/3] Mise à jour du système ==="
+echo "==================================================================="
+echo "============== DEBUT DU SCRIPT - INSTALL_DEPENDENCIES ============="
+echo "==================================================================="
+echo
+echo
+
+echo "----------------------------------------------------------------------"
+echo "                           [1/4] MISE À JOUR                          "
+echo "           Mise à jour de la liste des paquets et du système         "
+echo "----------------------------------------------------------------------"
+echo
 sudo apt update && sudo apt upgrade -y
+echo
+echo
 
-echo "===================================================="
-echo "===================================================="
+echo "----------------------------------------------------------------------"
+echo "               [2/4] INSTALLATION DES DÉPENDANCES SYSTÈME            "
+echo "----------------------------------------------------------------------"
+echo
 
-echo "=== [2/3] Installation des dépendances système ==="
-
-echo "--- Langage & environnement Python ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.1] Langage et environnement Python                      "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   python3 \
   python3-dev \
   python3-pip \
-  python3-venv \
+  python3-venv
+echo
 
-echo "--- Services essentiels ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.2] Services essentiels                                  "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   redis-server \
-  git 
+  git
+echo
 
-echo "--- OCR (Reconnaissance de texte) ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.3] OCR – Reconnaissance de texte                        "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   tesseract-ocr \
   tesseract-ocr-fra \
   tesseract-ocr-eng \
-  ocrad 
+  ocrad
+echo
 
-echo "--- Outils PDF ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.4] Outils PDF                                           "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   ghostscript \
   unpaper \
   qpdf \
   pdftk \
   poppler-utils \
-  xpdf 
+  xpdf
+echo
 
-echo "--- Optimisation d'images ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.5] Optimisation d’images                                "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   pngquant \
   imagemagick \
@@ -55,60 +77,82 @@ sudo apt install -y \
   libfreetype6-dev \
   liblcms2-dev \
   libpng-dev \
-  libheif1 
+  libheif1
+echo
 
-echo "--- Typographie (PDF lisibles, polices) ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.6] Polices et typographie                               "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   fonts-dejavu \
-  fonts-liberation 
+  fonts-liberation
+echo
 
-echo "--- Métadonnées, formats de fichiers ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.7] Métadonnées et formats                               "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   exiftool \
   libimage-exiftool-perl \
   libmagic1 \
-  libpoppler-cpp-dev 
+  libpoppler-cpp-dev
+echo
 
-echo "--- Librairies de rendu texte / PDF ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.8] Librairies PDF et rendu texte                        "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   libharfbuzz-dev \
   libfribidi-dev \
   libxcb1-dev
+echo
 
-echo "--- Sécurité, compression, cryptographie ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.9] Sécurité, compression et cryptographie              "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   libssl-dev \
   libffi-dev \
   zlib1g-dev \
   ffmpeg \
-  cups 
+  cups
+echo
 
-echo "--- Compilation & outils de build ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.10] Compilation et outils de build                      "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   build-essential \
   autoconf \
   automake \
-  libtool 
+  libtool
+echo
 
-echo "--- Debug & développement avancé ---"
+echo "----------------------------------------------------------------------"
+echo "           [2.11] Debug et développement avancé                       "
+echo "----------------------------------------------------------------------"
 sudo apt install -y \
   inkscape \
   strace
+echo
 
-echo "--- Frontend Environnement ---"
-sudo apt install -y \
-  nginx 
+echo "----------------------------------------------------------------------"
+echo "           [2.12] Serveur Web (Nginx pour frontend)                   "
+echo "----------------------------------------------------------------------"
+sudo apt install -y nginx
+echo
+echo
 
-echo "===================================================="
-echo "===================================================="
-
-echo "=== [3/3] Clonage et compilation de jbig2enc ==="
+echo "----------------------------------------------------------------------"
+echo "             [3/4] CLONAGE ET COMPILATION DE JBIG2ENC                "
+echo "----------------------------------------------------------------------"
 cd /opt
 
 if [ ! -d "/opt/jbig2enc" ]; then
+  echo "Clonage de jbig2enc..."
   sudo git clone https://github.com/agl/jbig2enc.git
 else
-  echo "Dossier /opt/jbig2enc déjà présent. Suppression et nouveau clonage..."
+  echo "Répertoire jbig2enc déjà présent, suppression puis nouveau clonage..."
   sudo rm -rf /opt/jbig2enc
   sudo git clone https://github.com/agl/jbig2enc.git
 fi
@@ -118,12 +162,50 @@ sudo ./autogen.sh
 sudo ./configure
 sudo make -j"$(nproc)"
 sudo make install
+echo
+echo
 
-echo "✅ Installation système terminée avec succès."
+echo "----------------------------------------------------------------------"
+echo "             [4/4] CONFIGURATION DE NGINX POUR PDFTOOLS              "
+echo "----------------------------------------------------------------------"
 
+NGINX_CONF_SRC="/opt/pdftools/nginx/pdftools.conf"
+NGINX_CONF_DEST="/etc/nginx/sites-available/pdftools"
+NGINX_SYMLINK="/etc/nginx/sites-enabled/pdftools"
 
-echo "========================================================"
-echo "========================================================"
-echo "====+==== FIN SCRIPT - INSTALL_DEPENDENCIES.SH ====+===="
-echo "========================================================"
-echo "========================================================"
+echo "Copie de la configuration Nginx..."
+if [ -f "$NGINX_CONF_SRC" ]; then
+  sudo cp "$NGINX_CONF_SRC" "$NGINX_CONF_DEST"
+else
+  echo "Erreur : fichier de configuration introuvable : $NGINX_CONF_SRC"
+  exit 1
+fi
+
+echo "Activation de la configuration..."
+if [ ! -L "$NGINX_SYMLINK" ]; then
+  sudo ln -s "$NGINX_CONF_DEST" "$NGINX_SYMLINK"
+fi
+
+echo "Désactivation de la configuration par défaut..."
+if [ -L "/etc/nginx/sites-enabled/default" ]; then
+  sudo rm /etc/nginx/sites-enabled/default
+fi
+
+echo "Vérification de la configuration Nginx..."
+sudo nginx -t
+
+echo "Redémarrage de Nginx..."
+sudo systemctl reload nginx
+
+if command -v ufw > /dev/null; then
+  echo "Ouverture du pare-feu pour Nginx..."
+  sudo ufw allow 'Nginx Full'
+fi
+
+echo
+echo "Accès au site : http://<IP_DU_SERVEUR>/"
+echo
+
+echo "==================================================================="
+echo "============== FIN DU SCRIPT - INSTALL_DEPENDENCIES =============="
+echo "==================================================================="
