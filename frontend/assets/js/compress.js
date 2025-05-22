@@ -15,15 +15,6 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Réinitialiser l'interface
-function resetUI() {
-  dropzone.style.display = 'block';
-  statusDiv.classList.add('hidden');
-  downloadDiv.classList.add('hidden');
-  statusText.innerHTML = '';
-  fileInput.value = '';
-}
-
 selectBtn.onclick = () => fileInput.click();
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
@@ -61,12 +52,14 @@ async function uploadFile(file) {
     return;
   }
 
+  // Vérification de la taille
+  if (file.size > 10 * 1024 * 1024) {
+    showError(`Fichier trop volumineux (${formatFileSize(file.size)} > 10 MB)`);
+    return;
+  }
+
   try {
-    // Cacher la zone de drop et afficher le statut
-    dropzone.style.display = 'none';
     statusDiv.classList.remove('hidden');
-    downloadDiv.classList.add('hidden');
-    
     statusText.innerHTML = `
       <div class="font-medium">Téléversement en cours...</div>
       <div class="text-sm text-gray-500">${file.name} (${formatFileSize(file.size)})</div>
@@ -102,22 +95,12 @@ async function checkStatus(jobId) {
     const data = await response.json();
 
     if (data.status === 'done') {
-      // Cacher le spinner quand c'est terminé
-      document.querySelector('.spinner').style.display = 'none';
-      
       statusText.innerHTML = `
         <div class="font-medium text-green-600">Traitement terminé !</div>
         <div class="text-sm text-gray-500">Votre fichier est prêt à être téléchargé</div>
       `;
       downloadDiv.classList.remove('hidden');
       resultLink.href = `/api/download/${jobId}`;
-      
-      // Ajouter un bouton pour traiter un nouveau fichier
-      statusText.innerHTML += `
-        <button onclick="resetUI()" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium">
-          Traiter un autre fichier
-        </button>
-      `;
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
@@ -129,14 +112,9 @@ async function checkStatus(jobId) {
 }
 
 function showError(message) {
-  dropzone.style.display = 'block';
   statusDiv.classList.remove('hidden');
-  document.querySelector('.spinner').style.display = 'none';
   statusText.innerHTML = `
     <div class="text-red-600 font-medium">Erreur</div>
     <div class="text-sm text-gray-500">${message}</div>
-    <button onclick="resetUI()" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium">
-      Réessayer
-    </button>
   `;
 }
