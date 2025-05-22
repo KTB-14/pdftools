@@ -1,4 +1,6 @@
-from app.logger import logger  # si tu veux logguer sa création
+from app.logger import logger
+import uuid
+from datetime import datetime
 
 def generate_job_id() -> str:
     uid = uuid.uuid4().hex[:12]
