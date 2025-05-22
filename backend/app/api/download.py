@@ -7,28 +7,21 @@ from pathlib import Path
 router = APIRouter()
 
 @router.get("/download/{job_id}")
-def download_pdf(job_id: str):
+def download_archive(job_id: str):
     """
-    Renvoie directement le fichier PDF traité, sans archive ZIP.
+    Permet de télécharger l'archive ZIP du job si elle a été générée avec succès.
     """
-    output_dir = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR
+    archive_path = config.OCR_ROOT / job_id / config.ZIP_SUBDIR / f"{job_id}.zip"
 
-    logger.info(f"[{job_id}] 📥 Demande de téléchargement du PDF OCRisé")
+    logger.info(f"[{job_id}] 📨 Demande de téléchargement de l'archive ZIP")
 
-    if not output_dir.exists():
-        logger.warning(f"[{job_id}] ❌ Dossier de sortie introuvable : {output_dir}")
-        raise HTTPException(status_code=404, detail="Résultat introuvable")
+    if not archive_path.exists() or not archive_path.is_file():
+        logger.warning(f"[{job_id}] ❌ Archive non trouvée à {archive_path}")
+        raise HTTPException(status_code=404, detail="Archive non trouvée. Traitement probablement en cours.")
 
-    pdf_files = list(output_dir.glob("*.pdf"))
-    if not pdf_files:
-        logger.warning(f"[{job_id}] ❌ Aucun PDF trouvé dans {output_dir}")
-        raise HTTPException(status_code=404, detail="Fichier PDF non trouvé")
-
-    pdf_path = pdf_files[0]  # On suppose qu’un seul fichier PDF est généré
-    logger.info(f"[{job_id}] ✅ Fichier PDF trouvé : {pdf_path.name}")
-
+    logger.info(f"[{job_id}] ✅ Archive trouvée, envoi du fichier")
     return FileResponse(
-        path=str(pdf_path),
-        filename=pdf_path.name,
-        media_type="application/pdf"
+        path=str(archive_path),
+        filename=f"{job_id}.zip",
+        media_type="application/zip"
     )
