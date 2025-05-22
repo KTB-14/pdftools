@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCR & Compression – PDFTools</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>OCR & Compression PDF</h1>
+    <a href="index.html" class="back">← Retour</a>
+  </header>
+
+  <main class="upload-section">
+    <div id="dropzone" class="dropzone">
+      <p>Glissez-déposez votre PDF ici<br/>ou</p>
+      <button id="selectFile">Sélectionner un fichier</button>
+      <input type="file" id="fileInput" accept="application/pdf" hidden />
+    </div>
+
+    <div id="status" class="status hidden">
+      <div class="spinner"></div>
+      <p id="statusText">En attente...</p>
+    </div>
+
+    <div id="downloadLink" class="hidden">
+      <a id="resultLink" href="#" download>📥 Télécharger le PDF OCRisé</a>
+    </div>
+  </main>
+
+  <script src="assets/js/compress.js"></script>
+</body>
+</html>
