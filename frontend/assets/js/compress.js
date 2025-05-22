@@ -4,12 +4,13 @@ const selectBtn = document.getElementById('selectFile');
 const statusDiv = document.getElementById('status');
 const statusText = document.getElementById('statusText');
 const downloadDiv = document.getElementById('downloadLink');
-const resultLink = document.getElementById('resultLink');
 
 selectBtn.onclick = () => fileInput.click();
+
 fileInput.onchange = (e) => {
-  if (e.target.files.length) {
-    uploadFile(e.target.files[0]);
+  const files = Array.from(e.target.files);
+  if (files.length) {
+    uploadFiles(files);
   }
 };
 
@@ -30,14 +31,15 @@ fileInput.onchange = (e) => {
 });
 
 dropzone.addEventListener('drop', e => {
-  const files = e.dataTransfer.files;
+  const files = Array.from(e.dataTransfer.files);
   if (files.length) {
-    uploadFile(files[0]);
+    uploadFiles(files);
   }
 });
 
-async function uploadFile(file) {
-  if (file.type !== 'application/pdf') {
+async function uploadFiles(files) {
+  const invalid = files.find(f => f.type !== 'application/pdf');
+  if (invalid) {
     showError('Seuls les fichiers PDF sont autorisés');
     return;
   }
@@ -46,11 +48,11 @@ async function uploadFile(file) {
     statusDiv.classList.remove('hidden');
     statusText.innerHTML = `
       <div class="font-medium">Téléversement en cours...</div>
-      <div class="text-sm text-gray-500">${file.name} (${formatFileSize(file.size)})</div>
+      <div class="text-sm text-gray-500">${files.length} fichiers PDF sélectionnés</div>
     `;
 
     const formData = new FormData();
-    formData.append('files', file);
+    files.forEach(file => formData.append('files', file));
 
     const uploadRes = await fetch('/api/upload', {
       method: 'POST',
@@ -70,7 +72,7 @@ async function checkStatus(jobId) {
   try {
     statusText.innerHTML = `
       <div class="font-medium">Traitement en cours...</div>
-      <div class="text-sm text-gray-500">Veuillez patienter pendant que nous traitons votre fichier</div>
+      <div class="text-sm text-gray-500">Veuillez patienter pendant que nous traitons vos fichiers</div>
     `;
 
     const response = await fetch(`/api/status/${jobId}`);
@@ -79,7 +81,7 @@ async function checkStatus(jobId) {
     if (data.status === 'done') {
       statusText.innerHTML = `
         <div class="font-medium text-green-600">Traitement terminé !</div>
-        <div class="text-sm text-gray-500">Vos fichiers sont prêts</div>
+        <div class="text-sm text-gray-500">Vos fichiers sont prêts à être téléchargés</div>
       `;
       await displayDownloadLinks(jobId);
     } else if (data.status === 'error') {
@@ -94,7 +96,7 @@ async function checkStatus(jobId) {
 
 async function displayDownloadLinks(jobId) {
   downloadDiv.classList.remove('hidden');
-  resultLink.innerHTML = ''; // Vide la div
+  downloadDiv.innerHTML = '';
 
   try {
     const response = await fetch(`/api/download/${jobId}`);
@@ -107,7 +109,7 @@ async function displayDownloadLinks(jobId) {
       a.textContent = `📥 Télécharger ${file}`;
       a.style.display = 'block';
       a.style.margin = '0.5rem 0';
-      resultLink.appendChild(a);
+      downloadDiv.appendChild(a);
     });
   } catch (error) {
     showError("Erreur lors du chargement des liens de téléchargement");
