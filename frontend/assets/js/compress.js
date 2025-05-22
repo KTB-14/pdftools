@@ -52,12 +52,6 @@ async function uploadFile(file) {
     return;
   }
 
-  // Vérification de la taille
-  if (file.size > 10 * 1024 * 1024) {
-    showError(`Fichier trop volumineux (${formatFileSize(file.size)} > 10 MB)`);
-    return;
-  }
-
   try {
     statusDiv.classList.remove('hidden');
     statusText.innerHTML = `
