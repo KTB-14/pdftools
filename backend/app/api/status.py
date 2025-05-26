@@ -22,7 +22,8 @@ def get_status(job_id: str):
         return StatusOut(
             job_id=job_id,
             status=status,
-            details=str(result.info) if result.info else None
+            details=str(result.info) if result.info else None,
+            files=None
         )
     except ValueError:
         logger.info(f"[{job_id}] ⚠️ Statut Celery inconnu ou terminé – fallback vers status.json")
@@ -36,7 +37,8 @@ def get_status(job_id: str):
             return StatusOut(
                 job_id=job_id,
                 status=JobStatus(data.get("status", "unknown")),
-                details=data.get("details")
+                details=data.get("details"),
+                files=data.get("files")  
             )
         except Exception as e:
             logger.exception(f"[{job_id}] ❌ Erreur lecture status.json : {e}")

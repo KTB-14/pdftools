@@ -16,11 +16,12 @@ class OCRService:
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
 
-    def _write_status(self, status: str, details: str = None):
+    def _write_status(self, status: str, details: str = None, files: list = None):
         data = {
             "job_id": self.job_id,
             "status": status,
-            "details": details
+            "details": details,
+            "files": files
         }
         try:
             with open(self.status_file, "w", encoding="utf-8") as f:
@@ -37,6 +38,8 @@ class OCRService:
             files = list(os.listdir(self.input_dir))
             if not files:
                 raise FileNotFoundError("Aucun fichier PDF trouvé dans le dossier d'entrée")
+
+            output_files = []
 
             for filename in files:
                 input_path = self.input_dir / filename
@@ -55,9 +58,10 @@ class OCRService:
                     skip_text=True
                 )
 
+                output_files.append(out_name)
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
-            self._write_status("done", "Traitement OCR terminé avec succès")
+            self._write_status("done", "Traitement OCR terminé avec succès", output_files)
 
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
