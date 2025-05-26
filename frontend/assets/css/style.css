@@ -201,3 +201,65 @@ footer {
   background: #1f2937;
   color: #9ca3af;
 }
+
+/* === Liste des fichiers traités === */
+#fileStatusList {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+}
+
+#fileStatusList li {
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+#fileStatusList li .progress {
+  margin-right: 1rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+#fileStatusList li button {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+#fileStatusList li button:hover {
+  background: #059669;
+}
+
+#fileStatusList li button.hidden {
+  display: none;
+}
+
+/* === Bouton "Télécharger tout" === */
+.download-all-btn {
+  margin-top: 1rem;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 600;
+}
+
+.download-all-btn:hover {
+  background: #1e40af;
+}

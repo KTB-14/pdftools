@@ -1,21 +1,16 @@
-const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
-const statusDiv = document.getElementById('status');
-const statusText = document.getElementById('statusText');
-const downloadDiv = document.getElementById('downloadLink');
-const resultLink = document.getElementById('resultLink');
+const dropzone = document.getElementById('dropzone');
+const fileStatusList = document.getElementById('fileStatusList');
+const fileListContainer = document.getElementById('fileList');
+const downloadAllContainer = document.getElementById('downloadAllContainer');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-// Fonction pour formater la taille du fichier
-function formatFileSize(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+let jobId = null;
+let filesMap = new Map();
 
 selectBtn.onclick = () => fileInput.click();
+
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
     uploadFiles(e.target.files);
@@ -45,102 +40,109 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-async function uploadFiles(files) {
-  try {
-    statusDiv.classList.remove('hidden');
-    statusText.innerHTML = `
-      <div class="font-medium">Téléversement en cours...</div>
-      <div class="text-sm text-gray-500">Nombre de fichiers : ${files.length}</div>
-    `;
-
-    const formData = new FormData();
-    for (const file of files) {
-      if (file.type !== 'application/pdf') {
-        showError('Tous les fichiers doivent être au format PDF');
-        return;
-      }
-      formData.append('files', file);
-    }
-
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!uploadRes.ok) {
-      throw new Error('Échec du téléversement');
-    }
-
-    const { job_id } = await uploadRes.json();
-    await checkStatus(job_id);
-  } catch (error) {
-    showError(error.message);
-  }
-}
-
-async function checkStatus(jobId) {
-  try {
-    statusText.innerHTML = `
-      <div class="font-medium">Traitement en cours...</div>
-      <div class="text-sm text-gray-500">Veuillez patienter...</div>
-    `;
-
-    const response = await fetch(`/api/status/${jobId}`);
-    const data = await response.json();
-
-    if (data.status === 'done') {
-      statusText.innerHTML = `
-        <div class="font-medium text-green-600">Traitement terminé !</div>
-        <div class="text-sm text-gray-500">Cliquez sur "Télécharger" pour récupérer vos fichiers PDF traités</div>
-      `;
-      downloadDiv.classList.remove('hidden');
-
-      // Configurer le lien pour télécharger tous les fichiers
-      resultLink.onclick = () => downloadAllFiles(jobId, data.files);
-    } else if (data.status === 'error') {
-      throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
-    } else {
-      setTimeout(() => checkStatus(jobId), 2000);
-    }
-  } catch (error) {
-    showError(error.message);
-  }
-}
-
-function showError(message) {
-  statusDiv.classList.remove('hidden');
-  statusText.innerHTML = `
-    <div class="text-red-600 font-medium">Erreur</div>
-    <div class="text-sm text-gray-500">${message}</div>
+function createFileRow(filename) {
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <strong>${filename}</strong> — <span class="progress">En attente</span>
+    <button class="btn hidden" data-filename="${filename}">Télécharger</button>
   `;
+  fileStatusList.appendChild(li);
+  return li;
 }
 
-// Fonction pour télécharger tous les fichiers traités
-async function downloadAllFiles(jobId, files) {
-  if (!files || files.length === 0) {
-    alert("Aucun fichier disponible à télécharger.");
+async function uploadFiles(fileList) {
+  fileListContainer.classList.remove('hidden');
+  fileStatusList.innerHTML = '';
+  downloadAllContainer.classList.add('hidden');
+  filesMap.clear();
+
+  const formData = new FormData();
+  for (const file of fileList) {
+    if (file.type !== 'application/pdf') continue;
+    formData.append('files', file);
+    const row = createFileRow(file.name);
+    filesMap.set(file.name, { row, done: false });
+  }
+
+  const uploadRes = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!uploadRes.ok) {
+    alert("Erreur lors de l'envoi des fichiers.");
     return;
   }
 
-  for (const filename of files) {
-    try {
-      const response = await fetch(`/api/download/${jobId}/${filename}`);
-      if (!response.ok) {
-        console.error(`Erreur de téléchargement pour ${filename}`);
-        continue;
-      }
+  const data = await uploadRes.json();
+  jobId = data.job_id;
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error("Téléchargement échoué pour : " + filename, e);
+  pollStatus();
+}
+
+async function pollStatus() {
+  const res = await fetch(`/api/status/${jobId}`);
+  if (!res.ok) {
+    setTimeout(pollStatus, 2000);
+    return;
+  }
+
+  const data = await res.json();
+  if (!data.files) {
+    setTimeout(pollStatus, 2000);
+    return;
+  }
+
+  let completed = 0;
+
+  for (const filename of data.files) {
+    const fileEntry = filesMap.get(filename);
+    if (!fileEntry || fileEntry.done) continue;
+
+    if (data.status === "done" || data.status === "done_with_errors") {
+      const row = fileEntry.row;
+      const span = row.querySelector(".progress");
+      const btn = row.querySelector("button");
+
+      span.textContent = "✅ Terminé";
+      btn.classList.remove("hidden");
+      btn.onclick = () => downloadFile(jobId, filename);
+      fileEntry.done = true;
+      completed++;
     }
+  }
+
+  const total = data.files.length;
+  const allDone = [...filesMap.values()].every(f => f.done);
+
+  if (!allDone) {
+    setTimeout(pollStatus, 2000);
+  } else {
+    downloadAllContainer.classList.remove("hidden");
+    downloadAllBtn.onclick = () => downloadAllFiles(jobId, data.files);
+  }
+}
+
+async function downloadFile(jobId, filename) {
+  const response = await fetch(`/api/download/${jobId}/${filename}`);
+  if (!response.ok) {
+    alert(`Erreur lors du téléchargement de ${filename}`);
+    return;
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+async function downloadAllFiles(jobId, filenames) {
+  for (const filename of filenames) {
+    await downloadFile(jobId, filename);
   }
 }

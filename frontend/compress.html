@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OCR & Compression – PDFTools</title>
   <link rel="stylesheet" href="assets/css/style.css" />
-  <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
   <header>
@@ -15,28 +14,18 @@
 
   <main class="upload-section">
     <div id="dropzone" class="dropzone">
-      <p>
-        Glissez-déposez votre PDF ici<br/>
-        <span class="text-sm text-gray-500">ou</span>
-      </p>
-      <button id="selectFile">Sélectionner un fichier</button>
+      <p>Sélectionner un ou plusieurs fichiers PDF</p>
+      <button id="selectFile">Choisir des fichiers</button>
       <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
-      <p class="text-sm text-gray-500 mt-4">
-        Format accepté : PDF uniquement
-      </p>
     </div>
 
-    <div id="status" class="status hidden">
-      <div class="spinner"></div>
-      <p id="statusText">En attente...</p>
+    <div id="fileList" class="status hidden">
+      <ul id="fileStatusList"></ul>
     </div>
 
-<div id="downloadLink" class="hidden">
-  <a id="resultLink" href="#" title="Cliquez pour télécharger tous les fichiers PDF traités">
-    <span>📥</span> Télécharger les fichiers PDF
-  </a>
-</div>
-
+    <div id="downloadAllContainer" class="hidden" style="text-align: center; margin-top: 1rem;">
+      <button id="downloadAllBtn" class="download-all-btn">📥 Télécharger tous les fichiers</button>
+    </div>
   </main>
 
   <footer>
