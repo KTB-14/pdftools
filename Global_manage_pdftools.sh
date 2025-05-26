@@ -27,8 +27,7 @@ while true; do
   echo " 1) Cloner et préparer le dépôt PDFTools"
   echo " 2) Installer les dépendances système (OCR, PDF, ...)"
   echo " 3) Installer les dépendances Python (bibliothèques, ...) "
-  echo " 4) Installer ou désinstaller la configuration Nginx uniquement"
-  echo "    → Configure Nginx pour servir le frontend et reverse proxy vers FastAPI"
+  echo " 4) Installer ou désinstaller la configuration Apache2 uniquement"
   echo
   echo "=========== GESTION DES SERVICES (ocr-api, celery, purge OCR)==========="
   echo " 5) Déployer les services systemd"
@@ -69,14 +68,15 @@ while true; do
       read -p "Appuyez sur Entrée pour continuer..."
       ;;
     4)
-      to_log "Configuration Nginx (install/désinstall)"
-      if [ -f "/opt/pdftools/install/nginx_install.sh" ]; then
-        bash /opt/pdftools/install/nginx_install.sh
+      to_log "Configuration Apache2 (install/désinstall)"
+      if [ -f "/opt/pdftools/install/apache2_install.sh" ]; then
+        bash /opt/pdftools/install/apache2_install.sh
       else
-        echo "Erreur : /opt/pdftools/install/nginx_install.sh introuvable"
+        echo "Erreur : /opt/pdftools/install/apache2_install.sh introuvable"
       fi
       read -p "Appuyez sur Entrée pour continuer..."
       ;;
+
     5)
       to_log "Déploiement des services systemd"
       bash /opt/pdftools/install/deploy_systemd.sh
