@@ -103,8 +103,8 @@ async function checkStatus(jobId) {
       downloadDiv.style.display = 'block';
 
       // Lancer le téléchargement automatiquement
-      downloadAllFiles(jobId, data.files);
-      resultLink.onclick = null;
+      resultLink.onclick = () => downloadAllFiles(jobId, data.files);
+
 
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
