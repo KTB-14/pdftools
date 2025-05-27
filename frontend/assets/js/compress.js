@@ -15,15 +15,14 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Gestion des clics
 selectBtn.onclick = () => fileInput.click();
+
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
     uploadFiles(e.target.files);
   }
 };
 
-// Drag & drop
 ['dragenter', 'dragover'].forEach(evt => {
   dropzone.addEventListener(evt, e => {
     e.preventDefault();
@@ -47,10 +46,11 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-// Fonction d'upload
 async function uploadFiles(files) {
   try {
+    // Réinitialisation
     statusDiv.classList.remove('hidden');
+    downloadDiv.classList.add('hidden');
     statusText.innerHTML = `
       <div class="font-medium">Téléversement en cours...</div>
       <div class="text-sm text-gray-500">Nombre de fichiers : ${files.length}</div>
@@ -76,12 +76,13 @@ async function uploadFiles(files) {
 
     const { job_id } = await uploadRes.json();
     await checkStatus(job_id);
+
   } catch (error) {
     showError(error.message);
   }
 }
 
-// Suivi de traitement
+// Suivi de traitement OCR
 async function checkStatus(jobId) {
   try {
     statusText.innerHTML = `
@@ -91,22 +92,20 @@ async function checkStatus(jobId) {
 
     const response = await fetch(`/api/status/${jobId}`);
     const data = await response.json();
-    console.log("🟢 Données status reçues :", data);  
-    
-    if (data.status === 'done') {
-      statusText.innerHTML = `
-        <div class="font-medium text-green-600">Traitement terminé !</div>
-        <div class="text-sm text-gray-500">Téléchargement en cours...</div>
-      `;
+    console.log("🟢 Données status reçues :", data);
 
+    if (data.status === 'done') {
+      // Masquer le spinner
+      statusDiv.classList.add('hidden');
+
+      // Afficher le bouton
       downloadDiv.classList.remove('hidden');
       downloadDiv.style.display = 'block';
 
-      // ✅ Lance immédiatement les téléchargements
+      // Lancer le téléchargement automatiquement
       downloadAllFiles(jobId, data.files);
-
-      // Optionnel : désactiver le lien s’il n’est plus utile
       resultLink.onclick = null;
+
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
@@ -117,8 +116,7 @@ async function checkStatus(jobId) {
   }
 }
 
-
-// Gestion des erreurs
+// En cas d'erreur
 function showError(message) {
   statusDiv.classList.remove('hidden');
   statusText.innerHTML = `
@@ -127,7 +125,7 @@ function showError(message) {
   `;
 }
 
-// Téléchargement des fichiers un par un
+// Téléchargement de tous les fichiers
 async function downloadAllFiles(jobId, files) {
   if (!files || files.length === 0) {
     alert("Aucun fichier disponible à télécharger.");
