@@ -7,7 +7,7 @@ const downloadAllContainer = document.getElementById('downloadAllContainer');
 const downloadAllBtn = document.getElementById('downloadAllBtn');
 
 let jobId = null;
-let filesMap = new Map();
+let filesMap = new Map(); // ex : "glpi" => { original: "glpi.pdf", row, done }
 
 selectBtn.onclick = () => fileInput.click();
 
@@ -50,6 +50,10 @@ function createFileRow(filename) {
   return li;
 }
 
+function getStem(filename) {
+  return filename.replace(/\.pdf$/i, '').trim();
+}
+
 async function uploadFiles(fileList) {
   fileListContainer.classList.remove('hidden');
   fileStatusList.innerHTML = '';
@@ -60,8 +64,15 @@ async function uploadFiles(fileList) {
   for (const file of fileList) {
     if (file.type !== 'application/pdf') continue;
     formData.append('files', file);
+
     const row = createFileRow(file.name);
-    filesMap.set(file.name, { row, done: false });
+    const stem = getStem(file.name);
+    filesMap.set(stem, {
+      original: file.name,
+      row,
+      done: false,
+      compressed: null // sera rempli après
+    });
   }
 
   const uploadRes = await fetch('/api/upload', {
@@ -88,38 +99,38 @@ async function pollStatus() {
   }
 
   const data = await res.json();
-  if (!data.files) {
+  if (!data.files || data.files.length === 0) {
     setTimeout(pollStatus, 2000);
     return;
   }
 
-  let completed = 0;
+  for (const compressedName of data.files) {
+    const stem = getStem(compressedName).replace('_compressed', '');
+    const fileEntry = filesMap.get(stem);
 
-  for (const filename of data.files) {
-    const fileEntry = filesMap.get(filename);
     if (!fileEntry || fileEntry.done) continue;
 
-    if (data.status === "done" || data.status === "done_with_errors") {
-      const row = fileEntry.row;
-      const span = row.querySelector(".progress");
-      const btn = row.querySelector("button");
+    const row = fileEntry.row;
+    const span = row.querySelector(".progress");
+    const btn = row.querySelector("button");
 
-      span.textContent = "✅ Terminé";
-      btn.classList.remove("hidden");
-      btn.onclick = () => downloadFile(jobId, filename);
-      fileEntry.done = true;
-      completed++;
-    }
+    span.textContent = "✅ Terminé";
+    btn.classList.remove("hidden");
+    btn.onclick = () => downloadFile(jobId, compressedName);
+
+    fileEntry.done = true;
+    fileEntry.compressed = compressedName;
   }
 
-  const total = data.files.length;
   const allDone = [...filesMap.values()].every(f => f.done);
-
   if (!allDone) {
     setTimeout(pollStatus, 2000);
   } else {
     downloadAllContainer.classList.remove("hidden");
-    downloadAllBtn.onclick = () => downloadAllFiles(jobId, data.files);
+    downloadAllBtn.onclick = () => {
+      const filenames = [...filesMap.values()].map(f => f.compressed);
+      downloadAllFiles(jobId, filenames);
+    };
   }
 }
 
