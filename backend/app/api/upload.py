@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from typing import List
 import shutil
-from app.models.job import JobOut
+from app.models.job import JobOut, JobStatus
 from app.utils.id_generator import generate_job_id
 from app.config import config
 from app.logger import logger
