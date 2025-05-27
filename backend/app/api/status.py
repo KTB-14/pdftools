@@ -1,11 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from app.models.job import StatusOut, JobStatus
-from celery.result import AsyncResult
-from worker.tasks import celery_app
 from app.config import config
 from app.logger import logger
-import json
 from pathlib import Path
+import json
 
 router = APIRouter()
 
@@ -13,21 +11,7 @@ router = APIRouter()
 def get_status(job_id: str):
     logger.info(f"[{job_id}] 🔍 Requête de statut reçue")
 
-    result = AsyncResult(job_id, app=celery_app)
-    celery_state = result.state.lower()
-
-    try:
-        status = JobStatus(celery_state)
-        logger.info(f"[{job_id}] ✅ Statut Celery reconnu : {status}")
-        return StatusOut(
-            job_id=job_id,
-            status=status,
-            details=str(result.info) if result.info else None,
-            files=None
-        )
-    except ValueError:
-        logger.info(f"[{job_id}] ⚠️ Statut Celery inconnu ou terminé – fallback vers status.json")
-
+    # Lecture directe du fichier status.json
     status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
     if status_path.exists():
         try:
@@ -38,7 +22,7 @@ def get_status(job_id: str):
                 job_id=job_id,
                 status=JobStatus(data.get("status", "unknown")),
                 details=data.get("details"),
-                files=data.get("files")  # ✅ Ici on renvoie la liste des fichiers
+                files=data.get("files")
             )
         except Exception as e:
             logger.exception(f"[{job_id}] ❌ Erreur lecture status.json : {e}")

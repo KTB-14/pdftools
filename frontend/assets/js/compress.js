@@ -91,7 +91,8 @@ async function checkStatus(jobId) {
 
     const response = await fetch(`/api/status/${jobId}`);
     const data = await response.json();
-
+    console.log("🟢 Données status reçues :", data);  
+    
     if (data.status === 'done') {
       statusText.innerHTML = `
         <div class="font-medium text-green-600">Traitement terminé !</div>
