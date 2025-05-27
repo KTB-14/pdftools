@@ -7,7 +7,6 @@
 - Téléversement de plusieurs fichiers PDF
 - Traitement asynchrone (via Celery)
 - OCR + compression automatique (`ocrmypdf`)
-- Archivage au format ZIP des résultats
 - Suivi du statut du job en temps réel
 - Interface Web HTML simple
 

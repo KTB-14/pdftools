@@ -1,5 +1,3 @@
-# app/config.py
-
 from pydantic_settings import BaseSettings
 from pydantic import Field
 from typing import List
@@ -15,8 +13,7 @@ class Config(BaseSettings):
     # === Sous-dossiers des jobs ===
     INPUT_SUBDIR: str = "input_ocr"
     OUTPUT_SUBDIR: str = "output_ocr"
-    ZIP_SUBDIR: str = "archives"
-    STATUS_FILENAME: str = "status.json"
+    STATUS_FILENAME: str = "status.json"  
 
     # === Celery / Redis ===
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
@@ -38,6 +35,6 @@ class Config(BaseSettings):
 # Instance globale utilisable partout dans le projet
 config = Config()
 
-# Création automatique des dossiers critiques (optionnel ici, mais utile)
+# Création automatique des dossiers critiques
 config.OCR_ROOT.mkdir(parents=True, exist_ok=True)
 config.LOG_DIR.mkdir(parents=True, exist_ok=True)

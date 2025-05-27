@@ -4,7 +4,6 @@ from app.services.ocr.ocr_service import OCRService
 from app.config import config
 from app.logger import logger
 
-# Initialisation de l'application Celery
 celery_app = Celery(
     "ocr_tasks",
     broker=config.CELERY_BROKER_URL,
@@ -23,8 +22,7 @@ def ocr_task(self, job_id: str):
         ocr.process()
 
         logger.info(f"[{job_id}] ✅ OCR terminé avec succès")
-
-        return {"status": "done"}
+        return {"status": "done"}  
 
     except Exception as exc:
         logger.exception(f"[{job_id}] ❌ Erreur lors du traitement OCR : {exc}")
