@@ -43,4 +43,4 @@ async def upload_files(files: List[UploadFile] = File(...)):
         logger.exception(f"[{job_id}] ❌ Erreur lancement tâche Celery")
         raise HTTPException(status_code=500, detail=f"Erreur Celery lancement tâche OCR : {e}")
 
-    return JobOut(job_id=job_id)
+    return JobOut(job_id=job_id, status=JobStatus.pending)
