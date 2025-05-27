@@ -16,21 +16,25 @@
   <main class="upload-section">
     <div id="dropzone" class="dropzone">
       <p>
-        Glissez-déposez un ou plusieurs fichiers PDF ici<br/>
+        Glissez-déposez vos PDF ici<br/>
         <span class="text-sm text-gray-500">ou</span>
       </p>
-      <button id="selectFile">Sélectionner un fichier</button>
-      <input type="file" id="fileInput" accept="application/pdf" hidden />
+      <button id="selectFile">Sélectionner un ou plusieurs fichiers</button>
+      <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
       <p class="text-sm text-gray-500 mt-4">
-        Formats acceptés : PDF uniquement
+        Format accepté : PDF uniquement
       </p>
     </div>
 
     <div id="status" class="status hidden">
-      <ul id="fileList"></ul>
-      <div id="downloadAll" class="hidden" style="text-align:center; margin-top:2rem;">
-        <button id="downloadAllBtn">📥 Télécharger tous les fichiers</button>
-      </div>
+      <div class="spinner"></div>
+      <p id="statusText">En attente...</p>
+    </div>
+
+    <div id="downloadLink" class="hidden">
+      <a id="resultLink" href="#" title="Cliquez pour télécharger tous les fichiers PDF traités">
+        <span>📥</span> Télécharger les fichiers PDF
+      </a>
     </div>
   </main>
 
