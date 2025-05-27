@@ -52,49 +52,35 @@ body {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
 }
-
 .card:hover:not(.disabled) { 
   transform: translateY(-4px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-
-.card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
-}
-
-.card p {
-  color: #4b5563;
-  margin-bottom: 1rem;
-}
-
+.card h2 { font-size: 1.5rem; margin-bottom: 1rem; color: #1a1a1a; }
+.card p { color: #4b5563; margin-bottom: 1rem; }
 .card.disabled {
   opacity: 0.7;
   cursor: not-allowed;
   background: #f9fafb;
 }
 
-/* Upload area */
+/* Upload section */
 .upload-section { 
   max-width: 640px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
-
 header {
   text-align: center;
   padding: 2rem 1rem;
   background: white;
   border-bottom: 1px solid #e5e7eb;
 }
-
 header h1 {
   font-size: 2rem;
   color: #1a1a1a;
   margin-bottom: 0.5rem;
 }
-
 .back {
   display: inline-flex;
   align-items: center;
@@ -103,10 +89,7 @@ header h1 {
   font-weight: 500;
   transition: color 0.2s;
 }
-
-.back:hover {
-  color: #1d4ed8;
-}
+.back:hover { color: #1d4ed8; }
 
 .dropzone {
   border: 2px dashed #d1d5db;
@@ -117,17 +100,14 @@ header h1 {
   transition: all 0.3s ease;
   text-align: center;
 }
-
 .dropzone:hover, .dropzone.hover {
   border-color: #2563eb;
   background: #f8fafc;
 }
-
 .dropzone p {
   margin-bottom: 1.5rem;
   color: #4b5563;
 }
-
 button#selectFile {
   background: #2563eb;
   color: white;
@@ -138,59 +118,70 @@ button#selectFile {
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 button#selectFile:hover {
   background: #1d4ed8;
 }
 
-/* Status & spinner */
-.status {
+/* File list display */
+.file-list {
   margin-top: 2rem;
-  padding: 1.5rem;
+}
+.file-item {
   background: white;
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.file-item p {
+  margin-bottom: 0.5rem;
+}
+.download-button {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #059669;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.download-button:hover {
+  background-color: #047857;
 }
 
-.hidden {
-  display: none;
-}
-
+/* Spinner */
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   border: 3px solid #e5e7eb;
   border-top-color: #2563eb;
   border-radius: 50%;
-  margin: 1rem auto;
+  display: inline-block;
   animation: spin 1s linear infinite;
+  margin-left: 0.5rem;
+  vertical-align: middle;
 }
-
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* Download link */
-#downloadLink {
+/* Download all */
+#downloadAll {
   margin-top: 2rem;
-  text-align: center;
-}
-
-#downloadLink a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #059669;
+  display: none;
+  background: #2563eb;
   color: white;
   padding: 0.75rem 1.5rem;
-  text-decoration: none;
+  border: none;
   border-radius: 0.5rem;
   font-weight: 500;
-  transition: background-color 0.2s;
+  cursor: pointer;
 }
-
-#downloadLink a:hover {
-  background: #047857;
+#downloadAll:hover {
+  background: #1d4ed8;
 }
 
 /* Footer */
@@ -200,66 +191,4 @@ footer {
   padding: 2rem;
   background: #1f2937;
   color: #9ca3af;
-}
-
-/* === Liste des fichiers traités === */
-#fileStatusList {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 1rem;
-}
-
-#fileStatusList li {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-#fileStatusList li .progress {
-  margin-right: 1rem;
-  color: #2563eb;
-  font-weight: 500;
-}
-
-#fileStatusList li button {
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 500;
-}
-
-#fileStatusList li button:hover {
-  background: #059669;
-}
-
-#fileStatusList li button.hidden {
-  display: none;
-}
-
-/* === Bouton "Télécharger tout" === */
-.download-all-btn {
-  margin-top: 1rem;
-  background: #1d4ed8;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 600;
-}
-
-.download-all-btn:hover {
-  background: #1e40af;
 }
