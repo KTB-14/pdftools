@@ -95,11 +95,17 @@ async function checkStatus(jobId) {
     if (data.status === 'done') {
       statusText.innerHTML = `
         <div class="font-medium text-green-600">Traitement terminé !</div>
-        <div class="text-sm text-gray-500">Cliquez sur "Télécharger" pour récupérer vos fichiers PDF traités</div>
+        <div class="text-sm text-gray-500">Téléchargement en cours...</div>
       `;
+
       downloadDiv.classList.remove('hidden');
-      downloadDiv.style.display = 'block'; // ← au cas où le CSS override
-      resultLink.onclick = () => downloadAllFiles(jobId, data.files);
+      downloadDiv.style.display = 'block';
+
+      // ✅ Lance immédiatement les téléchargements
+      downloadAllFiles(jobId, data.files);
+
+      // Optionnel : désactiver le lien s’il n’est plus utile
+      resultLink.onclick = null;
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
@@ -109,6 +115,7 @@ async function checkStatus(jobId) {
     showError(error.message);
   }
 }
+
 
 // Gestion des erreurs
 function showError(message) {
