@@ -34,12 +34,16 @@ def get_status(job_id: str):
             with open(status_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             logger.info(f"[{job_id}] 📄 Lecture réussie de status.json")
+            
+            logger.debug(f"[{job_id}] 🔁 Réponse envoyée : {data}")
+            
             return StatusOut(
                 job_id=job_id,
                 status=JobStatus(data.get("status", "unknown")),
                 details=data.get("details"),
-                files=data.get("files")  
+                files=data.get("files")
             )
+            
         except Exception as e:
             logger.exception(f"[{job_id}] ❌ Erreur lecture status.json : {e}")
             raise HTTPException(status_code=500, detail=f"Erreur lecture status.json : {str(e)}")
