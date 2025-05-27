@@ -7,7 +7,7 @@ const downloadAllContainer = document.getElementById('downloadAllContainer');
 const downloadAllBtn = document.getElementById('downloadAllBtn');
 
 let jobId = null;
-let filesMap = new Map(); // ex : "glpi" => { original: "glpi.pdf", row, done }
+let filesMap = new Map(); // clef = nom sans extension, valeur = { originalName, row, done, compressedName }
 
 selectBtn.onclick = () => fileInput.click();
 
@@ -44,14 +44,14 @@ function createFileRow(filename) {
   const li = document.createElement('li');
   li.innerHTML = `
     <strong>${filename}</strong> — <span class="progress">En attente</span>
-    <button class="btn hidden" data-filename="${filename}">Télécharger</button>
+    <button class="btn hidden">Télécharger</button>
   `;
   fileStatusList.appendChild(li);
   return li;
 }
 
 function getStem(filename) {
-  return filename.replace(/\.pdf$/i, '').trim();
+  return filename.toLowerCase().replace(/\.pdf$/, '');
 }
 
 async function uploadFiles(fileList) {
@@ -63,15 +63,18 @@ async function uploadFiles(fileList) {
   const formData = new FormData();
   for (const file of fileList) {
     if (file.type !== 'application/pdf') continue;
+
+    const originalName = file.name;
+    const stem = getStem(originalName);
+    const row = createFileRow(originalName);
+
     formData.append('files', file);
 
-    const row = createFileRow(file.name);
-    const stem = getStem(file.name);
     filesMap.set(stem, {
-      original: file.name,
+      original: originalName,
       row,
       done: false,
-      compressed: null // sera rempli après
+      compressed: null
     });
   }
 
@@ -87,7 +90,6 @@ async function uploadFiles(fileList) {
 
   const data = await uploadRes.json();
   jobId = data.job_id;
-
   pollStatus();
 }
 
@@ -105,21 +107,24 @@ async function pollStatus() {
   }
 
   for (const compressedName of data.files) {
-    const stem = getStem(compressedName).replace('_compressed', '');
-    const fileEntry = filesMap.get(stem);
+    const baseStem = getStem(compressedName).replace('_compressed', '');
+    for (const [originalStem, fileEntry] of filesMap.entries()) {
+      if (fileEntry.done) continue;
 
-    if (!fileEntry || fileEntry.done) continue;
+      // Match souple : si le début du nom compressé ressemble au nom original
+      if (baseStem.includes(originalStem) || originalStem.includes(baseStem)) {
+        const span = fileEntry.row.querySelector(".progress");
+        const btn = fileEntry.row.querySelector("button");
 
-    const row = fileEntry.row;
-    const span = row.querySelector(".progress");
-    const btn = row.querySelector("button");
+        span.textContent = "✅ Terminé";
+        btn.classList.remove("hidden");
+        btn.onclick = () => downloadFile(jobId, compressedName);
 
-    span.textContent = "✅ Terminé";
-    btn.classList.remove("hidden");
-    btn.onclick = () => downloadFile(jobId, compressedName);
-
-    fileEntry.done = true;
-    fileEntry.compressed = compressedName;
+        fileEntry.done = true;
+        fileEntry.compressed = compressedName;
+        break;
+      }
+    }
   }
 
   const allDone = [...filesMap.values()].every(f => f.done);
