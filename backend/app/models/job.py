@@ -1,22 +1,27 @@
 from enum import Enum
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional, List
 
+# Les différents états possibles d’un job
 class JobStatus(str, Enum):
-    queued = "queued"
+    pending = "pending"
     processing = "processing"
     done = "done"
-    done_with_errors = "done_with_errors"
     error = "error"
+    unknown = "unknown"
 
+# Schéma pour une requête de création (optionnel selon tes endpoints)
 class JobCreate(BaseModel):
     filenames: List[str]
 
+# Schéma de réponse simplifiée
 class JobOut(BaseModel):
     job_id: str
+    status: JobStatus
 
+# Schéma complet du statut, utilisé pour le endpoint /status/{job_id}
 class StatusOut(BaseModel):
     job_id: str
     status: JobStatus
     details: Optional[str] = None
-    files: Optional[List[str]] = None  
+    files: Optional[List[str]] = None
