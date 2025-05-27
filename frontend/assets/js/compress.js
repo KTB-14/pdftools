@@ -1,15 +1,24 @@
+const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
-const dropzone = document.getElementById('dropzone');
+const statusDiv = document.getElementById('status');
+const statusText = document.getElementById('statusText');
 const fileStatusList = document.getElementById('fileStatusList');
-const fileListContainer = document.getElementById('fileList');
-const downloadAllContainer = document.getElementById('downloadAllContainer');
 const downloadAllBtn = document.getElementById('downloadAllBtn');
+const downloadAllContainer = document.getElementById('downloadAllContainer');
 
 let jobId = null;
-let filesMap = new Map(); // clef = nom sans extension, valeur = { originalName, row, done, compressedName }
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
 
 selectBtn.onclick = () => fileInput.click();
+fileInput.setAttribute('multiple', true);
 
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
@@ -40,125 +49,93 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-function createFileRow(filename) {
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <strong>${filename}</strong> — <span class="progress">En attente</span>
-    <button class="btn hidden">Télécharger</button>
-  `;
-  fileStatusList.appendChild(li);
-  return li;
-}
+async function uploadFiles(files) {
+  try {
+    statusDiv.classList.remove('hidden');
+    statusText.innerHTML = `
+      <div class="font-medium">Téléversement de ${files.length} fichiers...</div>
+    `;
 
-function getStem(filename) {
-  return filename.toLowerCase().replace(/\.pdf$/, '');
-}
+    const formData = new FormData();
+    Array.from(files).forEach(file => formData.append('files', file));
 
-async function uploadFiles(fileList) {
-  fileListContainer.classList.remove('hidden');
-  fileStatusList.innerHTML = '';
-  downloadAllContainer.classList.add('hidden');
-  filesMap.clear();
-
-  const formData = new FormData();
-  for (const file of fileList) {
-    if (file.type !== 'application/pdf') continue;
-
-    const originalName = file.name;
-    const stem = getStem(originalName);
-    const row = createFileRow(originalName);
-
-    formData.append('files', file);
-
-    filesMap.set(stem, {
-      original: originalName,
-      row,
-      done: false,
-      compressed: null
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
     });
+
+    if (!uploadRes.ok) throw new Error('Échec du téléversement');
+
+    const data = await uploadRes.json();
+    jobId = data.job_id;
+    statusText.innerHTML = `<div class="font-medium">Traitement en cours...</div>`;
+
+    fileStatusList.classList.remove('hidden');
+    fileStatusList.innerHTML = '';
+
+    // Affichage initial de la liste
+    Array.from(files).forEach(file => {
+      const li = document.createElement('li');
+      li.id = `file-${file.name}`;
+      li.innerHTML = `
+        <span class="progress">${file.name}</span>
+        <button class="hidden">Télécharger</button>
+      `;
+      fileStatusList.appendChild(li);
+    });
+
+    await pollStatus();
+  } catch (err) {
+    statusText.innerHTML = `<div class="text-red-600 font-medium">Erreur : ${err.message}</div>`;
   }
-
-  const uploadRes = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData
-  });
-
-  if (!uploadRes.ok) {
-    alert("Erreur lors de l'envoi des fichiers.");
-    return;
-  }
-
-  const data = await uploadRes.json();
-  jobId = data.job_id;
-  pollStatus();
 }
 
 async function pollStatus() {
-  const res = await fetch(`/api/status/${jobId}`);
-  if (!res.ok) {
-    setTimeout(pollStatus, 2000);
-    return;
-  }
+  if (!jobId) return;
 
-  const data = await res.json();
-  if (!data.files || data.files.length === 0) {
-    setTimeout(pollStatus, 2000);
-    return;
-  }
+  try {
+    const res = await fetch(`/api/status/${jobId}`);
+    const data = await res.json();
 
-  for (const compressedName of data.files) {
-    const baseStem = getStem(compressedName).replace('_compressed', '');
-    for (const [originalStem, fileEntry] of filesMap.entries()) {
-      if (fileEntry.done) continue;
+    if (data.status === 'done' && Array.isArray(data.files)) {
+      let allDone = true;
 
-      // Match souple : si le début du nom compressé ressemble au nom original
-      if (baseStem.includes(originalStem) || originalStem.includes(baseStem)) {
-        const span = fileEntry.row.querySelector(".progress");
-        const btn = fileEntry.row.querySelector("button");
+      data.files.forEach(filename => {
+        const li = document.getElementById(`file-${filename.replace('_compressed.pdf', '.pdf')}`);
+        if (!li) return;
 
-        span.textContent = "✅ Terminé";
-        btn.classList.remove("hidden");
-        btn.onclick = () => downloadFile(jobId, compressedName);
+        const progress = li.querySelector('.progress');
+        const button = li.querySelector('button');
 
-        fileEntry.done = true;
-        fileEntry.compressed = compressedName;
-        break;
-      }
+        progress.innerText = `${filename} – 100% ✅`;
+        button.classList.remove('hidden');
+        button.onclick = () => downloadFile(`/api/download/${jobId}?file=${encodeURIComponent(filename)}`);
+      });
+
+      downloadAllContainer.classList.remove('hidden');
+      downloadAllBtn.onclick = () => {
+        data.files.forEach(filename => {
+          downloadFile(`/api/download/${jobId}?file=${encodeURIComponent(filename)}`);
+        });
+      };
+
+    } else if (data.status === 'error') {
+      statusText.innerHTML = `<div class="text-red-600 font-medium">Erreur : ${data.details}</div>`;
+    } else {
+      // Pas encore fini
+      setTimeout(pollStatus, 2000);
     }
-  }
-
-  const allDone = [...filesMap.values()].every(f => f.done);
-  if (!allDone) {
-    setTimeout(pollStatus, 2000);
-  } else {
-    downloadAllContainer.classList.remove("hidden");
-    downloadAllBtn.onclick = () => {
-      const filenames = [...filesMap.values()].map(f => f.compressed);
-      downloadAllFiles(jobId, filenames);
-    };
+  } catch (err) {
+    console.error("Erreur polling :", err);
+    setTimeout(pollStatus, 3000);
   }
 }
 
-async function downloadFile(jobId, filename) {
-  const response = await fetch(`/api/download/${jobId}/${filename}`);
-  if (!response.ok) {
-    alert(`Erreur lors du téléchargement de ${filename}`);
-    return;
-  }
-
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
+function downloadFile(url) {
+  const a = document.createElement('a');
   a.href = url;
-  a.download = filename;
+  a.download = '';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-}
-
-async function downloadAllFiles(jobId, filenames) {
-  for (const filename of filenames) {
-    await downloadFile(jobId, filename);
-  }
 }
