@@ -4,26 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OCR & Compression – PDFTools</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/compress.css" />
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
-  <header>
+
+  <header class="header-banner">
+    <a href="index.html" class="return-button">← Retour à l'accueil</a>
     <h1>OCR & Compression PDF</h1>
-    <a href="index.html" class="back">← Retour à l'accueil</a>
   </header>
 
   <main class="upload-section">
     <div id="dropzone" class="dropzone">
-      <p>
-        Glissez-déposez vos PDF ici<br/>
-        <span class="text-sm text-gray-500">ou</span>
-      </p>
-      <button id="selectFile">Sélectionner un ou plusieurs fichiers</button>
+      <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
+      <button id="selectFile" class="dashboard-button">Sélectionner un ou plusieurs fichiers</button>
       <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
-      <p class="text-sm text-gray-500 mt-4">
-        Format accepté : PDF uniquement
-      </p>
+      <p class="text-muted">Format accepté : PDF uniquement</p>
     </div>
 
     <div id="status" class="status hidden">
@@ -32,14 +28,14 @@
     </div>
 
     <div id="downloadLink" class="hidden">
-      <a id="resultLink" href="#" title="Cliquez pour télécharger tous les fichiers PDF traités">
-        <span>📥</span> Télécharger les fichiers PDF
+      <a id="resultLink" href="#" class="dashboard-button" title="Cliquez pour télécharger tous les fichiers PDF traités">
+        📥 Télécharger les fichiers PDF
       </a>
     </div>
   </main>
 
   <footer>
-    <small>© PDFTools by KTB-14 – Tous droits réservés</small>
+    <small style="text-align: center; display: block; padding: 2rem; color: #777;">© FAREVA PDFTools</small>
   </footer>
 
   <script src="assets/js/compress.js"></script>

@@ -1,3 +1,4 @@
+const API_BASE = "api";  //  l’IP locale de la VM
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
@@ -65,7 +66,7 @@ async function uploadFiles(files) {
       formData.append('files', file);
     }
 
-    const uploadRes = await fetch('/api/upload', {
+    const uploadRes = await fetch(`${API_BASE}/upload`, {
       method: 'POST',
       body: formData
     });
@@ -90,7 +91,7 @@ async function checkStatus(jobId) {
       <div class="text-sm text-gray-500">Veuillez patienter...</div>
     `;
 
-    const response = await fetch(`/api/status/${jobId}`);
+    const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
     console.log("🟢 Données status reçues :", data);
 
@@ -134,7 +135,7 @@ async function downloadAllFiles(jobId, files) {
 
   for (const filename of files) {
     try {
-      const response = await fetch(`/api/download/${jobId}/${filename}`);
+      const response = await fetch(`${API_BASE}/download/${jobId}/${filename}`);
       if (!response.ok) {
         console.error(`Erreur de téléchargement pour ${filename}`);
         continue;
