@@ -15,6 +15,7 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Gestion des clics
 selectBtn.onclick = () => fileInput.click();
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
@@ -22,6 +23,7 @@ fileInput.onchange = (e) => {
   }
 };
 
+// Drag & drop
 ['dragenter', 'dragover'].forEach(evt => {
   dropzone.addEventListener(evt, e => {
     e.preventDefault();
@@ -45,6 +47,7 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
+// Fonction d'upload
 async function uploadFiles(files) {
   try {
     statusDiv.classList.remove('hidden');
@@ -78,6 +81,7 @@ async function uploadFiles(files) {
   }
 }
 
+// Suivi de traitement
 async function checkStatus(jobId) {
   try {
     statusText.innerHTML = `
@@ -94,6 +98,7 @@ async function checkStatus(jobId) {
         <div class="text-sm text-gray-500">Cliquez sur "Télécharger" pour récupérer vos fichiers PDF traités</div>
       `;
       downloadDiv.classList.remove('hidden');
+      downloadDiv.style.display = 'block'; // ← au cas où le CSS override
       resultLink.onclick = () => downloadAllFiles(jobId, data.files);
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
@@ -105,6 +110,7 @@ async function checkStatus(jobId) {
   }
 }
 
+// Gestion des erreurs
 function showError(message) {
   statusDiv.classList.remove('hidden');
   statusText.innerHTML = `
@@ -113,6 +119,7 @@ function showError(message) {
   `;
 }
 
+// Téléchargement des fichiers un par un
 async function downloadAllFiles(jobId, files) {
   if (!files || files.length === 0) {
     alert("Aucun fichier disponible à télécharger.");
