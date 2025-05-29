@@ -72,6 +72,7 @@ sudo apt install -y \
   libopenjp2-7-dev \
   libtiff-tools \
   libtiff-dev \
+  libqpdf \
   libleptonica-dev \
   libfreetype6-dev \
   liblcms2-dev \
