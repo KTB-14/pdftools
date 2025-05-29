@@ -1,13 +1,12 @@
-const API_BASE = "api";  //  l’IP locale de la VM
+const API_BASE = "api";
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
-const statusDiv = document.getElementById('status');
-const statusText = document.getElementById('statusText');
-const downloadDiv = document.getElementById('downloadLink');
-const resultLink = document.getElementById('resultLink');
+const fileList = document.getElementById('fileList');
+const downloadAllSection = document.getElementById('downloadAll');
+const downloadAllButton = document.getElementById('downloadAllButton');
 
-// Fonction pour formater la taille du fichier
+// Format file size
 function formatFileSize(bytes) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -16,6 +15,28 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Create file item element
+function createFileItem(file) {
+  const fileItem = document.createElement('div');
+  fileItem.className = 'file-item';
+  fileItem.innerHTML = `
+    <div class="file-info">
+      <div class="file-name">${file.name}</div>
+      <div class="file-size">${formatFileSize(file.size)}</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+    <button class="button button-secondary download-button hidden" data-filename="${file.name}">
+      Télécharger
+    </button>
+  `;
+  return fileItem;
+}
+
+// Event listeners
 selectBtn.onclick = () => fileInput.click();
 
 fileInput.onchange = (e) => {
@@ -48,22 +69,20 @@ dropzone.addEventListener('drop', e => {
 });
 
 async function uploadFiles(files) {
-  try {
-    // Réinitialisation
-    statusDiv.classList.remove('hidden');
-    downloadDiv.classList.add('hidden');
-    statusText.innerHTML = `
-      <div class="font-medium">Téléversement en cours...</div>
-      <div class="text-sm text-gray-500">Nombre de fichiers : ${files.length}</div>
-    `;
+  fileList.innerHTML = '';
+  downloadAllSection.classList.add('hidden');
+  const fileItems = new Map();
 
+  try {
     const formData = new FormData();
     for (const file of files) {
       if (file.type !== 'application/pdf') {
-        showError('Tous les fichiers doivent être au format PDF');
-        return;
+        throw new Error('Tous les fichiers doivent être au format PDF');
       }
       formData.append('files', file);
+      const fileItem = createFileItem(file);
+      fileList.appendChild(fileItem);
+      fileItems.set(file.name, fileItem);
     }
 
     const uploadRes = await fetch(`${API_BASE}/upload`, {
@@ -76,82 +95,79 @@ async function uploadFiles(files) {
     }
 
     const { job_id } = await uploadRes.json();
-    await checkStatus(job_id);
+    await checkStatus(job_id, fileItems);
 
   } catch (error) {
     showError(error.message);
   }
 }
 
-// Suivi de traitement OCR
-async function checkStatus(jobId) {
+async function checkStatus(jobId, fileItems) {
   try {
-    statusText.innerHTML = `
-      <div class="font-medium">Traitement en cours...</div>
-      <div class="text-sm text-gray-500">Veuillez patienter...</div>
-    `;
-
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
-    console.log("🟢 Données status reçues :", data);
 
-    if (data.status === 'done') {
-      // Masquer le spinner
-      statusDiv.classList.add('hidden');
+    if (data.status === 'done' && data.files) {
+      downloadAllSection.classList.remove('hidden');
+      data.files.forEach(filename => {
+        const fileItem = fileItems.get(filename.replace('_compressed.pdf', '.pdf'));
+        if (fileItem) {
+          const progressFill = fileItem.querySelector('.progress-fill');
+          const downloadButton = fileItem.querySelector('.download-button');
+          progressFill.style.width = '100%';
+          downloadButton.classList.remove('hidden');
+          downloadButton.onclick = () => downloadFile(jobId, filename);
+        }
+      });
 
-      // Afficher le bouton
-      downloadDiv.classList.remove('hidden');
-      downloadDiv.style.display = 'block';
-
-      // Lancer le téléchargement automatiquement
-      resultLink.onclick = () => downloadAllFiles(jobId, data.files);
-
-
+      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
-      setTimeout(() => checkStatus(jobId), 2000);
+      fileItems.forEach((fileItem) => {
+        const progressFill = fileItem.querySelector('.progress-fill');
+        progressFill.style.width = '50%';
+      });
+      setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
   } catch (error) {
     showError(error.message);
   }
 }
 
-// En cas d'erreur
-function showError(message) {
-  statusDiv.classList.remove('hidden');
-  statusText.innerHTML = `
-    <div class="text-red-600 font-medium">Erreur</div>
-    <div class="text-sm text-gray-500">${message}</div>
-  `;
+async function downloadFile(jobId, filename) {
+  try {
+    const response = await fetch(`${API_BASE}/download/${jobId}/${filename}`);
+    if (!response.ok) throw new Error('Erreur lors du téléchargement');
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    showError(`Erreur de téléchargement : ${error.message}`);
+  }
 }
 
-// Téléchargement de tous les fichiers
 async function downloadAllFiles(jobId, files) {
   if (!files || files.length === 0) {
-    alert("Aucun fichier disponible à télécharger.");
+    showError('Aucun fichier disponible');
     return;
   }
 
   for (const filename of files) {
-    try {
-      const response = await fetch(`${API_BASE}/download/${jobId}/${filename}`);
-      if (!response.ok) {
-        console.error(`Erreur de téléchargement pour ${filename}`);
-        continue;
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error("Téléchargement échoué pour : " + filename, e);
-    }
+    await downloadFile(jobId, filename);
   }
+}
+
+function showError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message';
+  errorDiv.textContent = message;
+  fileList.appendChild(errorDiv);
 }
