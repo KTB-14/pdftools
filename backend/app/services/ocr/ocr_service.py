@@ -50,12 +50,33 @@ class OCRService:
 
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
+                # 🔍 Détection "tagged PDF"
+                try:
+                    with pikepdf.open(str(input_path)) as pdf:
+                        is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
+                except Exception as e:
+                    logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
+                    is_tagged = False
+
+                # 🧠 Choix intelligent des options
+                ocr_args = {
+                    "optimize": 3
+                }
+
+                if is_tagged:
+                    logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
+                    ocr_args["redo_ocr"] = False
+                    ocr_args["force_ocr"] = False
+                else:
+                    logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
+                    ocr_args["deskew"] = True
+                    ocr_args["skip_text"] = True
+
+                # 🚀 Traitement OCR
                 ocrmypdf.ocr(
                     str(input_path),
                     str(output_path),
-                    deskew=True,
-                    optimize=3,
-                    skip_text=True
+                    **ocr_args
                 )
 
                 output_files.append(out_name)
