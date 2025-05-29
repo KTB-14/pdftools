@@ -1,10 +1,17 @@
 import os
 import json
+import signal
 from pathlib import Path
 import ocrmypdf
-import pikepdf  
+import pikepdf
 from app.config import config
 from app.logger import logger
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    raise TimeoutException("OCR timeout exceeded")
 
 class OCRService:
     def __init__(self, job_id: str):
@@ -13,7 +20,6 @@ class OCRService:
         self.input_dir = self.job_dir / config.INPUT_SUBDIR
         self.output_dir = self.job_dir / config.OUTPUT_SUBDIR
         self.status_file = self.job_dir / config.STATUS_FILENAME
-
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
 
@@ -30,6 +36,16 @@ class OCRService:
             logger.info(f"[{self.job_id}] 📝 Status mis à jour : {status}")
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Échec écriture status.json : {e}")
+
+    def _pdf_has_text(self, pdf_path: Path) -> bool:
+        try:
+            with pikepdf.open(str(pdf_path)) as pdf:
+                for page in pdf.pages:
+                    if "/Contents" in page.obj:
+                        return True
+        except Exception as e:
+            logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier le texte dans le PDF : {e}")
+        return False
 
     def process(self) -> None:
         self._write_status("processing", "OCR en cours")
@@ -49,46 +65,64 @@ class OCRService:
                 out_name = f"{stem}_compressed{ext}"
                 output_path = self.output_dir / out_name
 
-                logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
+                logger.info(f"[{self.job_id}] 🧾 Analyse du PDF : {input_path.name}")
 
-                # 🔍 Détection "tagged PDF"
+                # Vérification tagging + texte
                 try:
                     with pikepdf.open(str(input_path)) as pdf:
                         is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
                 except Exception as e:
-                    logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
+                    logger.warning(f"[{self.job_id}] ⚠️ Erreur lors de la lecture du PDF : {e}")
                     is_tagged = False
 
-                # 🧠 Choix intelligent des options
+                has_text = self._pdf_has_text(input_path)
+                logger.info(f"[{self.job_id}] 📌 Taggé : {is_tagged} | Texte détecté : {has_text}")
+
                 ocr_args = {
                     "optimize": 3
                 }
 
-                if is_tagged:
-                    logger.info(f"[{self.job_id}] 📌 PDF déjà taggé → utilisation de redo_ocr=True")
-                    ocr_args["redo_ocr"] = True                    
-                    ocr_args["deskew"] = False
-                    ocr_args["remove_background"] = False
-                    ocr_args["clean_final"] = False
+                if not has_text and not is_tagged:
+                    logger.info(f"[{self.job_id}] ➤ PDF non taggé sans texte → OCR classique")
+                    ocr_args.update({"deskew": True, "skip_text": True})
 
-                else:
-                    logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
-                    ocr_args["deskew"] = True
-                    ocr_args["skip_text"] = True
+                elif not has_text and is_tagged:
+                    logger.info(f"[{self.job_id}] ➤ PDF taggé sans texte → tentative redo_ocr avec timeout")
 
-                # 🚀 Traitement OCR
-                ocrmypdf.ocr(
-                    str(input_path),
-                    str(output_path),
-                    **ocr_args
-                )
+                    signal.signal(signal.SIGALRM, timeout_handler)
+                    signal.alarm(20)
 
-                output_files.append(out_name)
-                logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
+                    try:
+                        ocr_args.update({"redo_ocr": True})
+                        ocrmypdf.ocr(str(input_path), str(output_path), **ocr_args)
+                        signal.alarm(0)
+                        logger.info(f"[{self.job_id}] ✅ OCR (redo) terminé : {output_path.name}")
+                        output_files.append(out_name)
+                        continue
+                    except TimeoutException:
+                        logger.warning(f"[{self.job_id}] ⏱️ OCR bloqué sur redo_ocr → compression seule")
+                        logger.info(f"[{self.job_id}] 🗜️ Compression forcée après échec redo_ocr")
+                    except Exception as e:
+                        logger.warning(f"[{self.job_id}] ⚠️ Échec redo_ocr : {e}")
+                        logger.info(f"[{self.job_id}] 🗜️ Compression forcée après échec redo_ocr")
+                    finally:
+                        signal.alarm(0)
 
-            self._write_status("done", "Traitement OCR terminé avec succès", output_files)
+                elif has_text:
+                    logger.info(f"[{self.job_id}] ➤ Texte déjà présent → compression seule")
+                    logger.info(f"[{self.job_id}] 📄 Compression seule effectuée : {output_path.name}")
+
+                # Traitement final (OCR ou compression seule)
+                try:
+                    ocrmypdf.ocr(str(input_path), str(output_path), **ocr_args)
+                    logger.info(f"[{self.job_id}] ✅ Traitement final terminé : {output_path.name}")
+                    output_files.append(out_name)
+                except Exception as e:
+                    logger.warning(f"[{self.job_id}] ⚠️ Échec traitement final : {e}")
+
+            self._write_status("done", "Traitement OCR terminé", output_files)
 
         except Exception as e:
-            logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
+            logger.exception(f"[{self.job_id}] ❌ Erreur globale OCR")
             self._write_status("error", str(e))
             raise
