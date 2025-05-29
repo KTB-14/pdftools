@@ -126,7 +126,13 @@ class OCRService:
             if not output_path.exists():
                 logger.warning(f"[{self.job_id}] ⚠️ Aucune sortie générée → tentative finale de compression seule")
                 try:
-                    ocrmypdf.ocr(str(input_path), str(output_path), force_ocr=False, optimize=3)
+                    ocrmypdf.ocr(
+                        str(input_path),
+                        str(output_path),
+                        force_ocr=True,
+                        skip_text=True,
+                        optimize=3
+                    )
                     logger.info(f"[{self.job_id}] ✅ Compression seule réussie (fallback) : {output_path.name}")
                     output_files.append(out_name)
                 except Exception as e:
