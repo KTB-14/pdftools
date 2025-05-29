@@ -130,7 +130,6 @@ class OCRService:
                         str(input_path),
                         str(output_path),
                         force_ocr=True,
-                        skip_text=True,
                         optimize=3
                     )
                     logger.info(f"[{self.job_id}] ✅ Compression seule réussie (fallback) : {output_path.name}")
