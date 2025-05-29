@@ -75,10 +75,10 @@ class OCRService:
 
             is_tagged = self._is_tagged(input_path)
             has_text = self._has_text(input_path)
-
             logger.info(f"[{self.job_id}] 📌 Taggé : {is_tagged} | Texte détecté : {has_text}")
 
             try:
+                # Cas OCR complet
                 if not is_tagged and not has_text:
                     logger.info(f"[{self.job_id}] 🧠 OCR complet requis (non taggé, sans texte)")
                     ocrmypdf.ocr(
@@ -86,22 +86,51 @@ class OCRService:
                         str(output_path),
                         deskew=True,
                         skip_text=True,
-                        optimize=3
+                        optimize=3,
+                        use_threads=True
                     )
+
+                # Sinon compression uniquement
                 else:
                     logger.info(f"[{self.job_id}] 📄 Compression seule (pas d'OCR nécessaire)")
                     ocrmypdf.ocr(
                         str(input_path),
                         str(output_path),
                         force_ocr=False,
-                        optimize=3
+                        optimize=3,
+                        use_threads=True
                     )
 
-                logger.info(f"[{self.job_id}] ✅ Fichier traité avec succès : {output_path.name}")
-                output_files.append(output_path.name)
+                # Vérification de la sortie
+                if output_path.exists():
+                    output_files.append(output_path.name)
+                    logger.info(f"[{self.job_id}] ✅ Fichier généré : {output_path.name}")
+                else:
+                    raise FileNotFoundError("Aucun fichier de sortie généré")
 
             except Exception as e:
-                logger.error(f"[{self.job_id}] ❌ Erreur pendant le traitement : {e}")
+                error_msg = str(e)
+                logger.warning(f"[{self.job_id}] ⚠️ Erreur traitement : {error_msg}")
+
+                if "does not need OCR" in error_msg or "Tagged PDF" in error_msg:
+                    logger.warning(f"[{self.job_id}] ⚠️ PDF probablement déjà OCRisé → tentative fallback compression")
+                    try:
+                        ocrmypdf.ocr(
+                            str(input_path),
+                            str(output_path),
+                            force_ocr=False,
+                            optimize=3,
+                            use_threads=True
+                        )
+                        if output_path.exists():
+                            output_files.append(output_path.name)
+                            logger.info(f"[{self.job_id}] ✅ Fallback réussi : {output_path.name}")
+                        else:
+                            logger.error(f"[{self.job_id}] ❌ Fallback sans fichier généré")
+                    except Exception as fallback_error:
+                        logger.error(f"[{self.job_id}] ❌ Échec du fallback : {fallback_error}")
+                else:
+                    logger.error(f"[{self.job_id}] ❌ Erreur non rattrapable : {error_msg}")
 
         if output_files:
             self._write_status("done", "Traitement terminé avec succès", output_files)
