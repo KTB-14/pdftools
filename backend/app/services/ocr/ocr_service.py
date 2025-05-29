@@ -5,46 +5,50 @@ import ocrmypdf
 from app.config import config
 from app.logger import logger
 
-
 class OCRService:
     def __init__(self, job_id: str):
         self.job_id = job_id
-        self.job_dir = JOBS_ROOT / job_id
-        self.input_dir = self.job_dir / INPUT_SUBDIR
-        self.output_dir = self.job_dir / OUTPUT_SUBDIR
-        self.status_file = self.job_dir / STATUS_FILENAME
-        os.makedirs(self.output_dir, exist_ok=True)
+        self.job_dir = config.OCR_ROOT / job_id
+        self.input_dir = self.job_dir / config.INPUT_SUBDIR
+        self.output_dir = self.job_dir / config.OUTPUT_SUBDIR
+        self.status_file = self.job_dir / config.STATUS_FILENAME
 
-    def _write_status(self, status: str, details: str = None):
+        os.makedirs(self.output_dir, exist_ok=True)
+        logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
+
+    def _write_status(self, status: str, details: str = None, files: list = None):
         data = {
             "job_id": self.job_id,
             "status": status,
-            "details": details
+            "details": details,
+            "files": files
         }
         try:
             with open(self.status_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
+            logger.info(f"[{self.job_id}] 📝 Status mis à jour : {status}")
         except Exception as e:
-            logger.error(f"[{self.job_id}] ❌ Erreur écriture status.json : {e}")
-
-    def _is_tagged(self, pdf_path: Path) -> bool:
-        try:
-            with pikepdf.open(str(pdf_path)) as pdf:
-                return "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
-        except Exception as e:
-            logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier le tagging : {e}")
-            return False
+            logger.exception(f"[{self.job_id}] ❌ Échec écriture status.json : {e}")
 
     def process(self) -> None:
         self._write_status("processing", "OCR en cours")
+        logger.info(f"[{self.job_id}] 🚀 Début du traitement OCR")
+
         try:
-            for filename in os.listdir(self.input_dir):
+            files = list(os.listdir(self.input_dir))
+            if not files:
+                raise FileNotFoundError("Aucun fichier PDF trouvé dans le dossier d'entrée")
+
+            output_files = []
+
+            for filename in files:
                 input_path = self.input_dir / filename
                 stem = Path(filename).stem
                 ext = Path(filename).suffix
-                output_path = self.output_dir / f"{stem}_compressed{ext}"
+                out_name = f"{stem}_compressed{ext}"
+                output_path = self.output_dir / out_name
 
-                logger.info(f"[{self.job_id}] 🔍 Fichier en cours : {filename}")
+                logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
                 ocrmypdf.ocr(
                     str(input_path),
@@ -54,9 +58,12 @@ class OCRService:
                     skip_text=True
                 )
 
-            self._write_status("done", "Traitement terminé avec succès")
+                output_files.append(out_name)
+                logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
+
+            self._write_status("done", "Traitement OCR terminé avec succès", output_files)
 
         except Exception as e:
-            logger.error(f"[{self.job_id}] ❌ Erreur traitement : {e}")
+            logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
             self._write_status("error", str(e))
             raise
