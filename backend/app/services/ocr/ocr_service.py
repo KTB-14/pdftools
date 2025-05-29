@@ -2,6 +2,7 @@ import os
 import json
 from pathlib import Path
 import ocrmypdf
+import pikepdf
 from app.config import config
 from app.logger import logger
 
@@ -59,20 +60,24 @@ class OCRService:
                     is_tagged = False
 
                 # 🧠 Choix intelligent des options
-                ocr_args = {
-                    "optimize": 3
-                }
-
                 if is_tagged:
                     logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
-                    ocr_args["redo_ocr"] = False
-                    ocr_args["force_ocr"] = False
+                    ocr_args = {
+                        "optimize": 3,
+                        "redo_ocr": False,
+                        "force_ocr": False,
+                        "skip_text": True,
+                        "output_type": "pdf"  
+                    }
                 else:
                     logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
-                    ocr_args["deskew"] = True
-                    ocr_args["skip_text"] = True
+                    ocr_args = {
+                        "optimize": 3,
+                        "deskew": True,
+                        "skip_text": True
+                    }
 
-                # 🚀 Traitement OCR
+                # 🚀 Traitement OCR ou compression
                 ocrmypdf.ocr(
                     str(input_path),
                     str(output_path),
