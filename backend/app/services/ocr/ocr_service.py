@@ -78,23 +78,30 @@ class OCRService:
 
             logger.info(f"[{self.job_id}] 📌 Taggé : {is_tagged} | Texte détecté : {has_text}")
 
-            ocr_args = {
-                "optimize": 3
-            }
-
-            if not has_text and not is_tagged:
-                logger.info(f"[{self.job_id}] 🧠 OCR nécessaire → PDF non taggé et sans texte")
-                ocr_args["deskew"] = True
-                ocr_args["skip_text"] = True
-            else:
-                logger.info(f"[{self.job_id}] 📄 Pas d'OCR → compression seule")
-
             try:
-                ocrmypdf.ocr(str(input_path), str(output_path), **ocr_args)
+                if not is_tagged and not has_text:
+                    logger.info(f"[{self.job_id}] 🧠 OCR complet requis (non taggé, sans texte)")
+                    ocrmypdf.ocr(
+                        str(input_path),
+                        str(output_path),
+                        deskew=True,
+                        skip_text=True,
+                        optimize=3
+                    )
+                else:
+                    logger.info(f"[{self.job_id}] 📄 Compression seule (pas d'OCR nécessaire)")
+                    ocrmypdf.ocr(
+                        str(input_path),
+                        str(output_path),
+                        force_ocr=False,
+                        optimize=3
+                    )
+
                 logger.info(f"[{self.job_id}] ✅ Fichier traité avec succès : {output_path.name}")
                 output_files.append(output_path.name)
+
             except Exception as e:
-                logger.error(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR : {e}")
+                logger.error(f"[{self.job_id}] ❌ Erreur pendant le traitement : {e}")
 
         if output_files:
             self._write_status("done", "Traitement terminé avec succès", output_files)
