@@ -5,6 +5,7 @@ const selectBtn = document.getElementById('selectFile');
 const fileList = document.getElementById('fileList');
 const downloadAllSection = document.getElementById('downloadAll');
 const downloadAllButton = document.getElementById('downloadAllButton');
+const restartButton = document.getElementById('restartButton');
 
 // Format file size
 function formatFileSize(bytes) {
@@ -36,8 +37,17 @@ function createFileItem(file) {
   return fileItem;
 }
 
+// Reset the interface
+function resetInterface() {
+  fileList.innerHTML = '';
+  downloadAllSection.classList.add('hidden');
+  dropzone.classList.remove('hidden');
+  fileInput.value = '';
+}
+
 // Event listeners
 selectBtn.onclick = () => fileInput.click();
+restartButton.onclick = resetInterface;
 
 fileInput.onchange = (e) => {
   if (e.target.files.length) {
@@ -71,6 +81,7 @@ dropzone.addEventListener('drop', e => {
 async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
+  dropzone.classList.add('hidden');
   const fileItems = new Map();
 
   try {
@@ -99,6 +110,7 @@ async function uploadFiles(files) {
 
   } catch (error) {
     showError(error.message);
+    dropzone.classList.remove('hidden');
   }
 }
 
@@ -132,6 +144,7 @@ async function checkStatus(jobId, fileItems) {
     }
   } catch (error) {
     showError(error.message);
+    dropzone.classList.remove('hidden');
   }
 }
 
