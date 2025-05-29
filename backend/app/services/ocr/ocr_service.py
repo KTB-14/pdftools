@@ -58,6 +58,8 @@ class OCRService:
                         str(input_path),
                         str(output_path),
                         force_ocr=False,
+                        deskew=False,
+                        skip_text=False,                        
                         optimize=3
                     )
                 else:
