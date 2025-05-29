@@ -94,6 +94,7 @@ sudo apt install -y \
   exiftool \
   libimage-exiftool-perl \
   libmagic1 \
+  libqpdf \
   libpoppler-cpp-dev 
 echo
 
