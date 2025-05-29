@@ -117,7 +117,6 @@ class OCRService:
                             str(input_path),
                             str(output_path),
                             skip_text=True,
-                            force_ocr=True,
                             optimize=3,
                             use_threads=True
                         )
