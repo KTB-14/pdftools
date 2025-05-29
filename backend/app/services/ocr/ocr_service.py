@@ -112,13 +112,14 @@ class OCRService:
                     logger.warning(f"[{self.job_id}] ⚠️ PDF probablement déjà OCRisé → tentative fallback compression")
 
                     try:
-                        logger.warning(f"[{self.job_id}] ⚠️ Fallback 1 avec --skip-text + --force-ocr")
+                        logger.warning(f"[{self.job_id}] ⚠️ Fallback 1 avec --redo-ocr + compression (sans PDF/A)")
                         ocrmypdf.ocr(
                             str(input_path),
                             str(output_path),
-                            skip_text=True,
+                            redo_ocr=True,
                             optimize=3,
-                            use_threads=True
+                            use_threads=True,
+                            output_type="pdf"  # évite les erreurs strictes PDF/A
                         )
                         if output_path.exists():
                             output_files.append(output_path.name)
@@ -128,13 +129,14 @@ class OCRService:
                         logger.warning(f"[{self.job_id}] ⚠️ Fallback 1 échoué : {fallback_error1}")
 
                     try:
-                        logger.warning(f"[{self.job_id}] ⚠️ Fallback 2 avec --force-ocr=False (compression seule forcée)")
+                        logger.warning(f"[{self.job_id}] ⚠️ Fallback 2 avec compression seule")
                         ocrmypdf.ocr(
                             str(input_path),
                             str(output_path),
                             force_ocr=False,
                             optimize=3,
-                            use_threads=True
+                            use_threads=True,
+                            output_type="pdf"  # toujours sans PDF/A pour éviter Ghostscript
                         )
                         if output_path.exists():
                             output_files.append(output_path.name)
@@ -144,9 +146,9 @@ class OCRService:
                             raise FileNotFoundError("Fallback 2 : aucun fichier généré")
                     except Exception as fallback_error2:
                         logger.error(f"[{self.job_id}] ❌ Fallback 2 échoué : {fallback_error2}")
-
                 else:
                     logger.error(f"[{self.job_id}] ❌ Erreur non rattrapable : {error_msg}")
+            
 
         if output_files:
             self._write_status("done", "Traitement terminé avec succès", output_files)
