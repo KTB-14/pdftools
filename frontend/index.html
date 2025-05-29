@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDFTools - Compressez et OCRisez vos PDFs</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <meta name="description" content="PDFTools vous permet de compresser vos PDFs et d'y ajouter une couche OCR pour les rendre consultables" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
-  <header class="hero">
-    <h1>Bienvenue sur PDFTools</h1>
-    <p>Des outils simples et efficaces pour vos documents PDF</p>
-  </header>
+<div class="header-banner">
+    <div class="welcome-text">
+        <h1>PDFTools Dashboard</h1>
+    </div>
+    <div class="logo">
+        <img src="img/image.png" alt="FAREVA Logo">
+    </div>
+</div>
 
-  <main class="services">
-    <a class="card" href="compress.html">
-      <h2>OCR & Compression PDF</h2>
-      <p>Convertissez et compressez vos PDF avec OCR intégré pour les rendre consultables et plus légers</p>
-      <span class="text-sm text-blue-600 font-medium">Commencer →</span>
-    </a>
+<div class="dashboard-container">
+    <div class="logo-container">
+        <img src="img/image.png" alt="FAREVA Logo" class="center-logo">
+    </div>
     
-    <a class="card disabled" href="#">
-      <h2>Image → PDF</h2>
-      <p>Convertissez facilement vos images en fichiers PDF</p>
-      <span class="text-sm text-gray-500">Bientôt disponible</span>
-    </a>
-  </main>
+    <div class="dashboard-buttons">
+        <a href="compress.html">
+            <button class="dashboard-button">PDF - Compression</button>
+        </a>
+    </div>
 
-  <footer>
-    <small>© PDFTools by KTB-14 – Tous droits réservés</small>
-  </footer>
-  
-  <script src="assets/js/main.js"></script>
+    <div class="footer-buttons">
+        <a href="a_propos">
+            <button class="dashboard-button">À propos</button>
+        </a>
+        <a href="aide">
+            <button class="dashboard-button">Aide</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>
