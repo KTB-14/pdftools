@@ -66,7 +66,11 @@ class OCRService:
 
                 if is_tagged:
                     logger.info(f"[{self.job_id}] 📌 PDF déjà taggé → utilisation de redo_ocr=True")
-                    ocr_args["redo_ocr"] = True
+                    ocr_args["redo_ocr"] = True                    
+                    ocr_args["deskew"] = False
+                    ocr_args["remove_background"] = False
+                    ocr_args["clean_final"] = False
+
                 else:
                     logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
                     ocr_args["deskew"] = True
