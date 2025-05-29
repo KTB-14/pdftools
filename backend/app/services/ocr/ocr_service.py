@@ -2,9 +2,7 @@ import os
 import json
 from pathlib import Path
 import ocrmypdf
-import pikepdf
-
-from app.config import JOBS_ROOT, INPUT_SUBDIR, OUTPUT_SUBDIR, STATUS_FILENAME
+from app.config import config
 from app.logger import logger
 
 
@@ -48,31 +46,13 @@ class OCRService:
 
                 logger.info(f"[{self.job_id}] 🔍 Fichier en cours : {filename}")
 
-                # Vérifie si le PDF est taggé
-                is_tagged = self._is_tagged(input_path)
-                logger.info(f"[{self.job_id}] 📌 Taggé : {is_tagged}")
-
-                if is_tagged:
-                    logger.info(f"[{self.job_id}] ➤ Compression seule (PDF taggé)")
-                    ocrmypdf.ocr(
-                        str(input_path),
-                        str(output_path),
-                        force_ocr=False,
-                        deskew=True,
-                        skip_text=True,                        
-                        optimize=3
-                    )
-                else:
-                    logger.info(f"[{self.job_id}] ➤ OCR + compression (PDF non taggé)")
-                    ocrmypdf.ocr(
-                        str(input_path),
-                        str(output_path),
-                        deskew=True,
-                        skip_text=True,
-                        optimize=3
-                    )
-
-                logger.info(f"[{self.job_id}] ✅ Fichier traité : {output_path.name}")
+                ocrmypdf.ocr(
+                    str(input_path),
+                    str(output_path),
+                    deskew=True,
+                    optimize=3,
+                    skip_text=True
+                )
 
             self._write_status("done", "Traitement terminé avec succès")
 
