@@ -91,9 +91,10 @@ async function uploadFiles(files) {
         throw new Error('Tous les fichiers doivent être au format PDF');
       }
       formData.append('files', file);
+      const decodedName = decodeURIComponent(file.name);
       const fileItem = createFileItem(file);
       fileList.appendChild(fileItem);
-      fileItems.set(file.name, fileItem);
+      fileItems.set(decodedName, fileItem);  
     }
 
     const uploadRes = await fetch(`${API_BASE}/upload`, {
@@ -122,7 +123,11 @@ async function checkStatus(jobId, fileItems) {
     if (data.status === 'done' && data.files) {
       downloadAllSection.classList.remove('hidden');
       data.files.forEach(filename => {
-        const fileItem = fileItems.get(filename.replace('_compressed.pdf', '.pdf'));
+        const originalName = filename.replace('_compressed.pdf', '.pdf');
+        const fileItem = [...fileItems.entries()].find(([decodedName]) => {
+          return decodedName === originalName;
+        })?.[1];
+        
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
