@@ -15,8 +15,11 @@ os.makedirs(config.OCR_ROOT, exist_ok=True)
 logger.info(f"Dossier OCR_ROOT vérifié/créé à : {config.OCR_ROOT}")
 
 # Montage du frontend statique (formulaire HTML)
-app.mount("/frontend", StaticFiles(directory=config.FRONTEND_DIR), name="frontend")
-logger.info(f"Frontend monté depuis {config.FRONTEND_DIR}")
+# try:
+#     app.mount("/frontend", StaticFiles(directory=config.FRONTEND_DIR), name="frontend")
+#     logger.info(f"Frontend monté depuis {config.FRONTEND_DIR}")
+# except Exception as e:
+#     logger.warning(f" Impossible de monter le frontend depuis {config.FRONTEND_DIR} : {e}")
 
 # Inclusion des routes API
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
