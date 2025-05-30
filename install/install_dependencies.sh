@@ -86,7 +86,7 @@ echo "----------------------------------------------------------------------"
 sudo apt install -y \
   fonts-dejavu \
   fonts-liberation 
-echo
+echo 
 
 echo "----------------------------------------------------------------------"
 echo "           [2.7] Métadonnées et formats                               "

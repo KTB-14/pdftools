@@ -41,7 +41,7 @@ done
 echo "Rechargement de systemd..."
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
-
+ 
 echo
 echo "==================================================================="
 echo "=========== FIN DU SCRIPT - UNINSTALL_SYSTEMD.SH =================="

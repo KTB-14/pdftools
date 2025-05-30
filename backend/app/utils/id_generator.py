@@ -8,3 +8,4 @@ def generate_job_id() -> str:
     job_id = f"{uid}_{timestamp}"
     logger.info(f"🆕 Job ID généré : {job_id}")
     return job_id
+ 

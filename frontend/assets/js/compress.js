@@ -188,4 +188,4 @@ function showError(message) {
   errorDiv.className = 'error-message';
   errorDiv.textContent = message;
   fileList.appendChild(errorDiv);
-}
+} 

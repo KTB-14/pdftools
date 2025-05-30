@@ -25,3 +25,4 @@ class StatusOut(BaseModel):
     status: JobStatus
     details: Optional[str] = None
     files: Optional[List[str]] = None
+ 

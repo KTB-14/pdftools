@@ -1,5 +1,3 @@
-# backend/scripts/purge_old_jobs.py
-
 import shutil
 import time
 from pathlib import Path

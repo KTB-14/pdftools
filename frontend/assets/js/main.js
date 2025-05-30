@@ -6,4 +6,4 @@ document.querySelectorAll('.card').forEach(card => {
       alert('Ce service sera bientôt disponible !');
     }
   });
-});
+}); 

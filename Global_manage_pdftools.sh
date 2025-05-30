@@ -44,7 +44,7 @@ while true; do
   echo "============================= QUITTER =============================="
   echo "13) Quitter"
   echo
-  read -p "Choix [1-13] : " choice
+  read -p "Choix [1-13] : " choice 
 
   case "$choice" in
     1)

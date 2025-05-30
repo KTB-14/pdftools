@@ -41,4 +41,4 @@ logger.info(f"🎯 CORS activé pour : {config.ALLOWED_ORIGINS}")
 # Route racine
 @app.get("/")
 def read_root():
-    return {"message": "Bienvenue sur PDFTools  API OCR"}
+    return {"message": "Bienvenue sur PDFTools  API OCR"} 

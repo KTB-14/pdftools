@@ -31,3 +31,4 @@ def ocr_task(self, job_id: str):
 
     finally:
         logger.info(f"[{job_id}] 🔚 Fin de tâche OCR (avec ou sans succès)")
+ 

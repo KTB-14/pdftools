@@ -37,4 +37,4 @@ config = Config()
 
 # Création automatique des dossiers critiques
 config.OCR_ROOT.mkdir(parents=True, exist_ok=True)
-config.LOG_DIR.mkdir(parents=True, exist_ok=True)
+config.LOG_DIR.mkdir(parents=True, exist_ok=True) 

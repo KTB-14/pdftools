@@ -12,4 +12,4 @@ StandardOutput=append:/opt/pdftools/backend/logs/ocr.log
 StandardError=append:/opt/pdftools/backend/logs/ocr.log
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target 

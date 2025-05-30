@@ -30,3 +30,4 @@ def get_status(job_id: str):
 
     logger.warning(f"[{job_id}] ❌ Aucune info de statut trouvée")
     raise HTTPException(status_code=404, detail="Job non trouvé")
+ 

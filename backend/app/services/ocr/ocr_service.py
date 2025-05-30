@@ -92,4 +92,4 @@ class OCRService:
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
             self._write_status("error", str(e))
-            raise
+            raise 
