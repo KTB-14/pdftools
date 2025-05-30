@@ -1,0 +1,8 @@
+# enforce LF for all text files
+* text eol=lf
+
+# (optional) explicitly list common extensions:
+*.css  text eol=lf
+*.js   text eol=lf
+*.html text eol=lf
+*.md   text eol=lf
