@@ -7,6 +7,8 @@ from app.config import config
 from app.logger import logger
 from worker.tasks import ocr_task
 from pathlib import Path
+from urllib.parse import unquote   
+import os                        
 
 router = APIRouter()
 
@@ -27,13 +29,18 @@ async def upload_files(files: List[UploadFile] = File(...)):
         raise HTTPException(status_code=500, detail=f"Erreur création du dossier : {e}")
 
     for file in files:
-        dest = job_in_dir / file.filename
+        # --- ✅ Fix unsafe filenames ---
+        safe_filename = unquote(file.filename)
+        safe_filename = os.path.basename(safe_filename)
+        dest = job_in_dir / safe_filename
+        # -------------------------------
+
         try:
             with dest.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-            logger.info(f"[{job_id}] 📄 Fichier sauvegardé : {file.filename}")
+            logger.info(f"[{job_id}] 📄 Fichier sauvegardé : {safe_filename}")
         except Exception as e:
-            logger.exception(f"[{job_id}] ❌ Erreur lors de la sauvegarde de {file.filename}")
+            logger.exception(f"[{job_id}] ❌ Erreur lors de la sauvegarde de {safe_filename}")
             raise HTTPException(status_code=500, detail=f"Erreur sauvegarde fichier : {e}")
 
     try:
