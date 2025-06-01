@@ -177,9 +177,11 @@ body {
   background-color: var(--gray-300);
 }
 
-/* Force display for download-button */
+/* Force display and align download button properly */
 .download-button {
   display: inline-block;
+  justify-self: end;
+  align-self: center;
 }
 
 /* DOWNLOAD SECTION */
