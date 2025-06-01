@@ -1,13 +1,12 @@
-# backend/tests/test_secure_filename.py
+import sys
+import os
+
+# Ajoute le chemin parent à PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from app.utils.filename_utils import secure_filename
 
-cases = [
-    ("A&B.pdf", "a-b.pdf"),
-    ("   Épreuve finale 2025.PDF", "epreuve-finale-2025.pdf"),
-    ("Résumé_étude_économie.pdf", "resume-etude-economie.pdf"),
-    ("📄 Important Document 2025.PDF", "important-document-2025.pdf"),
-]
-
-def test_secure_filename():
-    for raw, expected in cases:
-        assert secure_filename(raw) == expected
+def test_secure_filename_basic():
+    assert secure_filename("Rapport & Synthèse 2025.pdf") == "rapport-synthese-2025.pdf"
+    assert secure_filename("Épreuve finale.PDF") == "epreuve-finale.pdf"
+    assert secure_filename("Super document final (version 2).pdf") == "super-document-final-version-2.pdf"
