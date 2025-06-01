@@ -27,14 +27,14 @@ function createFileItem(file) {
       <div class="file-name">${file.name}</div>
       <div class="file-size">${formatFileSize(file.size)}</div>
     </div>
-    <div class="progress-container">
+    <div class="progress-download-container">
       <div class="progress-bar">
         <div class="progress-fill" style="width: 0%"></div>
       </div>
+      <button class="button button-secondary download-button hidden" data-filename="${file.name}">
+        Télécharger
+      </button>
     </div>
-    <button class="button button-secondary download-button hidden" data-filename="${file.name}">
-      Télécharger
-    </button>
   `;
   return fileItem;
 }
@@ -129,14 +129,15 @@ async function checkStatus(jobId) {
         const fileItem = [...fileList.children].find(item => item.dataset.originalName === originalName);
 
         if (fileItem) {
-          const progressContainer = fileItem.querySelector('.progress-container');
+          const progressBar = fileItem.querySelector('.progress-bar');
           const downloadButton = fileItem.querySelector('.download-button');
 
           // Cache la barre de progression
-          progressContainer.style.display = 'none';
+          progressBar.style.display = 'none';
 
           // Affiche le bouton
           downloadButton.classList.remove('hidden');
+
           downloadButton.onclick = () => downloadFile(jobId, outputName);
         }
       });

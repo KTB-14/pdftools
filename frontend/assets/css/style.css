@@ -100,7 +100,7 @@ body {
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 3fr auto;
+  grid-template-columns: 2fr 3fr;
   gap: 1rem;
   align-items: center;
 }
@@ -122,9 +122,12 @@ body {
   font-size: 0.875rem;
 }
 
-/* PROGRESS BAR */
-.progress-container {
+/* PROGRESS & DOWNLOAD */
+.progress-download-container {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .progress-bar {
@@ -140,6 +143,10 @@ body {
   background: var(--primary);
   width: 0%;
   transition: width 0.3s ease;
+}
+
+.download-button {
+  display: inline-block;
 }
 
 /* BUTTONS */
@@ -177,14 +184,7 @@ body {
   background-color: var(--gray-300);
 }
 
-/* DOWNLOAD BUTTON (Individuel) */
-.download-button {
-  display: inline-block;
-  justify-self: end;   /* place it at the right of the grid */
-  align-self: center;  /* center vertically in the grid row */
-}
-
-/* DOWNLOAD SECTION (Télécharger tous les fichiers) */
+/* DOWNLOAD SECTION */
 .download-section {
   text-align: center;
   margin-top: 2rem;
