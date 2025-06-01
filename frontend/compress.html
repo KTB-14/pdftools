@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCR & Compression – PDFTools</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
+</head>
+<body>
+  <header class="header-container">
+    <a href="index.html" class="return-button">← Retour à l'accueil</a>
+    <h1>OCR & Compression PDF</h1>
+  </header>
+  <div class="header-space"></div>
+
+  <main class="container">
+    <section class="upload-section">
+      <div id="dropzone" class="dropzone">
+        <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
+        <button id="selectFile" class="button">Sélectionner un ou plusieurs fichiers</button>
+        <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
+        <p class="text-muted">Format accepté : PDF uniquement</p>
+      </div>
+
+      <div id="fileList" class="file-list"></div>
+
+      <div id="downloadAll" class="download-section hidden">
+        <button id="downloadAllButton" class="button">
+          📥 Télécharger tous les fichiers
+        </button>
+        <button id="restartButton" class="button button-secondary">
+          ↻ Recommencer
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/compress.js"></script>
+</body>
+</html> 

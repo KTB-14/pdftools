@@ -1,33 +1,34 @@
 from celery import Celery, states
 from celery.exceptions import Ignore
 from app.services.ocr.ocr_service import OCRService
-from app.services.ocr.zip_service import ZipService
-from app.config import CELERY_BROKER_URL, CELERY_RESULT_BACKEND
+from app.config import config
+from app.logger import logger
 
-# Initialisation de l'application Celery
 celery_app = Celery(
     "ocr_tasks",
-    broker=CELERY_BROKER_URL,           # Redis utilisé comme broker (file d’attente)
-    backend=CELERY_RESULT_BACKEND       # Redis pour stocker les résultats
+    broker=config.CELERY_BROKER_URL,
+    backend=config.CELERY_RESULT_BACKEND
 )
 
 @celery_app.task(bind=True, name="ocr_task", acks_late=True)
 def ocr_task(self, job_id: str):
-    """
-    Tâche asynchrone principale appelée lors d’un upload :
-    - Lance le traitement OCR du job
-    - Crée une archive ZIP des fichiers générés
+    logger.info(f"[{job_id}] ➤ Tâche OCR lancée")
 
-    En cas d’erreur, l'état Celery est mis en échec (FAILURE).
-    """
     try:
         self.update_state(state="PROCESSING", meta="Démarrage du traitement OCR")
+        logger.info(f"[{job_id}] ➤ Traitement OCR en cours...")
+
         ocr = OCRService(job_id)
         ocr.process()
-        archive = ZipService.make_archive(job_id)
-        return {"archive_path": archive}
+
+        logger.info(f"[{job_id}] ✅ OCR terminé avec succès")
+        return {"status": "done"}  
 
     except Exception as exc:
-        # Enregistre l’erreur dans l’état Celery et interrompt proprement
+        logger.exception(f"[{job_id}] ❌ Erreur lors du traitement OCR : {exc}")
         self.update_state(state=states.FAILURE, meta=str(exc))
         raise Ignore()
+
+    finally:
+        logger.info(f"[{job_id}] 🔚 Fin de tâche OCR (avec ou sans succès)")
+ 

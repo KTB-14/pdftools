@@ -7,7 +7,6 @@
 - Téléversement de plusieurs fichiers PDF
 - Traitement asynchrone (via Celery)
 - OCR + compression automatique (`ocrmypdf`)
-- Archivage au format ZIP des résultats
 - Suivi du statut du job en temps réel
 - Interface Web HTML simple
 
@@ -19,7 +18,3 @@
 - **ocrmypdf** (OCR & compression PDF)
 - **Uvicorn** (serveur ASGI)
 - **HTML/JavaScript** (frontend simple)
-
-## Arborescence
-
-Voir `install/README_INSTALL.md` pour l'installation et `backend/requirements.txt` pour les dépendances Python.
