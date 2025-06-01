@@ -7,8 +7,7 @@ from app.config import config
 from app.logger import logger
 from worker.tasks import ocr_task
 from pathlib import Path
-from urllib.parse import unquote   
-import os                        
+from app.utils.filename_utils import secure_filename            
 
 router = APIRouter()
 
@@ -30,8 +29,7 @@ async def upload_files(files: List[UploadFile] = File(...)):
 
     for file in files:
         # --- ✅ Fix unsafe filenames ---
-        safe_filename = unquote(file.filename)
-        safe_filename = os.path.basename(safe_filename)
+        safe_filename = secure_filename(file.filename)
         dest = job_in_dir / safe_filename
         # -------------------------------
 

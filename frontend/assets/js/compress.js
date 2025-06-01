@@ -122,22 +122,22 @@ async function checkStatus(jobId, fileItems) {
 
     if (data.status === 'done' && data.files) {
       downloadAllSection.classList.remove('hidden');
-      data.files.forEach(filename => {
-        const originalName = filename.replace('_compressed.pdf', '.pdf');
-        const fileItem = [...fileItems.entries()].find(([decodedName]) => {
-          return decodedName === originalName;
-        })?.[1];
-        
+
+      data.files.forEach(fileInfo => {
+        const originalName = fileInfo.original;
+        const outputName = fileInfo.output;
+
+        const fileItem = fileItems.get(originalName);
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, filename);
+          downloadButton.onclick = () => downloadFile(jobId, outputName);
         }
       });
 
-      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
+      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files.map(f => f.output));
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
@@ -172,13 +172,13 @@ async function downloadFile(jobId, filename) {
   }
 }
 
-async function downloadAllFiles(jobId, files) {
-  if (!files || files.length === 0) {
+async function downloadAllFiles(jobId, filenames) {
+  if (!filenames || filenames.length === 0) {
     showError('Aucun fichier disponible');
     return;
   }
 
-  for (const filename of files) {
+  for (const filename of filenames) {
     await downloadFile(jobId, filename);
   }
 }
@@ -188,4 +188,4 @@ function showError(message) {
   errorDiv.className = 'error-message';
   errorDiv.textContent = message;
   fileList.appendChild(errorDiv);
-} 
+}

@@ -84,7 +84,10 @@ class OCRService:
                     **ocr_args
                 )
 
-                output_files.append(out_name)
+                output_files.append(
+                    {"original": filename, "output": out_name}
+                )
+
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
             self._write_status("done", "Traitement OCR terminé avec succès", output_files)
