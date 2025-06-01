@@ -44,14 +44,19 @@ class OCRService:
 
             for filename in files:
                 input_path = self.input_dir / filename
-                stem = Path(filename).stem
-                ext = Path(filename).suffix
-                out_name = f"{stem}_compressed{ext}"
+                path = Path(filename)
+                stem = path.stem
+                suffix = path.suffix.lower()
+
+                if suffix != '.pdf':
+                    suffix = '.pdf'
+
+                out_name = f"{stem}_compressed{suffix}"
                 output_path = self.output_dir / out_name
 
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
-                # 🔍 Détection "tagged PDF"
+                # Détection "tagged PDF"
                 try:
                     with pikepdf.open(str(input_path)) as pdf:
                         is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
@@ -59,7 +64,6 @@ class OCRService:
                     logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
                     is_tagged = False
 
-                # 🧠 Choix intelligent des options
                 if is_tagged:
                     logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
                     ocr_args = {
