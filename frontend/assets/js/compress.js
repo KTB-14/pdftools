@@ -20,7 +20,7 @@ function formatFileSize(bytes) {
 function createFileItem(file) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
-  fileItem.dataset.originalName = file.name.trim();  // Stocker le nom original proprement
+  fileItem.dataset.originalName = file.name.trim();
 
   fileItem.innerHTML = `
     <div class="file-info">
@@ -129,9 +129,13 @@ async function checkStatus(jobId) {
         const fileItem = [...fileList.children].find(item => item.dataset.originalName === originalName);
 
         if (fileItem) {
-          const progressFill = fileItem.querySelector('.progress-fill');
+          const progressContainer = fileItem.querySelector('.progress-container');
           const downloadButton = fileItem.querySelector('.download-button');
-          progressFill.style.width = '100%';
+
+          // Cache la barre de progression
+          progressContainer.style.display = 'none';
+
+          // Affiche le bouton
           downloadButton.classList.remove('hidden');
           downloadButton.onclick = () => downloadFile(jobId, outputName);
         }
@@ -143,7 +147,7 @@ async function checkStatus(jobId) {
     } else {
       [...fileList.children].forEach((fileItem) => {
         const progressFill = fileItem.querySelector('.progress-fill');
-        progressFill.style.width = '50%';
+        progressFill.style.width = '50%'; // Barre en attente (visuel)
       });
       setTimeout(() => checkStatus(jobId), 2000);
     }

@@ -177,14 +177,14 @@ body {
   background-color: var(--gray-300);
 }
 
-/* Force display and align download button properly */
+/* DOWNLOAD BUTTON (Individuel) */
 .download-button {
   display: inline-block;
-  justify-self: end;
-  align-self: center;
+  justify-self: end;   /* place it at the right of the grid */
+  align-self: center;  /* center vertically in the grid row */
 }
 
-/* DOWNLOAD SECTION */
+/* DOWNLOAD SECTION (Télécharger tous les fichiers) */
 .download-section {
   text-align: center;
   margin-top: 2rem;
