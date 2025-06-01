@@ -83,7 +83,8 @@ body {
   margin-bottom: 2rem;
 }
 
-.dropzone:hover, .dropzone.hover {
+.dropzone:hover,
+.dropzone.hover {
   background-color: #fbeaea;
   border-color: var(--primary-dark);
 }
@@ -176,6 +177,11 @@ body {
   background-color: var(--gray-300);
 }
 
+/* Force display for download-button */
+.download-button {
+  display: inline-block;
+}
+
 /* DOWNLOAD SECTION */
 .download-section {
   text-align: center;
@@ -226,4 +232,4 @@ body {
   .button {
     width: 100%;
   }
-} 
+}
