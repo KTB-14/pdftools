@@ -100,7 +100,7 @@ body {
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 2fr 3fr; /* ✅ 2 colonnes : info + barre/bouton */
   gap: 1rem;
   align-items: center;
 }

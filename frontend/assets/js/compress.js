@@ -106,9 +106,11 @@ async function uploadFiles(files) {
     }
 
     const { job_id } = await uploadRes.json();
+    console.log('[DEBUG] Upload réussi. Job ID :', job_id);
     await checkStatus(job_id);
 
   } catch (error) {
+    console.error('[DEBUG] Erreur upload :', error.message);
     showError(error.message);
     dropzone.classList.remove('hidden');
   }
@@ -119,10 +121,16 @@ async function checkStatus(jobId) {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
 
+    console.log('[DEBUG] checkStatus data :', data);
+
     if (data.status === 'done' && data.files) {
+      console.log('[DEBUG] OCR terminé avec succès');
+
       downloadAllSection.classList.remove('hidden');
 
       data.files.forEach(fileInfo => {
+        console.log('[DEBUG] Fichier traité :', fileInfo);
+
         const originalName = fileInfo.original.trim();
         const outputName = fileInfo.output;
 
@@ -132,20 +140,27 @@ async function checkStatus(jobId) {
           const progressBar = fileItem.querySelector('.progress-bar');
           const downloadButton = fileItem.querySelector('.download-button');
 
+          console.log('[DEBUG] ProgressBar trouvé :', progressBar);
+          console.log('[DEBUG] DownloadButton trouvé :', downloadButton);
+
           // Cache la barre de progression
           progressBar.style.display = 'none';
-
           // Affiche le bouton
           downloadButton.classList.remove('hidden');
+          console.log('[DEBUG] Bouton affiché.');
 
           downloadButton.onclick = () => downloadFile(jobId, outputName);
+        } else {
+          console.warn('[DEBUG] Aucun fileItem trouvé pour :', originalName);
         }
       });
 
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files.map(f => f.output));
     } else if (data.status === 'error') {
+      console.error('[DEBUG] Erreur dans le traitement OCR :', data.details);
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
+      console.log('[DEBUG] OCR en cours...');
       [...fileList.children].forEach((fileItem) => {
         const progressFill = fileItem.querySelector('.progress-fill');
         progressFill.style.width = '50%'; // Barre en attente (visuel)
@@ -153,6 +168,7 @@ async function checkStatus(jobId) {
       setTimeout(() => checkStatus(jobId), 2000);
     }
   } catch (error) {
+    console.error('[DEBUG] Erreur checkStatus :', error.message);
     showError(error.message);
     dropzone.classList.remove('hidden');
   }
