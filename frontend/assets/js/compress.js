@@ -20,6 +20,8 @@ function formatFileSize(bytes) {
 function createFileItem(file) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
+  fileItem.dataset.originalName = file.name.trim();  // Stocker le nom original proprement
+
   fileItem.innerHTML = `
     <div class="file-info">
       <div class="file-name">${file.name}</div>
@@ -82,7 +84,6 @@ async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
   dropzone.classList.add('hidden');
-  const fileItems = new Map();
 
   try {
     const formData = new FormData();
@@ -93,7 +94,6 @@ async function uploadFiles(files) {
       formData.append('files', file);
       const fileItem = createFileItem(file);
       fileList.appendChild(fileItem);
-      fileItems.set(file.name.trim(), fileItem); // Stockage propre
     }
 
     const uploadRes = await fetch(`${API_BASE}/upload`, {
@@ -106,7 +106,7 @@ async function uploadFiles(files) {
     }
 
     const { job_id } = await uploadRes.json();
-    await checkStatus(job_id, fileItems);
+    await checkStatus(job_id);
 
   } catch (error) {
     showError(error.message);
@@ -114,7 +114,7 @@ async function uploadFiles(files) {
   }
 }
 
-async function checkStatus(jobId, fileItems) {
+async function checkStatus(jobId) {
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
@@ -122,12 +122,12 @@ async function checkStatus(jobId, fileItems) {
     if (data.status === 'done' && data.files) {
       downloadAllSection.classList.remove('hidden');
 
-      // Mise à jour correcte pour 'original' et 'output'
       data.files.forEach(fileInfo => {
         const originalName = fileInfo.original.trim();
         const outputName = fileInfo.output;
 
-        const fileItem = fileItems.get(originalName);
+        const fileItem = [...fileList.children].find(item => item.dataset.originalName === originalName);
+
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
@@ -141,11 +141,11 @@ async function checkStatus(jobId, fileItems) {
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
-      fileItems.forEach((fileItem) => {
+      [...fileList.children].forEach((fileItem) => {
         const progressFill = fileItem.querySelector('.progress-fill');
         progressFill.style.width = '50%';
       });
-      setTimeout(() => checkStatus(jobId, fileItems), 2000);
+      setTimeout(() => checkStatus(jobId), 2000);
     }
   } catch (error) {
     showError(error.message);
