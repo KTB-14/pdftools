@@ -20,9 +20,14 @@ class JobOut(BaseModel):
     status: JobStatus
 
 # Schéma complet du statut, utilisé pour le endpoint /status/{job_id}
+class FileEntry(BaseModel):
+    original: str
+    output: str
+
 class StatusOut(BaseModel):
     job_id: str
     status: JobStatus
     details: Optional[str] = None
-    files: Optional[List[str]] = None
+    files: Optional[List[FileEntry]] = None
+
  
