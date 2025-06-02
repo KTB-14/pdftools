@@ -129,6 +129,7 @@ async function checkStatus(jobId, fileItems) {
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
+          downloadButton.setAttribute('data-filename', outputName);
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
           downloadButton.onclick = () => downloadFile(jobId, outputName);
