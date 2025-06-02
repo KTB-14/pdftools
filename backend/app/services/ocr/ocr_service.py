@@ -17,6 +17,13 @@ class OCRService:
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
 
+        # ✅ Charger uniquement file_ids pour status.json
+        self.file_ids = {}
+        file_ids_path = self.job_dir / "file_ids.json"
+        if file_ids_path.exists():
+            with open(file_ids_path, "r", encoding="utf-8") as f:
+                self.file_ids = json.load(f)
+
     def _write_status(self, status: str, details: str = None, files: list = None):
         data = {
             "job_id": self.job_id,
@@ -71,7 +78,7 @@ class OCRService:
                         "redo_ocr": False,
                         "force_ocr": False,
                         "skip_text": True,
-                        "output_type": "pdf"  
+                        "output_type": "pdf"
                     }
                 else:
                     logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
@@ -88,13 +95,11 @@ class OCRService:
                     **ocr_args
                 )
 
-                # 📝 Construire aussi le nom final pour l'utilisateur
-                final_name = f"{path.stem}_compressed{path.suffix}"
-
+                # ✅ Ici on ajoute juste l'ID — le reste ne bouge PAS
                 output_files.append({
-                    "original": filename,        # Nom envoyé par l'utilisateur
-                    "output": out_name,           # Nom safe disque
-                    "final_name": final_name      # Nom affiché à l'utilisateur
+                    "id": self.file_ids.get(filename, ""),  # seulement ça ajouté
+                    "original": filename,
+                    "output": out_name
                 })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
