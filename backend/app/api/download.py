@@ -39,35 +39,21 @@ def download_single_or_multiple(job_id: str):
         raise HTTPException(status_code=500, detail=f"Erreur : {e}")
 
 
-@router.get("/download/{job_id}/{original_name}")
-def download_specific_file(job_id: str, original_name: str):
-    status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
-    if not status_path.exists():
-        raise HTTPException(status_code=404, detail="Status non trouvé")
+@router.get("/download/{job_id}/{filename}")
+def download_specific_file(job_id: str, filename: str):
+    """
+    Permet de télécharger un fichier PDF individuel traité
+    """
+    file_path = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR / filename
+    logger.info(f"[{job_id}] 📨 Requête de téléchargement fichier individuel : {filename}")
 
-    try:
-        with open(status_path, "r", encoding="utf-8") as f:
-            status_data = json.load(f)
+    if not file_path.exists() or not file_path.is_file():
+        logger.warning(f"[{job_id}] ❌ Fichier {filename} introuvable")
+        raise HTTPException(status_code=404, detail="Fichier non trouvé")
 
-        file_entry = next(
-            (f for f in status_data.get("files", []) if f["original"] == original_name),
-            None
-        )
-
-        if not file_entry:
-            raise HTTPException(status_code=404, detail="Fichier non trouvé dans le status")
-
-        file_path = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR / file_entry["output"]
-
-        if not file_path.exists():
-            raise HTTPException(status_code=404, detail="Fichier compressé non trouvé")
-
-        return FileResponse(
-            path=str(file_path),
-            filename=original_name,
-            media_type="application/pdf"
-        )
-
-    except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur pendant le téléchargement : {e}")
-        raise HTTPException(status_code=500, detail=f"Erreur : {str(e)}")
+    return FileResponse(
+        path=str(file_path),
+        filename=filename,
+        media_type="application/pdf"
+    )
+ 
