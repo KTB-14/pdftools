@@ -7,7 +7,10 @@ const downloadAllSection = document.getElementById('downloadAll');
 const downloadAllButton = document.getElementById('downloadAllButton');
 const restartButton = document.getElementById('restartButton');
 
-// Format file size
+function generateUniqueId() {
+  return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+}
+
 function formatFileSize(bytes) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -16,7 +19,6 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Create file item element
 function createFileItem(file) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
@@ -30,14 +32,13 @@ function createFileItem(file) {
         <div class="progress-fill" style="width: 0%"></div>
       </div>
     </div>
-    <button class="button button-secondary download-button hidden" data-filename="${file.name}">
+    <button class="button button-secondary download-button hidden">
       Télécharger
     </button>
   `;
   return fileItem;
 }
 
-// Reset the interface
 function resetInterface() {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
@@ -45,7 +46,6 @@ function resetInterface() {
   fileInput.value = '';
 }
 
-// Event listeners
 selectBtn.onclick = () => fileInput.click();
 restartButton.onclick = resetInterface;
 
@@ -82,20 +82,24 @@ async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
   dropzone.classList.add('hidden');
+
   const fileItems = new Map();
+  const fileIdMap = {};
+
+  const formData = new FormData();
+  for (const file of files) {
+    const id = generateUniqueId();
+    fileIdMap[file.name] = id;
+    formData.append('files', file);
+
+    const fileItem = createFileItem(file);
+    fileList.appendChild(fileItem);
+    fileItems.set(id, fileItem);
+  }
+
+  formData.append('file_ids', JSON.stringify(fileIdMap));
 
   try {
-    const formData = new FormData();
-    for (const file of files) {
-      if (file.type !== 'application/pdf') {
-        throw new Error('Tous les fichiers doivent être au format PDF');
-      }
-      formData.append('files', file);
-      const fileItem = createFileItem(file);
-      fileList.appendChild(fileItem);
-      fileItems.set(file.name, fileItem);
-    }
-
     const uploadRes = await fetch(`${API_BASE}/upload`, {
       method: 'POST',
       body: formData
@@ -122,26 +126,21 @@ async function checkStatus(jobId, fileItems) {
     if (data.status === 'done' && data.files) {
       downloadAllSection.classList.remove('hidden');
       data.files.forEach(fileInfo => {
-        const originalName = fileInfo.original;
-        const outputName = fileInfo.output;
-        
-        const fileItem = fileItems.get(originalName);
+        const fileItem = fileItems.get(fileInfo.id);
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
-          downloadButton.setAttribute('data-filename', outputName);
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, outputName);
+          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id);
         }
       });
 
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
-
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
-      fileItems.forEach((fileItem) => {
+      fileItems.forEach(fileItem => {
         const progressFill = fileItem.querySelector('.progress-fill');
         progressFill.style.width = '50%';
       });
@@ -153,16 +152,16 @@ async function checkStatus(jobId, fileItems) {
   }
 }
 
-async function downloadFile(jobId, filename) {
+async function downloadFile(jobId, fileId) {
   try {
-    const response = await fetch(`${API_BASE}/download/${jobId}/${filename}`);
+    const response = await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
     if (!response.ok) throw new Error('Erreur lors du téléchargement');
-    
+
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename;
+    a.download = 'document.pdf'; // Le serveur renverra le vrai nom original
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -179,7 +178,7 @@ async function downloadAllFiles(jobId, files) {
   }
 
   for (const fileInfo of files) {
-    await downloadFile(jobId, fileInfo.output);
+    await downloadFile(jobId, fileInfo.id);
   }
 }
 
