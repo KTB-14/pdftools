@@ -88,9 +88,14 @@ class OCRService:
                     **ocr_args
                 )
 
-                output_files.append(
-                    {"original": filename, "output": out_name}
-                )
+                # 📝 Construire aussi le nom final pour l'utilisateur
+                final_name = f"{path.stem}_compressed{path.suffix}"
+
+                output_files.append({
+                    "original": filename,        # Nom envoyé par l'utilisateur
+                    "output": out_name,           # Nom safe disque
+                    "final_name": final_name      # Nom affiché à l'utilisateur
+                })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
@@ -99,4 +104,4 @@ class OCRService:
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
             self._write_status("error", str(e))
-            raise 
+            raise

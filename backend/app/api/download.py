@@ -4,15 +4,12 @@ from app.config import config
 from app.logger import logger
 from pathlib import Path
 import json
+from urllib.parse import unquote
 
 router = APIRouter()
 
 @router.get("/download/{job_id}")
 def download_single_or_multiple(job_id: str):
-    """
-    Si un seul fichier a été généré → téléchargement direct.
-    Sinon → inviter à utiliser /download/{job_id}/{filename}
-    """
     output_dir = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR
     status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
 
@@ -41,7 +38,6 @@ def download_single_or_multiple(job_id: str):
         logger.exception(f"[{job_id}] ❌ Erreur pendant la tentative de téléchargement : {e}")
         raise HTTPException(status_code=500, detail=f"Erreur : {e}")
 
-
 @router.get("/download/{job_id}/{original_name}")
 def download_specific_file(job_id: str, original_name: str):
     status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
@@ -52,8 +48,11 @@ def download_specific_file(job_id: str, original_name: str):
         with open(status_path, "r", encoding="utf-8") as f:
             status_data = json.load(f)
 
+        from urllib.parse import unquote
+        original_name_decoded = unquote(original_name)
+
         file_entry = next(
-            (f for f in status_data.get("files", []) if f["original"] == original_name),
+            (f for f in status_data.get("files", []) if f["original"] == original_name_decoded),
             None
         )
 
@@ -67,7 +66,7 @@ def download_specific_file(job_id: str, original_name: str):
 
         return FileResponse(
             path=str(file_path),
-            filename=original_name,
+            filename=file_entry["final_name"],  # 🟢 Envoie final_name ici
             media_type="application/pdf"
         )
 
