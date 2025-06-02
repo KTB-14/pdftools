@@ -83,8 +83,7 @@ body {
   margin-bottom: 2rem;
 }
 
-.dropzone:hover,
-.dropzone.hover {
+.dropzone:hover, .dropzone.hover {
   background-color: #fbeaea;
   border-color: var(--primary-dark);
 }
@@ -100,7 +99,7 @@ body {
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 3fr; /* ✅ 2 colonnes : info + barre/bouton */
+  grid-template-columns: 2fr 3fr auto;
   gap: 1rem;
   align-items: center;
 }
@@ -122,12 +121,9 @@ body {
   font-size: 0.875rem;
 }
 
-/* PROGRESS & DOWNLOAD */
-.progress-download-container {
+/* PROGRESS BAR */
+.progress-container {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .progress-bar {
@@ -143,10 +139,6 @@ body {
   background: var(--primary);
   width: 0%;
   transition: width 0.3s ease;
-}
-
-.download-button {
-  display: inline-block;
 }
 
 /* BUTTONS */

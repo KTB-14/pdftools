@@ -20,21 +20,19 @@ function formatFileSize(bytes) {
 function createFileItem(file) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
-  fileItem.dataset.originalName = file.name.trim();
-
   fileItem.innerHTML = `
     <div class="file-info">
       <div class="file-name">${file.name}</div>
       <div class="file-size">${formatFileSize(file.size)}</div>
     </div>
-    <div class="progress-download-container">
+    <div class="progress-container">
       <div class="progress-bar">
         <div class="progress-fill" style="width: 0%"></div>
       </div>
-      <button class="button button-secondary download-button hidden" data-filename="${file.name}">
-        Télécharger
-      </button>
     </div>
+    <button class="button button-secondary download-button hidden" data-filename="${file.name}">
+      Télécharger
+    </button>
   `;
   return fileItem;
 }
@@ -84,6 +82,7 @@ async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
   dropzone.classList.add('hidden');
+  const fileItems = new Map();
 
   try {
     const formData = new FormData();
@@ -92,10 +91,9 @@ async function uploadFiles(files) {
         throw new Error('Tous les fichiers doivent être au format PDF');
       }
       formData.append('files', file);
-      const decodedName = decodeURIComponent(file.name);
       const fileItem = createFileItem(file);
       fileList.appendChild(fileItem);
-      fileItems.set(decodedName, fileItem);  
+      fileItems.set(file.name, fileItem);
     }
 
     const uploadRes = await fetch(`${API_BASE}/upload`, {
@@ -108,67 +106,47 @@ async function uploadFiles(files) {
     }
 
     const { job_id } = await uploadRes.json();
-    console.log('[DEBUG] Upload réussi. Job ID :', job_id);
-    await checkStatus(job_id);
+    await checkStatus(job_id, fileItems);
 
   } catch (error) {
-    console.error('[DEBUG] Erreur upload :', error.message);
     showError(error.message);
     dropzone.classList.remove('hidden');
   }
 }
 
-async function checkStatus(jobId) {
+async function checkStatus(jobId, fileItems) {
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
 
-    console.log('[DEBUG] checkStatus data :', data);
-
     if (data.status === 'done' && data.files) {
-      console.log('[DEBUG] OCR terminé avec succès');
-
       downloadAllSection.classList.remove('hidden');
-
       data.files.forEach(fileInfo => {
         const originalName = fileInfo.original;
         const outputName = fileInfo.output;
-
-        const fileItem = [...fileList.children].find(item => item.dataset.originalName === originalName);
-
+        
+        const fileItem = fileItems.get(originalName);
         if (fileItem) {
-          const progressBar = fileItem.querySelector('.progress-bar');
+          const progressFill = fileItem.querySelector('.progress-fill');
           const downloadButton = fileItem.querySelector('.download-button');
-
-          console.log('[DEBUG] ProgressBar trouvé :', progressBar);
-          console.log('[DEBUG] DownloadButton trouvé :', downloadButton);
-
-          // Cache la barre de progression
-          progressBar.style.display = 'none';
-          // Affiche le bouton
+          progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          console.log('[DEBUG] Bouton affiché.');
-
           downloadButton.onclick = () => downloadFile(jobId, outputName);
-        } else {
-          console.warn('[DEBUG] Aucun fileItem trouvé pour :', originalName);
         }
       });
 
-      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files.map(f => f.output));
+      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
+
     } else if (data.status === 'error') {
-      console.error('[DEBUG] Erreur dans le traitement OCR :', data.details);
       throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
     } else {
-      console.log('[DEBUG] OCR en cours...');
-      [...fileList.children].forEach((fileItem) => {
+      fileItems.forEach((fileItem) => {
         const progressFill = fileItem.querySelector('.progress-fill');
-        progressFill.style.width = '50%'; // Barre en attente (visuel)
+        progressFill.style.width = '50%';
       });
-      setTimeout(() => checkStatus(jobId), 2000);
+      setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
   } catch (error) {
-    console.error('[DEBUG] Erreur checkStatus :', error.message);
     showError(error.message);
     dropzone.classList.remove('hidden');
   }
@@ -193,14 +171,14 @@ async function downloadFile(jobId, filename) {
   }
 }
 
-async function downloadAllFiles(jobId, filenames) {
-  if (!filenames || filenames.length === 0) {
+async function downloadAllFiles(jobId, files) {
+  if (!files || files.length === 0) {
     showError('Aucun fichier disponible');
     return;
   }
 
-  for (const filename of filenames) {
-    await downloadFile(jobId, filename);
+  for (const fileInfo of files) {
+    await downloadFile(jobId, fileInfo.output);
   }
 }
 
