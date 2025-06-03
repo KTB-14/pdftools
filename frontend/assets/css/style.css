@@ -1,10 +1,6 @@
-/* RESET & BASE */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* ----------------------------------------------
+   Variables de couleur
+---------------------------------------------- */
 :root {
   --primary: #7b222e;
   --primary-dark: #5c1a22;
@@ -13,12 +9,20 @@
   --gray-300: #dee2e6;
   --gray-600: #6c757d;
   --gray-800: #343a40;
-  --status-yellow: #f6c23e;   /* Jaune/orange pour upload/processing */
-  --status-green: #1cc88a;    /* Vert pour terminé */
-  --status-blue: #36b9cc;     /* Bleu pour téléchargement en cours */
+  --yellow: #f59e0b;
+  --green: #16a34a;
+  --red: #dc2626;
 }
 
-/* Corps général */
+/* ----------------------------------------------
+   Réinitialisation de base
+---------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--gray-100);
@@ -28,7 +32,9 @@ body {
   flex-direction: column;
 }
 
-/* HEADER FIXE */
+/* ----------------------------------------------
+   Header fixe
+---------------------------------------------- */
 .header-container {
   background-color: var(--primary);
   color: white;
@@ -38,73 +44,153 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.header-container a.return-button {
+  color: white;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+.header-container a.return-button:hover {
+  text-decoration: underline;
+}
+
 .header-container h1 {
   font-size: 1.5rem;
   margin: 0;
 }
-.return-button {
-  color: white;
-  text-decoration: none;
-  display: inline-block;
-  margin-bottom: 0.5rem;
-}
-.return-button:hover {
-  text-decoration: underline;
-}
+
 .header-space {
-  height: 100px; /* pour laisser de l’espace sous le header fix */
+  height: 72px; /* Hauteur approximative du header pour laisser de l’espace */
 }
 
-/* CONTENU PRINCIPAL */
+/* ----------------------------------------------
+   Conteneur principal
+---------------------------------------------- */
 .container {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 1rem;
+  flex: 1;
 }
 
-/* BARRE D’ACTIONS (Télécharger tous / Recommencer) */
-.action-bar {
+/* ----------------------------------------------
+   Barre d’actions (sticky au-dessus du contenu)
+---------------------------------------------- */
+#actionBar {
   display: flex;
   gap: 1rem;
-  justify-content: flex-end;
   margin-bottom: 1rem;
-}
-.action-bar.hidden {
-  display: none;
+  position: sticky;
+  top: 72px; /* Sous le header fixe */
+  background-color: white;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  z-index: 50;
 }
 
-/* SECTION UPLOAD */
+#actionBar .button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#actionBar .button:hover {
+  transform: translateY(-2px);
+}
+
+#actionBar .button:disabled {
+  background-color: var(--gray-300);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ----------------------------------------------
+   Boutons génériques
+---------------------------------------------- */
+.button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.button:disabled {
+  background-color: var(--gray-300);
+  cursor: not-allowed;
+}
+
+.button.button-secondary {
+  background-color: var(--gray-200);
+  color: var(--gray-800);
+}
+
+.button.button-secondary:hover {
+  background-color: var(--gray-300);
+}
+
+/* ----------------------------------------------
+   Zone d’upload (dropzone)
+---------------------------------------------- */
 .upload-section {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   padding: 2rem;
+  position: relative;
+  margin-bottom: 2rem;
 }
 
-/* DROPZONE */
 .dropzone {
   border: 2px dashed var(--primary);
   padding: 2rem;
   border-radius: 10px;
   background-color: white;
-  transition: all 0.3s ease;
-  margin-bottom: 2rem;
   text-align: center;
+  transition: background-color 0.3s, border-color 0.3s;
+  margin-bottom: 1rem;
 }
-.dropzone:hover,
+
 .dropzone.hover {
-  background-color: #fdf0f0;
+  background-color: #fbeaea;
   border-color: var(--primary-dark);
 }
 
-/* LISTE DES FICHIERS */
-.file-list {
-  margin-top: 1rem;
+.dropzone p {
+  margin-bottom: 1rem;
+  color: var(--gray-800);
 }
 
-/* ÉLÉMENT PAR FICHIER */
+.dropzone button {
+  margin-bottom: 0.5rem;
+}
+
+/* ----------------------------------------------
+   Liste des fichiers en cours / traités
+---------------------------------------------- */
+.file-list {
+  margin-top: 1.5rem;
+}
+
+/* Chaque élément de fichier */
 .file-item {
   background: var(--gray-100);
   border-radius: 8px;
@@ -116,10 +202,18 @@ body {
   align-items: center;
 }
 
-/* Partie « nom + taille » */
+.file-item[data-file-status="processing"] {
+  border-left: 4px solid var(--yellow);
+}
+
+.file-item[data-file-status="processed"] {
+  border-left: 4px solid var(--green);
+}
+
 .file-info {
   min-width: 0;
 }
+
 .file-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -127,20 +221,24 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .file-size {
   color: var(--gray-600);
   font-size: 0.875rem;
 }
 
-/* PROGRESSION ET STATUTS */
+/* Zone de progression */
 .status-area {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
+
 .progress-container {
   width: 100%;
 }
+
 .progress-bar {
   width: 100%;
   height: 8px;
@@ -148,6 +246,7 @@ body {
   border-radius: 4px;
   overflow: hidden;
 }
+
 .progress-fill {
   height: 100%;
   background: var(--primary);
@@ -155,137 +254,117 @@ body {
   transition: width 0.3s ease;
 }
 
-/* Texte de statut (uploading / processing / processed / downloading / downloaded) */
+/* Texte de statut */
 .status-text {
-  font-size: 0.9rem;
-  white-space: nowrap;
-  color: var(--gray-800);
-}
-.status-text.uploading {
-  color: var(--status-yellow);
-}
-.status-text.processing {
-  color: var(--status-yellow);
-}
-.status-text.processed {
-  color: var(--status-green);
-}
-.status-text.downloading {
-  color: var(--status-blue);
-}
-.status-text.downloaded {
-  color: var(--status-green);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-/* SPINNER (pour upload / processing / download) */
+.status-text.uploading {
+  color: var(--primary-dark);
+}
+
+.status-text.processing {
+  color: var(--yellow);
+}
+
+.status-text.processed {
+  color: var(--green);
+}
+
+.status-text.downloading {
+  color: var(--primary-dark);
+}
+
+.status-text.downloaded {
+  color: var(--green);
+}
+
+/* Spinner simple (circle border animé) */
 .spinner {
   display: none;
   width: 16px;
   height: 16px;
-  border: 3px solid var(--gray-300);
-  border-top: 3px solid var(--primary);
+  border: 2px solid var(--gray-300);
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  animation: spin 1s linear infinite;
 }
 
-/* CHECK ICON (✓) */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Check icon (✓) positionné : masqué par défaut */
 .check-icon {
   display: none;
-  color: var(--status-green);
+  color: var(--green);
   font-size: 1rem;
   font-weight: bold;
 }
 
-/* BOUTON « Télécharger » individuel */
+/* Lorsque ready : on affiche le ✓ */
+.check-icon.show {
+  display: block;
+}
+
+/* Bouton de téléchargement par fichier */
 .download-button {
-  background-color: var(--gray-200);
-  color: var(--gray-800);
   padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.download-button:hover:not(:disabled) {
-  background-color: var(--gray-300);
-}
-.download-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.download-button.hidden {
-  display: none !important;
 }
 
-/* BOUTONS GLOBAUX */
-.button {
-  background-color: var(--primary);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  display: inline-block;
-  white-space: nowrap;
-}
-.button:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-}
-.button:disabled {
-  background-color: var(--gray-300);
-  cursor: not-allowed;
-  transform: none;
-}
-.button-secondary {
-  background-color: var(--gray-200);
-  color: var(--gray-800);
-}
-.button-secondary:hover {
-  background-color: var(--gray-300);
-}
-
-/* SECTION RÉSUMÉ FINAL */
+/* ----------------------------------------------
+   Résumé final (liste des noms de fichiers)
+---------------------------------------------- */
 .summary-section {
   background: var(--gray-200);
   border-radius: 8px;
   padding: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
+
 .summary-section h2 {
+  font-size: 1rem;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-weight: 600;
 }
+
 .summary-section ul {
   list-style-type: disc;
   padding-left: 1.5rem;
 }
-.summary-section.hidden {
-  display: none;
+
+.summary-section li {
+  margin-bottom: 0.25rem;
+  color: var(--gray-800);
+  font-size: 0.9rem;
 }
 
-/* RWD / Responsive */
+/* ----------------------------------------------
+   Messages d’erreur
+---------------------------------------------- */
+.error-message {
+  background-color: #fef3f2;
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* ----------------------------------------------
+   Responsive
+---------------------------------------------- */
 @media (max-width: 768px) {
   .file-item {
     grid-template-columns: 1fr;
+    text-align: left;
   }
-  .status-area {
+
+  #actionBar {
     flex-direction: column;
-    align-items: flex-start;
-  }
-  .action-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .action-bar button {
-    width: 100%;
+    gap: 0.5rem;
   }
 }

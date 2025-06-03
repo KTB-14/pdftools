@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OCR & Compression – PDFTools</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
@@ -10,19 +10,19 @@
 <body>
   <!-- Header fixe -->
   <header class="header-container">
-    <a href="index.html" class="return-button">← Retour à l'accueil</a>
+    <a href="index.html" class="return-button">← Retour à l’accueil</a>
     <h1>OCR & Compression PDF</h1>
   </header>
   <div class="header-space"></div>
 
   <main class="container">
     <!-- Barre d’actions : Téléch. tous / Recommencer -->
-    <div id="actionBar" class="action-bar hidden">
-      <button id="downloadAllButton" class="button">Télécharger tous les fichiers</button>
+    <div id="actionBar" class="action-bar">
+      <button id="downloadAllButton" class="button" disabled>Télécharger tous les fichiers</button>
       <button id="restartButton" class="button button-secondary">↻ Recommencer</button>
     </div>
 
-    <!-- Section d’upload (dropzone) -->
+    <!-- Section Upload / Dropzone -->
     <section class="upload-section">
       <div id="dropzone" class="dropzone">
         <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
@@ -31,10 +31,13 @@
         <p class="text-muted">Format accepté : PDF uniquement</p>
       </div>
 
-      <!-- Zone où on listera chaque fichier pendant l’upload / traitement -->
+      <!-- Texte de statut global (upload + traitement) -->
+      <div id="globalStatus" class="status-text processing hidden">Traitement en cours…</div>
+
+      <!-- Liste des fichiers en cours / traités -->
       <div id="fileList" class="file-list"></div>
 
-      <!-- Résumé final (liste des originaux) -->
+      <!-- Résumé final (après traitement) -->
       <div id="summary" class="summary-section hidden"></div>
     </section>
   </main>
