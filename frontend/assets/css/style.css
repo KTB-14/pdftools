@@ -1,26 +1,19 @@
-/* ----------------------------------------------
-   Variables de couleur
----------------------------------------------- */
+/* RESET & BASE */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --primary: #7b222e;
   --primary-dark: #5c1a22;
-  --processing-color: #d08c00;   /* Jaune-orangé pour “en cours” */
-  --success-color: #1f8f4c;      /* Vert pour “terminé” */
-  --error-color: #b91c1c;        /* Rouge pour “erreur” */
+  --success: #28a745;
   --gray-100: #f4f6f9;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-600: #6c757d;
   --gray-800: #343a40;
-}
-
-/* ----------------------------------------------
-   Reset & Base
----------------------------------------------- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
@@ -32,9 +25,7 @@ body {
   flex-direction: column;
 }
 
-/* ----------------------------------------------
-   En-tête fixe
----------------------------------------------- */
+/* HEADER */
 .header-container {
   background-color: var(--primary);
   color: white;
@@ -64,92 +55,58 @@ body {
 }
 
 .header-space {
-  height: 100px; /* Correspond à la hauteur de header */
+  height: 100px;
 }
 
-/* ----------------------------------------------
-   Conteneur principal
----------------------------------------------- */
+/* MAIN CONTENT */
 .container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* ----------------------------------------------
-   Barre d’actions (au-dessus)
----------------------------------------------- */
-.action-bar {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.action-bar .button {
-  font-size: 1rem;
-}
-
-.action-bar .button-secondary {
-  background-color: var(--gray-200);
-  color: var(--gray-800);
-}
-
-.action-bar .button-secondary:hover {
-  background-color: var(--gray-300);
-}
-
-/* ----------------------------------------------
-   Section d’upload (dropzone)
----------------------------------------------- */
+/* UPLOAD SECTION */
 .upload-section {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   padding: 2rem;
   margin-bottom: 2rem;
-  position: relative;
 }
 
+/* DROPZONE */
 .dropzone {
   border: 2px dashed var(--primary);
   padding: 2rem;
   border-radius: 10px;
   background-color: white;
   transition: all 0.3s ease;
-  text-align: center;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
+.dropzone:hover,
 .dropzone.hover {
   background-color: #fbeaea;
   border-color: var(--primary-dark);
 }
 
-.dropzone.hidden {
-  display: none !important;
-}
-
-/* ----------------------------------------------
-   Zone de liste de fichiers
----------------------------------------------- */
+/* FILE LIST */
 .file-list {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* Chaque “file-item” */
 .file-item {
   background: var(--gray-100);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 3fr auto;
+  grid-template-columns: 2fr 1fr 2fr auto;
   gap: 1rem;
   align-items: center;
-  position: relative;
 }
 
-/* Zone info (nom & taille) */
 .file-info {
   min-width: 0;
 }
@@ -167,25 +124,86 @@ body {
   font-size: 0.875rem;
 }
 
-/* Zone status-area (progression + texte + icônes) */
+/* STATUS AREA */
 .status-area {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Barre de progression */
+.status-text {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+.status-text.uploading {
+  color: var(--gray-600);
+}
+
+.status-text.uploaded {
+  color: var(--success);
+}
+
+.status-text.processing {
+  color: var(--primary);
+}
+
+.status-text.processed {
+  color: var(--success);
+}
+
+.status-text.downloading {
+  color: var(--gray-600);
+}
+
+.status-text.downloaded {
+  color: var(--success);
+}
+
+/* SPINNER */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gray-300);
+  border-top: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* CHECK ICON */
+.check-icon {
+  font-size: 16px;
+  color: var(--success);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.check-icon.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* PROGRESS BAR (UPLOAD) */
 .progress-container {
   width: 100%;
+  background-color: var(--gray-200);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background: var(--gray-200);
-  border-radius: 4px;
-  overflow: hidden;
+  height: 6px;
+  background: var(--gray-300);
+  border-radius: 5px;
 }
 
 .progress-fill {
@@ -195,101 +213,79 @@ body {
   transition: width 0.3s ease;
 }
 
-/* Texte d’état (uploading, processing, etc.) */
-.status-text {
-  font-size: 0.875rem;
-}
-
-/* Couleur selon état */
-.status-text.uploading {
-  color: var(--processing-color);
-}
-
-.status-text.processing {
-  color: var(--processing-color);
-}
-
-.status-text.processed {
-  color: var(--success-color);
-}
-
-.status-text.downloading {
-  color: var(--processing-color);
-}
-
-.status-text.downloaded {
-  color: var(--success-color);
-}
-
-/* Spinner (indicateur de rotation) */
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--gray-200);
-  border-top: 2px solid var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  display: none; /* Affiché dynamiquement */
-}
-
-/* Icône ✓ */
-.check-icon {
-  font-size: 1rem;
-  color: var(--success-color);
-  display: none; /* Affiché dynamiquement */
-}
-
-.check-icon.show {
-  display: inline-block;
-}
-
-/* Bouton “Télécharger” */
-.download-button {
-  background-color: var(--gray-200);
-  color: var(--gray-800);
-  padding: 0.5rem 1rem;
+/* BUTTONS */
+.button {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
   white-space: nowrap;
 }
 
-.download-button:hover:not(:disabled) {
-  background-color: var(--gray-300);
+.button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
-.download-button:disabled {
+.button:disabled {
   background-color: var(--gray-300);
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Utilitaires */
+.button-secondary {
+  background-color: var(--gray-200);
+  color: var(--gray-800);
+}
+
+.button-secondary:hover {
+  background-color: var(--gray-300);
+}
+
+/* DOWNLOAD SECTION */
+.download-section {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* SUMMARY */
+.summary {
+  margin-top: 2rem;
+  background: var(--gray-100);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--gray-800);
+  border: 1px solid var(--gray-300);
+}
+
+.summary h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary ul {
+  margin-left: 1rem;
+  list-style-type: disc;
+  color: var(--gray-600);
+}
+
+/* UTILITIES */
 .hidden {
   display: none !important;
 }
 
-/* Section résumé final */
-.summary-section {
-  background: var(--gray-100);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-.summary-section h2 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  color: var(--gray-800);
-}
-
-.summary-section ul {
-  padding-left: 1.25rem;
-  color: var(--gray-800);
-  font-size: 0.9rem;
-}
-
-/* Message d’erreur */
+/* ERROR MESSAGE */
 .error-message {
   background-color: #fee2e2;
   border: 1px solid #ef4444;
@@ -299,23 +295,15 @@ body {
   margin: 1rem 0;
 }
 
-/* Responsive */
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
   .file-item {
     grid-template-columns: 1fr;
   }
-  .action-bar {
-    flex-direction: column;
-    gap: 0.5rem;
+  .status-area {
+    margin-top: 0.5rem;
   }
-  .action-bar .button {
+  .button {
     width: 100%;
-  }
-}
-
-/* Animation du spinner */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }
