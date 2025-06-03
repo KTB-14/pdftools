@@ -25,17 +25,13 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--gr
 .dropzone:hover,.dropzone.hover{background:#fbeaea;border-color:var(--primary-dark)}
 
 /* CARTE FICHIER ----------------------------------------------------- */
-.file-list{margin-top:1.5rem}
-.file-item{display:grid;grid-template-columns:1fr 180px 160px;align-items:center;gap:1rem;
-  background:#fff;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.06);padding:1.5rem;margin-bottom:1rem}
-@media(max-width:640px){
-  .file-item{grid-template-columns:1fr;grid-template-rows:auto auto auto}
-  .file-item>*{margin-top:.5rem}
-}
+.file-list {margin-top: 1.5rem;}
+.file-item {display: grid;grid-template-columns: 1fr 180px 160px;align-items: center;gap: 1rem;background: #fff;border-radius: 12px;box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);padding: 1.5rem;margin-bottom: 1rem;overflow: hidden; }
+@media (max-width: 640px) {.file-item {grid-template-columns: 1fr;grid-template-rows: auto auto auto;}.file-item > * {margin-top: 0.5rem;}}
 
 /* COLONNE 1 --------------------------------------------------------- */
-.file-info{min-width:0}
-.file-name{font-weight:600;margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-info{min-width:0;max-width: 100%;}
+.file-name{font-weight:600;margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display: block;max-width: 100%}
 .file-size{color:var(--gray-600);font-size:.875rem}
 
 /* COLONNE 2 : STATUT + PROGRESS ------------------------------------ */
