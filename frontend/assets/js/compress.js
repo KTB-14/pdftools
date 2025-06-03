@@ -158,7 +158,7 @@ async function uploadFiles(files) {
   xhr.send(formData);
 }
 
-async function beginProcessingPhase(fileItems, jobId) {
+async function beginProcessingPhase(fileItems, jobId){
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
     globalInfo.textContent = 'Traitement en cours…';
@@ -169,11 +169,15 @@ async function beginProcessingPhase(fileItems, jobId) {
     const statusText = fileItem.querySelector('.status-text');
     const spinner = fileItem.querySelector('.spinner');
     const checkIcon = fileItem.querySelector('.check-icon');
+    const progressFill = fileItem.querySelector('.progress-fill'); 
 
     statusText.textContent = 'Traitement en cours…';
     statusText.className = 'status-text processing';
     spinner.style.display = 'block';
     checkIcon.classList.remove('show');
+
+    // 🎯 NEW : Démarrer l'animation infinie
+    progressFill.classList.add('indeterminate');
   });
 
   await checkStatus(jobId, fileItems);
