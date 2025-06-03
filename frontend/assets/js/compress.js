@@ -132,7 +132,7 @@ async function checkStatus(jobId, fileItems) {
           const downloadButton = fileItem.querySelector('.download-button');
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id);
+          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
         }
       });
 
@@ -161,6 +161,7 @@ async function downloadFile(jobId, fileId) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
+    a.download = originalName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
