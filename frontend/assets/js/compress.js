@@ -13,7 +13,6 @@ function generateUniqueId(){
   return Math.random().toString(36).substring(2,10) + Date.now().toString(36);
 }
 
-// Convertit octets → unité lisible
 function formatFileSize(bytes){
   if (bytes === 0) return "0 Bytes";
   const k = 1024, sizes = ["Bytes", "KB", "MB", "GB"];
@@ -73,7 +72,12 @@ function resetInterface(){
 selectBtn.onclick = () => fileInput.click();
 restartButton.onclick = resetInterface;
 
-/* ------------- DRAG & DROP ------------------------------------------- */
+fileInput.onchange = (e) => {
+  if (e.target.files.length) {
+    uploadFiles(e.target.files);
+  }
+};
+
 ['dragenter', 'dragover'].forEach(evt => {
   dropzone.addEventListener(evt, e => {
     e.preventDefault();
@@ -95,7 +99,6 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-/* ------------ UPLOAD -------------------------------------------------- */
 async function uploadFiles(files){
   fileList.innerHTML = '';
   summaryDiv.classList.add('hidden');
@@ -112,9 +115,7 @@ async function uploadFiles(files){
 
     const fileItem = createFileItem(file, id);
     fileList.appendChild(fileItem);
-
-    // NEW: on stocke sizeBefore pour chaque fichier
-    fileItems.set(id, { fileItem, sizeBefore: file.size });
+    fileItems.set(id, { fileItem, fileName: file.name });
   }
   formData.append('file_ids', JSON.stringify(fileIdMap));
 
@@ -162,7 +163,6 @@ async function uploadFiles(files){
   xhr.send(formData);
 }
 
-/* -------- PROCESSING + CHECK STATUS ---------------------------------- */
 async function beginProcessingPhase(fileItems, jobId){
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
@@ -199,13 +199,12 @@ async function checkStatus(jobId, fileItems){
       data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
-        const { fileItem, sizeBefore } = entry;
+        const { fileItem } = entry;
 
         const statusText = fileItem.querySelector('.status-text');
         const spinner = fileItem.querySelector('.spinner');
         const checkIcon = fileItem.querySelector('.check-icon');
         const downloadButton = fileItem.querySelector('.download-button');
-        const sizeDiv = fileItem.querySelector('.file-size'); // NEW
 
         statusText.textContent = 'Traitement terminé ✓';
         statusText.className = 'status-text processed';
@@ -217,17 +216,17 @@ async function checkStatus(jobId, fileItems){
         downloadButton.addEventListener('click', () => {
           downloadFile(jobId, fileInfo.id, fileInfo.original);
         });
-
-        // NEW: affiche "taille avant → taille après"
-        sizeDiv.textContent = `${formatFileSize(sizeBefore)} → ${formatFileSize(fileInfo.size_after)}`;
       });
 
       summaryDiv.classList.remove('hidden');
+      // Si un seul fichier : cacher bouton "Télécharger tous les fichiers"
       if (data.files.length <= 1) {
         downloadAllButton.style.display = 'none';
       } else {
         downloadAllButton.style.display = 'inline-block';
       }
+
+      // Bind action      
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
       showSummary(data.files);
 
@@ -242,7 +241,6 @@ async function checkStatus(jobId, fileItems){
   }
 }
 
-/* ---------- DOWNLOAD FUNCTIONS -------------------------------------- */
 async function downloadFile(jobId, fileId, originalName){
   const selector = `.download-button[data-file-id="${fileId}"]`;
   const downloadButton = document.querySelector(selector);
@@ -296,7 +294,6 @@ async function downloadAllFiles(jobId, files){
   }
 }
 
-/* ------------ SUMMARY & ERRORS -------------------------------------- */
 function showSummary(files){
   const ul = summaryDiv.querySelector('ul');
   ul.innerHTML = '';
