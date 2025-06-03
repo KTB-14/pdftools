@@ -20,12 +20,10 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Crée l’élément DOM pour chaque fichier, avec son ID
 function createFileItem(file, id) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
 
-  // Nom + taille
   const infoDiv = document.createElement('div');
   infoDiv.className = 'file-info';
   infoDiv.innerHTML = `
@@ -33,7 +31,6 @@ function createFileItem(file, id) {
     <div class="file-size">${formatFileSize(file.size)}</div>
   `;
 
-  // Zone de progression + statut + spinner + check
   const statusDiv = document.createElement('div');
   statusDiv.className = 'status-area';
   statusDiv.innerHTML = `
@@ -47,11 +44,9 @@ function createFileItem(file, id) {
     <div class="check-icon">✓</div>
   `;
 
-  // Bouton “Télécharger” (initialement masqué)
   const downloadButton = document.createElement('button');
   downloadButton.className = 'button button-secondary download-button hidden';
   downloadButton.textContent = 'Télécharger';
-  // On stocke l’ID dans data-file-id
   downloadButton.dataset.fileId = id;
   downloadButton.dataset.original = file.name;
 
@@ -62,15 +57,15 @@ function createFileItem(file, id) {
 }
 
 function resetInterface() {
-  // Supprimer toute div .status-text existante
+  // 1) Supprime toutes les div .status-text (effacer « Téléversement… », « Traitement en cours… »…)
   document.querySelectorAll('.status-text').forEach(el => el.remove());
 
-  // Vider la liste de fichiers et masquer “Télécharger tous” + résumé
+  // 2) Vider la liste de fichiers + masquer “Télécharger tous” + résumé
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
   summaryDiv.classList.add('hidden');
 
-  // Ré-afficher la dropzone et vider fileInput
+  // 3) Ré-afficher la dropzone et vider le champ fileInput
   dropzone.classList.remove('hidden');
   fileInput.value = '';
 }
@@ -197,6 +192,13 @@ async function checkStatus(jobId, fileItems) {
     const data = await response.json();
 
     if (data.status === 'done' && data.files) {
+      const globalInfo = document.querySelector('.status-text.processing');
+      if (globalInfo) {
+        globalInfo.textContent = 'Traitement terminé ✓';
+        globalInfo.className = 'status-text processed';
+        globalInfo.remove();
+      }
+      
       data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
@@ -214,7 +216,6 @@ async function checkStatus(jobId, fileItems) {
 
         downloadButton.classList.remove('hidden');
         downloadButton.disabled = false;
-        // Ajout de l’écouteur de clic directement ici :
         downloadButton.addEventListener('click', () => {
           downloadFile(jobId, fileInfo.id, fileInfo.original);
         });
@@ -245,7 +246,6 @@ async function downloadFile(jobId, fileId, originalName) {
   const spinner = fileItem.querySelector('.spinner');
   const checkIcon = fileItem.querySelector('.check-icon');
 
-  // Désactiver bouton PENDANT téléchargement
   downloadButton.disabled = true;
   downloadButton.textContent = 'Téléchargement…';
   statusText.textContent = 'Téléchargement en cours…';
@@ -267,16 +267,13 @@ async function downloadFile(jobId, fileId, originalName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    // ✅ Succès
     statusText.textContent = 'Téléchargement terminé ✓';
     statusText.className = 'status-text downloaded';
     spinner.style.display = 'none';
     checkIcon.classList.add('show');
 
-    // ✅ Le bouton reste réactivé après téléchargement
     downloadButton.disabled = false;
     downloadButton.textContent = 'Télécharger à nouveau';
-
   } catch (error) {
     statusText.textContent = 'Erreur de téléchargement';
     statusText.className = 'status-text';
@@ -285,7 +282,6 @@ async function downloadFile(jobId, fileId, originalName) {
     downloadButton.textContent = 'Télécharger';
   }
 }
-
 
 async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
