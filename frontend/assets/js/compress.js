@@ -6,6 +6,7 @@ const fileList = document.getElementById('fileList');
 const downloadAllSection = document.getElementById('downloadAll');
 const downloadAllButton = document.getElementById('downloadAllButton');
 const restartButton = document.getElementById('restartButton');
+const summaryDiv = document.getElementById('summary');
 
 function generateUniqueId() {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
@@ -19,29 +20,48 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Crée l’élément DOM pour chaque fichier
 function createFileItem(file) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
-  fileItem.innerHTML = `
-    <div class="file-info">
-      <div class="file-name">${file.name}</div>
-      <div class="file-size">${formatFileSize(file.size)}</div>
-    </div>
+
+  // Nom et taille
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'file-info';
+  infoDiv.innerHTML = `
+    <div class="file-name">${file.name}</div>
+    <div class="file-size">${formatFileSize(file.size)}</div>
+  `;
+
+  // Zone de progression (barre + texte + icône)
+  const statusDiv = document.createElement('div');
+  statusDiv.className = 'status-area';
+  statusDiv.innerHTML = `
     <div class="progress-container">
       <div class="progress-bar">
         <div class="progress-fill" style="width: 0%"></div>
       </div>
     </div>
-    <button class="button button-secondary download-button hidden">
-      Télécharger
-    </button>
+    <div class="status-text uploading">Téléversement en cours…</div>
+    <div class="spinner"></div>
+    <div class="check-icon">✓</div>
   `;
+
+  // Bouton de téléchargement (masqué jusqu’à traitement terminé)
+  const downloadButton = document.createElement('button');
+  downloadButton.className = 'button button-secondary download-button hidden';
+  downloadButton.textContent = 'Télécharger';
+
+  fileItem.appendChild(infoDiv);
+  fileItem.appendChild(statusDiv);
+  fileItem.appendChild(downloadButton);
   return fileItem;
 }
 
 function resetInterface() {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
+  summaryDiv.classList.add('hidden');
   dropzone.classList.remove('hidden');
   fileInput.value = '';
 }
@@ -62,7 +82,6 @@ fileInput.onchange = (e) => {
     dropzone.classList.add('hover');
   });
 });
-
 ['dragleave', 'drop'].forEach(evt => {
   dropzone.addEventListener(evt, e => {
     e.preventDefault();
@@ -70,7 +89,6 @@ fileInput.onchange = (e) => {
     dropzone.classList.remove('hover');
   });
 });
-
 dropzone.addEventListener('drop', e => {
   const files = e.dataTransfer.files;
   if (files.length) {
@@ -81,55 +99,101 @@ dropzone.addEventListener('drop', e => {
 async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
+  summaryDiv.classList.add('hidden');
   dropzone.classList.add('hidden');
 
   const fileItems = new Map();
   const fileIdMap = {};
 
+  // On crée les éléments pour chaque fichier et on collecte dans FormData
   const formData = new FormData();
   for (const file of files) {
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
-
     formData.append('files', file);
 
     const fileItem = createFileItem(file);
     fileList.appendChild(fileItem);
-    fileItems.set(id, fileItem);
+    fileItems.set(id, { fileItem, fileName: file.name });
   }
-
   formData.append('file_ids', JSON.stringify(fileIdMap));
 
-  // Passer à XMLHttpRequest pour progression
+  // Début de l’upload avec XMLHttpRequest pour gérer progrès et temps estimé
   const xhr = new XMLHttpRequest();
   xhr.open('POST', `${API_BASE}/upload`, true);
 
+  const startTime = Date.now();
+  let lastLoaded = 0;
+
+  // Div pour affichage du temps estimé
+  const globalInfo = document.createElement('div');
+  globalInfo.className = 'status-text processing';
+  globalInfo.textContent = 'Début du téléversement…';
+  fileList.parentElement.insertBefore(globalInfo, fileList);
+
   xhr.upload.addEventListener('progress', (e) => {
-    if (e.lengthComputable) {
-      const percentComplete = (e.loaded / e.total) * 100;
-      fileItems.forEach(fileItem => {
-        const progressFill = fileItem.querySelector('.progress-fill');
-        progressFill.style.width = `${percentComplete}%`;
-      });
-    }
+    if (!e.lengthComputable) return;
+    const percentComplete = (e.loaded / e.total) * 100;
+    const elapsed = (Date.now() - startTime) / 1000; // en secondes
+    const speed = e.loaded / elapsed; // octets/seconde
+    const remaining = (e.total - e.loaded) / speed; // secondes restantes
+
+    // Mettre à jour la barre pour tous les fichiers simultanément
+    fileItems.forEach(({ fileItem }) => {
+      const progressFill = fileItem.querySelector('.progress-fill');
+      progressFill.style.width = `${percentComplete.toFixed(1)}%`;
+    });
+
+    // Texte “Temps estimé restant : X s”
+    globalInfo.textContent = `Téléversement : ${percentComplete.toFixed(1)} % — Temps estimé : ${Math.ceil(remaining)} s`;
+    lastLoaded = e.loaded;
   });
 
   xhr.onload = async function () {
     if (xhr.status === 200) {
-      const response = JSON.parse(xhr.responseText);
-      await checkStatus(response.job_id, fileItems);
+      globalInfo.textContent = 'Téléversement terminé ✓';
+      globalInfo.className = 'status-text uploaded';
+
+      // Après un court délai, on passe à l’étape “traitement”
+      setTimeout(() => {
+        beginProcessingPhase(fileItems, JSON.parse(xhr.responseText).job_id);
+      }, 500);
     } else {
-      showError('Erreur lors de l\'upload');
+      showError('Erreur lors du téléversement');
       dropzone.classList.remove('hidden');
     }
   };
 
   xhr.onerror = function () {
-    showError('Erreur réseau lors de l\'upload');
+    showError('Erreur réseau lors du téléversement');
     dropzone.classList.remove('hidden');
   };
 
   xhr.send(formData);
+}
+
+async function beginProcessingPhase(fileItems, jobId) {
+  // Remplacer le message global
+  const globalInfo = document.querySelector('.status-text.uploaded');
+  if (globalInfo) {
+    globalInfo.textContent = 'Traitement en cours…';
+    globalInfo.className = 'status-text processing';
+  }
+
+  // Mettre à jour chaque fichier : statut “Traitement en cours” + spinner
+  fileItems.forEach(({ fileItem }) => {
+    const statusText = fileItem.querySelector('.status-text');
+    const spinner = fileItem.querySelector('.spinner');
+    const checkIcon = fileItem.querySelector('.check-icon');
+
+    statusText.textContent = 'Traitement en cours…';
+    statusText.className = 'status-text processing';
+    spinner.style.display = 'block';
+    checkIcon.classList.remove('show');
+  });
+
+  // Démarrer le polling du /status
+  await checkStatus(jobId, fileItems);
 }
 
 async function checkStatus(jobId, fileItems) {
@@ -138,27 +202,39 @@ async function checkStatus(jobId, fileItems) {
     const data = await response.json();
 
     if (data.status === 'done' && data.files) {
-      downloadAllSection.classList.remove('hidden');
-
+      // Pour chaque fichier retourné par /status, on indique qu’il est traité
       data.files.forEach(fileInfo => {
-        const fileItem = fileItems.get(fileInfo.id);
-        if (fileItem) {
-          const progressFill = fileItem.querySelector('.progress-fill');
-          progressFill.style.width = '100%';
-          const downloadButton = fileItem.querySelector('.download-button');
-          downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
-        }
+        const entry = fileItems.get(fileInfo.id);
+        if (!entry) return;
+        const { fileItem } = entry;
+
+        const statusText = fileItem.querySelector('.status-text');
+        const spinner = fileItem.querySelector('.spinner');
+        const checkIcon = fileItem.querySelector('.check-icon');
+        const downloadButton = fileItem.querySelector('.download-button');
+
+        // Statut “Traitement terminé”
+        statusText.textContent = 'Traitement terminé ✓';
+        statusText.className = 'status-text processed';
+        spinner.style.display = 'none';
+        checkIcon.classList.add('show');
+
+        // Afficher le bouton “Télécharger”
+        downloadButton.classList.remove('hidden');
+        downloadButton.disabled = false;
+        downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
       });
 
+      // Afficher le bouton “Télécharger tous”
+      downloadAllSection.classList.remove('hidden');
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
+
+      // Afficher le résumé final
+      showSummary(data.files);
     } else if (data.status === 'error') {
-      throw new Error(data.details || 'Une erreur est survenue pendant le traitement');
+      throw new Error(data.details || 'Erreur pendant le traitement');
     } else {
-      fileItems.forEach(fileItem => {
-        const progressFill = fileItem.querySelector('.progress-fill');
-        progressFill.style.width = '50%';
-      });
+      // Tant que ce n’est pas "done", on affiche une barre ou on attend
       setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
   } catch (error) {
@@ -168,6 +244,27 @@ async function checkStatus(jobId, fileItems) {
 }
 
 async function downloadFile(jobId, fileId, originalName) {
+  // Repérer l’élément fichier correspondant
+  const fileItemEntry = Array.from(document.querySelectorAll('.file-item'))
+    .find(node => {
+      const btn = node.querySelector('.download-button');
+      return btn && btn.onclick.toString().includes(`'${fileId}'`);
+    });
+  if (!fileItemEntry) return;
+
+  const statusText = fileItemEntry.querySelector('.status-text');
+  const spinner = fileItemEntry.querySelector('.spinner');
+  const checkIcon = fileItemEntry.querySelector('.check-icon');
+  const downloadButton = fileItemEntry.querySelector('.download-button');
+
+  // Désactiver le bouton
+  downloadButton.disabled = true;
+  downloadButton.textContent = 'Téléchargement…';
+  statusText.textContent = 'Téléchargement en cours…';
+  statusText.className = 'status-text downloading';
+  spinner.style.display = 'block';
+  checkIcon.classList.remove('show');
+
   try {
     const response = await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
     if (!response.ok) throw new Error('Erreur lors du téléchargement');
@@ -181,20 +278,42 @@ async function downloadFile(jobId, fileId, originalName) {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+
+    // Statut “Téléchargement terminé”
+    statusText.textContent = 'Téléchargement terminé ✓';
+    statusText.className = 'status-text downloaded';
+    spinner.style.display = 'none';
+    checkIcon.classList.add('show');
+    downloadButton.textContent = 'Téléchargement ✓';
   } catch (error) {
+    statusText.textContent = 'Erreur de téléchargement';
+    statusText.className = 'status-text';
     showError(`Erreur de téléchargement : ${error.message}`);
+    downloadButton.disabled = false;
+    downloadButton.textContent = 'Télécharger';
   }
 }
 
 async function downloadAllFiles(jobId, files) {
-  if (!files || files.length === 0) {
-    showError('Aucun fichier disponible');
-    return;
-  }
-
   for (const fileInfo of files) {
     await downloadFile(jobId, fileInfo.id, fileInfo.original);
   }
+}
+
+function showSummary(files) {
+  summaryDiv.innerHTML = '';
+  summaryDiv.classList.remove('hidden');
+  const heading = document.createElement('h2');
+  heading.textContent = 'Résumé des fichiers traités :';
+  summaryDiv.appendChild(heading);
+
+  const ul = document.createElement('ul');
+  files.forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = `${f.original}`;
+    ul.appendChild(li);
+  });
+  summaryDiv.appendChild(ul);
 }
 
 function showError(message) {

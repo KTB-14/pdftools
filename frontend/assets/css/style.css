@@ -8,6 +8,7 @@
 :root {
   --primary: #7b222e;
   --primary-dark: #5c1a22;
+  --success: #28a745;
   --gray-100: #f4f6f9;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
@@ -84,7 +85,8 @@ body {
   text-align: center;
 }
 
-.dropzone:hover, .dropzone.hover {
+.dropzone:hover,
+.dropzone.hover {
   background-color: #fbeaea;
   border-color: var(--primary-dark);
 }
@@ -100,7 +102,7 @@ body {
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 3fr auto;
+  grid-template-columns: 2fr 1fr 2fr auto;
   gap: 1rem;
   align-items: center;
 }
@@ -122,18 +124,84 @@ body {
   font-size: 0.875rem;
 }
 
-/* PROGRESS BAR */
+/* STATUS AREA */
+.status-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-text {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+.status-text.uploading {
+  color: var(--gray-600);
+}
+
+.status-text.uploaded {
+  color: var(--success);
+}
+
+.status-text.processing {
+  color: var(--primary);
+}
+
+.status-text.processed {
+  color: var(--success);
+}
+
+.status-text.downloading {
+  color: var(--gray-600);
+}
+
+.status-text.downloaded {
+  color: var(--success);
+}
+
+/* SPINNER */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gray-300);
+  border-top: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* CHECK ICON */
+.check-icon {
+  font-size: 16px;
+  color: var(--success);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.check-icon.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* PROGRESS BAR (UPLOAD) */
 .progress-container {
   width: 100%;
   background-color: var(--gray-200);
   border-radius: 5px;
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
+  height: 6px;
   background: var(--gray-300);
   border-radius: 5px;
 }
@@ -142,19 +210,19 @@ body {
   height: 100%;
   background: var(--primary);
   width: 0%;
-  transition: width 0.4s ease;
+  transition: width 0.3s ease;
 }
 
 /* BUTTONS */
 .button {
   background-color: var(--primary);
   color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
   text-decoration: none;
   display: inline-block;
   white-space: nowrap;
@@ -162,7 +230,7 @@ body {
 
 .button:hover {
   background-color: var(--primary-dark);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .button:disabled {
@@ -190,6 +258,28 @@ body {
   justify-content: center;
 }
 
+/* SUMMARY */
+.summary {
+  margin-top: 2rem;
+  background: var(--gray-100);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--gray-800);
+  border: 1px solid var(--gray-300);
+}
+
+.summary h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary ul {
+  margin-left: 1rem;
+  list-style-type: disc;
+  color: var(--gray-600);
+}
+
 /* UTILITIES */
 .hidden {
   display: none !important;
@@ -207,26 +297,12 @@ body {
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-  .header-container {
-    padding: 1rem;
-  }
-
-  .header-container h1 {
-    font-size: 1.2rem;
-  }
-
-  .upload-section {
-    padding: 1rem;
-  }
-
   .file-item {
     grid-template-columns: 1fr;
   }
-
-  .download-section {
-    flex-direction: column;
+  .status-area {
+    margin-top: 0.5rem;
   }
-
   .button {
     width: 100%;
   }
