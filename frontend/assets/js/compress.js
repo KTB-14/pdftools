@@ -1,3 +1,4 @@
+// Configuration et éléments DOM
 const API_BASE = "/api";
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -8,10 +9,12 @@ const downloadAllButton = document.getElementById('downloadAllButton');
 const restartButton = document.getElementById('restartButton');
 const summaryDiv = document.getElementById('summary');
 
+// Génère un ID unique pour chaque fichier
 function generateUniqueId() {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
 }
 
+// Convertit une taille en octets vers un format lisible (KB, MB, etc.)
 function formatFileSize(bytes) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -20,13 +23,11 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Crée l’élément DOM pour chaque fichier
+// Crée un élément DOM pour afficher un fichier pendant l'upload/traitement
 function createFileItem(file, id) {
-  console.log('🧐 File envoyé à createFileItem :', file);
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
 
-  // Nom et taille avant traitement
   const infoDiv = document.createElement('div');
   infoDiv.className = 'file-info';
   infoDiv.innerHTML = `
@@ -34,7 +35,6 @@ function createFileItem(file, id) {
     <div class="file-size" data-original-size="${file.size}">${formatFileSize(file.size)}</div>
   `;
 
-  // Zone de progression + statut + spinner + check
   const statusDiv = document.createElement('div');
   statusDiv.className = 'status-area';
   statusDiv.innerHTML = `
@@ -48,7 +48,6 @@ function createFileItem(file, id) {
     <div class="check-icon">✓</div>
   `;
 
-  // Bouton “Télécharger” (initialement masqué)
   const downloadButton = document.createElement('button');
   downloadButton.className = 'button button-secondary download-button hidden';
   downloadButton.textContent = 'Télécharger';
@@ -61,6 +60,7 @@ function createFileItem(file, id) {
   return fileItem;
 }
 
+// Réinitialise l'interface utilisateur
 function resetInterface() {
   document.querySelectorAll('.status-text').forEach(el => el.remove());
   fileList.innerHTML = '';
@@ -70,6 +70,7 @@ function resetInterface() {
   fileInput.value = '';
 }
 
+// Gestion des événements
 selectBtn.onclick = () => fileInput.click();
 restartButton.onclick = resetInterface;
 
@@ -100,6 +101,7 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
+// Upload des fichiers
 async function uploadFiles(files) {
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
@@ -111,7 +113,6 @@ async function uploadFiles(files) {
   const formData = new FormData();
 
   for (const file of files) {
-    console.log("Nom du fichier :", file.name, "Taille détectée (bytes) :", file.size);
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
     formData.append('files', file);
@@ -166,6 +167,7 @@ async function uploadFiles(files) {
   xhr.send(formData);
 }
 
+// Début de la phase de traitement OCR
 async function beginProcessingPhase(fileItems, jobId) {
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
@@ -187,6 +189,7 @@ async function beginProcessingPhase(fileItems, jobId) {
   await checkStatus(jobId, fileItems);
 }
 
+// Vérifie le statut de traitement OCR
 async function checkStatus(jobId, fileItems) {
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
@@ -214,10 +217,16 @@ async function checkStatus(jobId, fileItems) {
           downloadFile(jobId, fileInfo.id, fileInfo.original);
         });
 
-        // ➔ Ici on met à jour la taille affichée
+        // Mise à jour taille fichier après traitement
         const fileSizeElement = fileItem.querySelector('.file-size');
         const originalSize = parseInt(fileSizeElement.dataset.originalSize, 10);
-        fileSizeElement.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(fileInfo.size_after)}`;
+        const sizeAfter = parseInt(fileInfo.size_after, 10);
+
+        if (!isNaN(originalSize) && !isNaN(sizeAfter)) {
+          fileSizeElement.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(sizeAfter)}`;
+        } else {
+          fileSizeElement.textContent = `${formatFileSize(originalSize)}`;
+        }
       });
 
       downloadAllSection.classList.remove('hidden');
@@ -235,6 +244,7 @@ async function checkStatus(jobId, fileItems) {
   }
 }
 
+// Téléchargement d'un fichier individuel
 async function downloadFile(jobId, fileId, originalName) {
   const selector = `.download-button[data-file-id="${fileId}"]`;
   const downloadButton = document.querySelector(selector);
@@ -271,7 +281,6 @@ async function downloadFile(jobId, fileId, originalName) {
     spinner.style.display = 'none';
     checkIcon.classList.add('show');
 
-    // ✅ On réactive le bouton pour téléchargement multiple
     downloadButton.disabled = false;
     downloadButton.textContent = 'Télécharger à nouveau';
   } catch (error) {
@@ -283,12 +292,14 @@ async function downloadFile(jobId, fileId, originalName) {
   }
 }
 
+// Téléchargement de tous les fichiers
 async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
     await downloadFile(jobId, fileInfo.id, fileInfo.original);
   }
 }
 
+// Affiche un résumé des fichiers traités
 function showSummary(files) {
   summaryDiv.innerHTML = '';
   summaryDiv.classList.remove('hidden');
@@ -305,6 +316,7 @@ function showSummary(files) {
   summaryDiv.appendChild(ul);
 }
 
+// Affiche un message d'erreur
 function showError(message) {
   const errorDiv = document.createElement('div');
   errorDiv.className = 'error-message';
