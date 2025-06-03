@@ -20,17 +20,17 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Crée l’élément DOM pour chaque fichier, avec son ID
+// Crée l’élément DOM pour chaque fichier
 function createFileItem(file, id) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
 
-  // Nom + taille
+  // Nom et taille avant traitement
   const infoDiv = document.createElement('div');
   infoDiv.className = 'file-info';
   infoDiv.innerHTML = `
     <div class="file-name">${file.name}</div>
-    <div class="file-size">${formatFileSize(file.size)}</div>
+    <div class="file-size" data-original-size="${file.size}">${formatFileSize(file.size)}</div>
   `;
 
   // Zone de progression + statut + spinner + check
@@ -51,7 +51,6 @@ function createFileItem(file, id) {
   const downloadButton = document.createElement('button');
   downloadButton.className = 'button button-secondary download-button hidden';
   downloadButton.textContent = 'Télécharger';
-  // On stocke l’ID dans data-file-id
   downloadButton.dataset.fileId = id;
   downloadButton.dataset.original = file.name;
 
@@ -62,15 +61,10 @@ function createFileItem(file, id) {
 }
 
 function resetInterface() {
-  // Supprimer toute div .status-text existante
   document.querySelectorAll('.status-text').forEach(el => el.remove());
-
-  // Vider la liste de fichiers et masquer “Télécharger tous” + résumé
   fileList.innerHTML = '';
   downloadAllSection.classList.add('hidden');
   summaryDiv.classList.add('hidden');
-
-  // Ré-afficher la dropzone et vider fileInput
   dropzone.classList.remove('hidden');
   fileInput.value = '';
 }
@@ -217,6 +211,11 @@ async function checkStatus(jobId, fileItems) {
         downloadButton.addEventListener('click', () => {
           downloadFile(jobId, fileInfo.id, fileInfo.original);
         });
+
+        // ➔ Ici on met à jour la taille affichée
+        const fileSizeElement = fileItem.querySelector('.file-size');
+        const originalSize = parseInt(fileSizeElement.getAttribute('data-original-size'), 10);
+        fileSizeElement.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(fileInfo.size_after)}`;
       });
 
       downloadAllSection.classList.remove('hidden');
@@ -244,7 +243,6 @@ async function downloadFile(jobId, fileId, originalName) {
   const spinner = fileItem.querySelector('.spinner');
   const checkIcon = fileItem.querySelector('.check-icon');
 
-  // Désactiver bouton PENDANT téléchargement
   downloadButton.disabled = true;
   downloadButton.textContent = 'Téléchargement…';
   statusText.textContent = 'Téléchargement en cours…';
@@ -266,16 +264,14 @@ async function downloadFile(jobId, fileId, originalName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    // ✅ Succès
     statusText.textContent = 'Téléchargement terminé ✓';
     statusText.className = 'status-text downloaded';
     spinner.style.display = 'none';
     checkIcon.classList.add('show');
 
-    // ✅ Le bouton reste réactivé après téléchargement
+    // ✅ On réactive le bouton pour téléchargement multiple
     downloadButton.disabled = false;
     downloadButton.textContent = 'Télécharger à nouveau';
-
   } catch (error) {
     statusText.textContent = 'Erreur de téléchargement';
     statusText.className = 'status-text';
