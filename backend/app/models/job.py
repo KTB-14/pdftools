@@ -20,9 +20,9 @@ class FileEntry(BaseModel):
     id: str
     original: str
     output: str
-    size_before: Optional[int] = None   # octets
-    size_after:  Optional[int] = None   # octets
-    ratio: Optional[float] = None       # % (<=100)
+    size_before: Optional[int] = None  
+    size_after:  Optional[int] = None  
+    ratio: Optional[float] = None      
 
 # ───────── Réponse /status/{job_id}
 class StatusOut(BaseModel):
