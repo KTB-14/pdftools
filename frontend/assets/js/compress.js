@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API_BASE = "/api";  // <= impératif : slash devant “api”
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
@@ -20,12 +20,13 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Crée l’élément DOM pour chaque fichier
-function createFileItem(file) {
+// Crée l’élément DOM pour chaque fichier, en recevant aussi l’ID unique
+// (on passe désormais `id` en paramètre, pas seulement `file`)
+function createFileItem(file, id) {
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
 
-  // Nom et taille
+  // Nom + taille
   const infoDiv = document.createElement('div');
   infoDiv.className = 'file-info';
   infoDiv.innerHTML = `
@@ -33,7 +34,7 @@ function createFileItem(file) {
     <div class="file-size">${formatFileSize(file.size)}</div>
   `;
 
-  // Zone de progression (barre + texte + icône)
+  // Zone de progression + statut + spinner + check
   const statusDiv = document.createElement('div');
   statusDiv.className = 'status-area';
   statusDiv.innerHTML = `
@@ -47,10 +48,15 @@ function createFileItem(file) {
     <div class="check-icon">✓</div>
   `;
 
-  // Bouton de téléchargement (masqué jusqu’à traitement terminé)
+  // Bouton “Télécharger” (toujours présent dans le DOM, mais invisible via .hidden)
   const downloadButton = document.createElement('button');
   downloadButton.className = 'button button-secondary download-button hidden';
   downloadButton.textContent = 'Télécharger';
+
+  // =======> ON STOCKE l’ID du fichier dans data-id, pour retrouver facilement après
+  downloadButton.dataset.fileId = id;
+  // On peut aussi stocker le nom original dans data-original, si besoin
+  downloadButton.dataset.original = file.name;
 
   fileItem.appendChild(infoDiv);
   fileItem.appendChild(statusDiv);
@@ -102,30 +108,30 @@ async function uploadFiles(files) {
   summaryDiv.classList.add('hidden');
   dropzone.classList.add('hidden');
 
-  const fileItems = new Map();
-  const fileIdMap = {};
+  const fileItems = new Map(); // Clé = fileId, Valeur = élément DOM
+  const fileIdMap = {};       // Clé = nomOriginal, Valeur = fileId
 
-  // On crée les éléments pour chaque fichier et on collecte dans FormData
+  // On crée les éléments <div class="file-item">, on collecte dans FormData…
   const formData = new FormData();
   for (const file of files) {
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
     formData.append('files', file);
 
-    const fileItem = createFileItem(file);
+    // Now, PASSER l’ID en plus du fichier
+    const fileItem = createFileItem(file, id);
     fileList.appendChild(fileItem);
     fileItems.set(id, { fileItem, fileName: file.name });
   }
   formData.append('file_ids', JSON.stringify(fileIdMap));
 
-  // Début de l’upload avec XMLHttpRequest pour gérer progrès et temps estimé
+  // =========> Ça reste un XMLHttpRequest pour suivre l’avancement Upload
   const xhr = new XMLHttpRequest();
   xhr.open('POST', `${API_BASE}/upload`, true);
 
   const startTime = Date.now();
-  let lastLoaded = 0;
 
-  // Div pour affichage du temps estimé
+  // Un petit message général “Début du téléversement…”
   const globalInfo = document.createElement('div');
   globalInfo.className = 'status-text processing';
   globalInfo.textContent = 'Début du téléversement…';
@@ -135,18 +141,17 @@ async function uploadFiles(files) {
     if (!e.lengthComputable) return;
     const percentComplete = (e.loaded / e.total) * 100;
     const elapsed = (Date.now() - startTime) / 1000; // en secondes
-    const speed = e.loaded / elapsed; // octets/seconde
-    const remaining = (e.total - e.loaded) / speed; // secondes restantes
+    const speed = e.loaded / elapsed;                 // octets/seconde
+    const remaining = (e.total - e.loaded) / speed;   // secondes restantes
 
-    // Mettre à jour la barre pour tous les fichiers simultanément
+    // On met à jour la barre « globale » pour chaque fileItem
     fileItems.forEach(({ fileItem }) => {
       const progressFill = fileItem.querySelector('.progress-fill');
       progressFill.style.width = `${percentComplete.toFixed(1)}%`;
     });
 
-    // Texte “Temps estimé restant : X s”
+    // Message “Téléversement : XX % — Temps estimé : YY s”
     globalInfo.textContent = `Téléversement : ${percentComplete.toFixed(1)} % — Temps estimé : ${Math.ceil(remaining)} s`;
-    lastLoaded = e.loaded;
   });
 
   xhr.onload = async function () {
@@ -154,7 +159,7 @@ async function uploadFiles(files) {
       globalInfo.textContent = 'Téléversement terminé ✓';
       globalInfo.className = 'status-text uploaded';
 
-      // Après un court délai, on passe à l’étape “traitement”
+      // Dès que l’upload est OK, on passe à “Traitement en cours…”
       setTimeout(() => {
         beginProcessingPhase(fileItems, JSON.parse(xhr.responseText).job_id);
       }, 500);
@@ -173,14 +178,14 @@ async function uploadFiles(files) {
 }
 
 async function beginProcessingPhase(fileItems, jobId) {
-  // Remplacer le message global
+  // Remplacer le message global “Upload ✓” → “Traitement en cours…”
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
     globalInfo.textContent = 'Traitement en cours…';
     globalInfo.className = 'status-text processing';
   }
 
-  // Mettre à jour chaque fichier : statut “Traitement en cours” + spinner
+  // Pour chaque fichier, on change le texte + on affiche le spinner
   fileItems.forEach(({ fileItem }) => {
     const statusText = fileItem.querySelector('.status-text');
     const spinner = fileItem.querySelector('.spinner');
@@ -192,7 +197,7 @@ async function beginProcessingPhase(fileItems, jobId) {
     checkIcon.classList.remove('show');
   });
 
-  // Démarrer le polling du /status
+  // Lancer le polling sur /status/<jobId>
   await checkStatus(jobId, fileItems);
 }
 
@@ -202,10 +207,10 @@ async function checkStatus(jobId, fileItems) {
     const data = await response.json();
 
     if (data.status === 'done' && data.files) {
-      // Pour chaque fichier retourné par /status, on indique qu’il est traité
+      // Dès que le backend renvoie status="done", on itère sur chaque {id, original, output}
       data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
-        if (!entry) return;
+        if (!entry) return; 
         const { fileItem } = entry;
 
         const statusText = fileItem.querySelector('.status-text');
@@ -213,28 +218,33 @@ async function checkStatus(jobId, fileItems) {
         const checkIcon = fileItem.querySelector('.check-icon');
         const downloadButton = fileItem.querySelector('.download-button');
 
-        // Statut “Traitement terminé”
+        // Statut “Traitement terminé ✓”
         statusText.textContent = 'Traitement terminé ✓';
         statusText.className = 'status-text processed';
         spinner.style.display = 'none';
         checkIcon.classList.add('show');
 
-        // Afficher le bouton “Télécharger”
+        // =========> On rend le bouton visible, puis on rattache directement un addEventListener
         downloadButton.classList.remove('hidden');
         downloadButton.disabled = false;
-        downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
+
+        // ATTENTION : ici on utilise le data-attrib “data-file-id” et “data-original”
+        downloadButton.addEventListener('click', () => {
+          downloadFile(jobId, fileInfo.id, fileInfo.original);
+        });
       });
 
-      // Afficher le bouton “Télécharger tous”
+      // Afficher le bouton “Télécharger tous les fichiers”
       downloadAllSection.classList.remove('hidden');
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
 
-      // Afficher le résumé final
+      // Résumé final
       showSummary(data.files);
+
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Erreur pendant le traitement');
     } else {
-      // Tant que ce n’est pas "done", on affiche une barre ou on attend
+      // Si le job n’est pas encore done, on relance dans 2 s
       setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
   } catch (error) {
@@ -244,20 +254,18 @@ async function checkStatus(jobId, fileItems) {
 }
 
 async function downloadFile(jobId, fileId, originalName) {
-  // Repérer l’élément fichier correspondant
-  const fileItemEntry = Array.from(document.querySelectorAll('.file-item'))
-    .find(node => {
-      const btn = node.querySelector('.download-button');
-      return btn && btn.onclick.toString().includes(`'${fileId}'`);
-    });
-  if (!fileItemEntry) return;
+  // On repère directement le bouton qui a data-file-id = fileId
+  const selector = `.download-button[data-file-id="${fileId}"]`;
+  const downloadButton = document.querySelector(selector);
+  if (!downloadButton) return;
 
-  const statusText = fileItemEntry.querySelector('.status-text');
-  const spinner = fileItemEntry.querySelector('.spinner');
-  const checkIcon = fileItemEntry.querySelector('.check-icon');
-  const downloadButton = fileItemEntry.querySelector('.download-button');
+  // On retrouve la ligne complète (= parent .file-item)
+  const fileItem = downloadButton.closest('.file-item');
+  const statusText = fileItem.querySelector('.status-text');
+  const spinner = fileItem.querySelector('.spinner');
+  const checkIcon = fileItem.querySelector('.check-icon');
 
-  // Désactiver le bouton
+  // On passe en “Téléchargement en cours…”
   downloadButton.disabled = true;
   downloadButton.textContent = 'Téléchargement…';
   statusText.textContent = 'Téléchargement en cours…';
@@ -279,7 +287,7 @@ async function downloadFile(jobId, fileId, originalName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    // Statut “Téléchargement terminé”
+    // Statut “Téléchargement terminé ✓”
     statusText.textContent = 'Téléchargement terminé ✓';
     statusText.className = 'status-text downloaded';
     spinner.style.display = 'none';
