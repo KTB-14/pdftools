@@ -1,7 +1,8 @@
 /* RESET & BASE */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--primary:#7b222e;--primary-dark:#5c1a22;--success:#198754;--blue:#0d6efd;--orange:#fd7e14;--gray-50:#f8f9fa;--gray-100:#f4f6f9;--gray-200:#e9ecef;--gray-300:#dee2e6;--gray-600:#6c757d;--gray-800:#343a40}
-body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--gray-100);color:var(--gray-800);min-height:100vh;display:flex;flex-direction:column}
+html, body {height: 100%;}
+body { display: flex; flex-direction: column; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--gray-100); color: var(--gray-800); }
 
 /* HEADER */
 .header-container{background:var(--primary);color:#fff;padding:1rem 2rem;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.1)}
@@ -75,19 +76,8 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--gr
 .error-message{background:#fee2e2;border:1px solid #ef4444;color:#b91c1c;padding:1rem;border-radius:8px;margin:1rem 0}
 
 /* FOOTER  */
-/* --- Fixe body pour que le footer reste collé en bas --- */
-html, body {height: 100%;}
-body {display: flex;flex-direction: column;}
-/* --- Le main prend tout l'espace disponible --- */
 main.container {flex: 1;}
-/* --- Footer normal déjà fait --- */
 .footer-info {padding: 20px;background-color: var(--gray-50);text-align: center;border-top: 1px solid var(--gray-300);}
-/* --- Logo centré --- */
-.footer-logo img {width: 100px;height: auto;margin-bottom: 15px;transition: transform 0.3s ease; /* Animation smooth hover */}
-/* --- Hover du logo --- */
-.footer-logo img:hover {transform: scale(1.1); /* Petit zoom */}
-/* --- Texte --- */
 .footer-text p {margin: 5px 0;color: var(--gray-600);font-size: 0.9rem;}
-/* --- Lien --- */
-.footer-text a {color: var(--primary);text-decoration: none;font-weight: bold;}
-.footer-text a:hover {text-decoration: underline;}
+.footer-logo img { width: 100px; height: auto; margin-bottom: 15px; transition: transform 0.3s ease; }
+.footer-logo img:hover { transform: scale(1.1); }
