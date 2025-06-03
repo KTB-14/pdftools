@@ -244,6 +244,7 @@ async function downloadFile(jobId, fileId, originalName) {
   const spinner = fileItem.querySelector('.spinner');
   const checkIcon = fileItem.querySelector('.check-icon');
 
+  // Désactiver bouton PENDANT téléchargement
   downloadButton.disabled = true;
   downloadButton.textContent = 'Téléchargement…';
   statusText.textContent = 'Téléchargement en cours…';
@@ -265,11 +266,16 @@ async function downloadFile(jobId, fileId, originalName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
+    // ✅ Succès
     statusText.textContent = 'Téléchargement terminé ✓';
     statusText.className = 'status-text downloaded';
     spinner.style.display = 'none';
     checkIcon.classList.add('show');
-    downloadButton.textContent = 'Téléchargement ✓';
+
+    // ✅ Le bouton reste réactivé après téléchargement
+    downloadButton.disabled = false;
+    downloadButton.textContent = 'Télécharger à nouveau';
+
   } catch (error) {
     statusText.textContent = 'Erreur de téléchargement';
     statusText.className = 'status-text';
