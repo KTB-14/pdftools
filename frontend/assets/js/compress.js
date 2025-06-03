@@ -232,16 +232,10 @@ async function checkStatus(jobId, fileItems) {
           downloadFile(jobId, fileInfo.id, fileInfo.original);
         });
 
-        // Mise à jour des tailles de fichiers
+        // Mise à jour des tailles de fichiers → formatée simplement
         const fileSizeElement = fileItem.querySelector('.file-size');
-        const originalSize = parseInt(fileSizeElement.dataset.originalSize, 10);
-        const sizeAfter = parseInt(fileInfo.size_after, 10);
-
-        if (!isNaN(originalSize) && !isNaN(sizeAfter)) {
-          fileSizeElement.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(sizeAfter)}`;
-        } else {
-          fileSizeElement.textContent = formatFileSize(originalSize);
-        }
+        const sizeAfterFormatted = formatFileSize(fileInfo.size_after);
+        fileSizeElement.textContent = sizeAfterFormatted;
       });
 
       downloadAllSection.classList.remove('hidden');
