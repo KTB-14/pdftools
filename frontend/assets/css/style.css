@@ -26,8 +26,8 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--gr
 
 /* CARTE FICHIER ----------------------------------------------------- */
 .file-list{margin-top:1.5rem}
-.file-item{display:grid;grid-template-columns:1fr 150px 140px;align-items:center;gap:1rem;
-  background:#fff;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.06);padding:1rem;margin-bottom:1rem}
+.file-item{display:grid;grid-template-columns:1fr 180px 160px;align-items:center;gap:1rem;
+  background:#fff;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.06);padding:1.5rem;margin-bottom:1rem}
 @media(max-width:640px){
   .file-item{grid-template-columns:1fr;grid-template-rows:auto auto auto}
   .file-item>*{margin-top:.5rem}
