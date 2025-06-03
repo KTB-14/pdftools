@@ -206,11 +206,16 @@ async function checkStatus(jobId, fileItems) {
         const downloadButton = fileItem.querySelector('.download-button');
         const sizeDiv = fileItem.querySelector('.file-size');
 
+        const progressFill = fileItem.querySelector('.progress-fill');
+
         const originalBytes = entry.sizeBefore;
         const compressedBytes = fileInfo.size_after;
         const ratioRetained = fileInfo.ratio || 0;
         const reductionPercent = (100 - ratioRetained).toFixed(1);
-
+        progressFill.classList.remove('indeterminate');
+        progressFill.style.width = '100%'; 
+        
+        
         sizeDiv.textContent = `${formatBytes(originalBytes)} → ${formatBytes(compressedBytes)} (${reductionPercent}% de réduction)`;
 
         statusText.textContent = 'Traitement terminé ✓';
