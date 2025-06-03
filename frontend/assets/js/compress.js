@@ -22,6 +22,7 @@ function formatFileSize(bytes) {
 
 // Crée l’élément DOM pour chaque fichier
 function createFileItem(file, id) {
+  console.log('🧐 File envoyé à createFileItem :', file);
   const fileItem = document.createElement('div');
   fileItem.className = 'file-item';
 
@@ -110,6 +111,7 @@ async function uploadFiles(files) {
   const formData = new FormData();
 
   for (const file of files) {
+    console.log("Nom du fichier :", file.name, "Taille détectée (bytes) :", file.size);
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
     formData.append('files', file);
