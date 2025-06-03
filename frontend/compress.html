@@ -16,6 +16,7 @@
 
   <main class="container">
     <section class="upload-section">
+      <!-- DROPZONE ------------------------------------------------------- -->
       <div id="dropzone" class="dropzone">
         <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
         <button id="selectFile" class="button">Sélectionner un ou plusieurs fichiers</button>
@@ -23,14 +24,16 @@
         <p class="text-muted">Format accepté : PDF uniquement</p>
       </div>
 
+      <!-- LISTE DES FICHIERS --------------------------------------------- -->
       <div id="fileList" class="file-list"></div>
 
+      <!-- ACTIONS GLOBALES ------------------------------------------------ -->
       <div id="downloadAll" class="download-section hidden">
         <button id="downloadAllButton" class="button">Télécharger tous les fichiers</button>
         <button id="restartButton" class="button button-secondary">↻ Recommencer</button>
       </div>
 
-      <!-- Résumé final après traitement -->
+      <!-- RÉSUMÉ ---------------------------------------------------------- -->
       <div id="summary" class="summary hidden"></div>
     </section>
   </main>

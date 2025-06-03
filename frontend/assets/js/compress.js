@@ -1,57 +1,61 @@
+/* ------------- CONFIG ------------------------------------------------- */
 const API_BASE = "/api";
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('fileInput');
-const selectBtn = document.getElementById('selectFile');
-const fileList = document.getElementById('fileList');
-const downloadAllSection = document.getElementById('downloadAll');
-const downloadAllButton = document.getElementById('downloadAllButton');
-const restartButton = document.getElementById('restartButton');
-const summaryDiv = document.getElementById('summary');
+const dropzone  = document.getElementById("dropzone");
+const fileInput = document.getElementById("fileInput");
+const selectBtn = document.getElementById("selectFile");
+const fileList  = document.getElementById("fileList");
+const downloadAllSection = document.getElementById("downloadAll");
+const downloadAllButton  = document.getElementById("downloadAllButton");
+const restartButton      = document.getElementById("restartButton");
+const summaryDiv         = document.getElementById("summary");
 
-function generateUniqueId() {
-  return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+/* ------------- HELPERS ------------------------------------------------ */
+function generateUniqueId(){
+  return Math.random().toString(36).substring(2,10)+Date.now().toString(36);
+}
+function formatFileSize(bytes){
+  if(bytes===0) return "0 Bytes";
+  const k=1024,sizes=["Bytes","KB","MB","GB"],i=Math.floor(Math.log(bytes)/Math.log(k));
+  return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+" "+sizes[i];
 }
 
-function formatFileSize(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+/* ------------- UI ELEMENTS ------------------------------------------- */
+function createFileItem(file,id){
+  const fileItem = document.createElement("div");
+  fileItem.className = "file-item";              // + ombre déjà dans CSS
 
-function createFileItem(file, id) {
-  const fileItem = document.createElement('div');
-  fileItem.className = 'file-item';
-
-  const infoDiv = document.createElement('div');
-  infoDiv.className = 'file-info';
+  /* Col 1 : infos --------------------------------------------------- */
+  const infoDiv = document.createElement("div");
+  infoDiv.className = "file-info";
   infoDiv.innerHTML = `
-    <div class="file-name">${file.name}</div>
+    <div class="file-name" title="${file.name}">${file.name}</div>
     <div class="file-size">${formatFileSize(file.size)}</div>
   `;
 
-  const statusDiv = document.createElement('div');
-  statusDiv.className = 'status-area';
-  statusDiv.innerHTML = `
-    <div class="progress-container">
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: 0%"></div>
-      </div>
+  /* Col 2 : statut + barre ----------------------------------------- */
+  const statusBlock = document.createElement("div");
+  statusBlock.className = "status-block";
+  statusBlock.innerHTML = `
+    <div class="status-area">
+      <span class="status-text uploading" aria-live="polite">Téléversement en cours…</span>
+      <div class="spinner"></div>
+      <div class="check-icon">✓</div>
     </div>
-    <div class="status-text uploading">Téléversement en cours…</div>
-    <div class="spinner"></div>
-    <div class="check-icon">✓</div>
+    <div class="progress-container">
+      <div class="progress-fill" style="width:0%"></div>
+    </div>
   `;
 
-  const downloadButton = document.createElement('button');
-  downloadButton.className = 'button button-secondary download-button hidden';
-  downloadButton.textContent = 'Télécharger';
+  /* Col 3 : actions ------------------------------------------------- */
+  const downloadButton = document.createElement("button");
+  downloadButton.className = "button button-secondary download-button hidden";
+  downloadButton.textContent = "Télécharger";
   downloadButton.dataset.fileId = id;
   downloadButton.dataset.original = file.name;
 
+  /* Assemblage ------------------------------------------------------ */
   fileItem.appendChild(infoDiv);
-  fileItem.appendChild(statusDiv);
+  fileItem.appendChild(statusBlock);
   fileItem.appendChild(downloadButton);
   return fileItem;
 }
