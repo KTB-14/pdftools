@@ -15,10 +15,22 @@ function generateUniqueId(){
 
 function formatFileSize(bytes){
   if (bytes === 0) return "0 Bytes";
-  const k = 1024, sizes = ["Bytes", "KB", "MB", "GB"];
+  const k = 1024, sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
+
+// ───────── NEW ─────────
+// Cette fonction fait exactement la même chose (formatage),
+// mais on la baptise `formatBytes` pour pouvoir l'utiliser
+// quand on aura deux valeurs à afficher (avant → après).
+function formatBytes(b){
+  if (!b) return "0 B";
+  const k = 1024, u = ["B","KB","MB","GB","TB"];
+  const i = Math.floor(Math.log(b) / Math.log(k));
+  return (b / Math.pow(k, i)).toFixed(2) + " " + u[i];
+}
+
 
 /* ------------- UI ELEMENTS ------------------------------------------- */
 function createFileItem(file, id){
@@ -115,7 +127,7 @@ async function uploadFiles(files){
 
     const fileItem = createFileItem(file, id);
     fileList.appendChild(fileItem);
-    fileItems.set(id, { fileItem, fileName: file.name });
+    fileItems.set(id, { fileItem, fileName: file.name, sizeBefore: file.size });
   }
   formData.append('file_ids', JSON.stringify(fileIdMap));
 
@@ -196,7 +208,7 @@ async function checkStatus(jobId, fileItems){
         globalInfo.className = 'status-text processed';
       }
 
-      data.files.forEach(fileInfo => {
+      data.files.forEach(fileInfo => {        
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
         const { fileItem } = entry;
@@ -205,7 +217,11 @@ async function checkStatus(jobId, fileItems){
         const spinner = fileItem.querySelector('.spinner');
         const checkIcon = fileItem.querySelector('.check-icon');
         const downloadButton = fileItem.querySelector('.download-button');
-
+        // Récupérer la taille avant (stockée dans fileItems) et la taille après (venue du back)
+        const sizeDiv = fileItem.querySelector('.file-size');
+        const originalBytes = entry.sizeBefore;
+        const compressedBytes = fileInfo.size_after; // JSON renvoyé par le back
+        sizeDiv.textContent = `${formatBytes(originalBytes)} → ${formatBytes(compressedBytes)}`;
         statusText.textContent = 'Traitement terminé ✓';
         statusText.className = 'status-text processed';
         spinner.style.display = 'none';
