@@ -17,7 +17,7 @@ class OCRService:
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
 
-        # ✅ Charger uniquement file_ids pour status.json
+        # Charger uniquement file_ids pour status.json
         self.file_ids = {}
         file_ids_path = self.job_dir / "file_ids.json"
         if file_ids_path.exists():
@@ -95,11 +95,18 @@ class OCRService:
                     **ocr_args
                 )
 
-                # ✅ Ici on ajoute juste l'ID — le reste ne bouge PAS
+                # Récupérer taille compressée après OCR
+                output_size = os.path.getsize(output_path)
+
+                # 📝 Construire aussi le nom final pour l'utilisateur
+                final_name = f"{path.stem}_compressed{path.suffix}"
+
                 output_files.append({
                     "id": self.file_ids.get(filename, ""),  # seulement ça ajouté
                     "original": filename,
-                    "output": out_name
+                    "output": out_name,
+                    "final_name": final_name,
+                    "size_after": output_size  # <<--- ici nouvelle clé
                 })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
