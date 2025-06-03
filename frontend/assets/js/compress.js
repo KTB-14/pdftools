@@ -132,7 +132,7 @@ async function checkStatus(jobId, fileItems) {
           const downloadButton = fileItem.querySelector('.download-button');
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.originalName);
+          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
         }
       });
 
@@ -152,7 +152,7 @@ async function checkStatus(jobId, fileItems) {
   }
 }
 
-async function downloadFile(jobId, fileId) {
+async function downloadFile(jobId, fileId, originalName) {
   try {
     const response = await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
     if (!response.ok) throw new Error('Erreur lors du téléchargement');
