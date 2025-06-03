@@ -1,63 +1,59 @@
 /**
  * compress.js
  * 
- * Script de gestion du téléversement (upload), du suivi de statut, et du téléchargement.
- * 
- * Le déroulé :
- * 1. L'utilisateur sélectionne ou glisse-dépose ses fichiers (PDF uniquement).
- * 2. On affiche un spinner et une barre de progression pendant le téléversement (XHR).
- * 3. Une fois l’upload terminé, on lance le polling sur /status/{jobId} pour suivre le traitement OCR.
- * 4. Lorsque le traitement est terminé, on active le bouton “Télécharger” à côté de chaque fichier,
- *    on affiche la nouvelle taille, on active “Télécharger tous les fichiers”.
- * 5. Lorsqu’on clique sur “Télécharger” ou “Télécharger tous”, on effectue un fetch() + Blob + a.click()
- *    en affichant le spinner jusqu’à la fin du téléchargement, puis on réactive le bouton.
+ * Front‐end JavaScript gérant :
+ *  - Sélection & glisser-déposer des fichiers
+ *  - Upload AJAX avec progression (xhr)
+ *  - Polling de /status pour afficher l’état “traitement”
+ *  - Téléchargement de chaque fichier (xhr + progression visuelle)
+ *  - Affichage de la taille originale → taille compressée
+ *  - Affichage d’un résumé final
  */
 
-const API_BASE        = "/api";
-const dropzone        = document.getElementById("dropzone");
-const fileInput       = document.getElementById("fileInput");
-const selectBtn       = document.getElementById("selectFile");
-const fileList        = document.getElementById("fileList");
-const globalStatus    = document.getElementById("globalStatus");
-const actionBar       = document.getElementById("actionBar");
-const downloadAllBtn  = document.getElementById("downloadAllButton");
-const restartBtn      = document.getElementById("restartButton");
-const summaryDiv      = document.getElementById("summary");
+/* =================================================
+   Sélection des éléments du DOM
+================================================= */
+const API_BASE           = "/api";
+const dropzone           = document.getElementById("dropzone");
+const fileInput          = document.getElementById("fileInput");
+const selectBtn          = document.getElementById("selectFile");
+const fileList           = document.getElementById("fileList");
+const downloadAllSection = document.getElementById("downloadAll");
+const downloadAllButton  = document.getElementById("downloadAllButton");
+const restartButton      = document.getElementById("restartButton");
+const summaryDiv         = document.getElementById("summary");
+const actionBar          = document.getElementById("actionBar");
 
-/**
- * Génère un identifiant unique (chaîne alphanumérique).
- */
+/* =================================================
+   Génération d’un ID unique pour chaque fichier
+================================================= */
 function generateUniqueId() {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
 }
 
-/**
- * Convertit une taille (en octets) en quelque-chose de lisible (Bytes, KB, MB, GB).
- */
+/* =================================================
+   Conversion d’octets → chaîne “XX.XX MB/KB/Bytes”
+================================================= */
 function formatFileSize(bytes) {
-  if (bytes === 0) {
-    return "0 Bytes";
-  }
-  const k = 1024;
+  if (bytes === 0) return "0 Bytes";
+  const k     = 1024;
   const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  const i     = Math.floor(Math.log(bytes) / Math.log(k));
+  const size  = (bytes / Math.pow(k, i)).toFixed(2);
+  return `${size} ${sizes[i]}`;
 }
 
-/**
- * Crée et retourne l’élément DOM correspondant à un fichier avant/après traitement.
- *
- * @param {File} file       - Le fichier local sélectionné (avant upload).
- * @param {string} id       - L’identifiant unique généré pour ce fichier.
- * @returns {HTMLElement}   - La <div class="file-item"> construite.
- */
+/* =================================================
+   Création d’un “file‐item” dans la liste
+   - file : objet File de l’input
+   - id   : identifiant unique généré
+================================================= */
 function createFileItem(file, id) {
-  // Conteneur principal
   const fileItem = document.createElement("div");
   fileItem.className = "file-item";
-  fileItem.dataset.fileStatus = "uploading"; // "uploading", "processing", "processed"
+  fileItem.dataset.fileId = id;
 
-  // Colonne 1 : Nom + taille d’origine
+  // 1) Info : nom + taille originale
   const infoDiv = document.createElement("div");
   infoDiv.className = "file-info";
   infoDiv.innerHTML = `
@@ -67,7 +63,7 @@ function createFileItem(file, id) {
     </div>
   `;
 
-  // Colonne 2 : Zone de progression + status text + spinner + check
+  // 2) Zone de statut : barre de progression / texte / icône
   const statusDiv = document.createElement("div");
   statusDiv.className = "status-area";
   statusDiv.innerHTML = `
@@ -81,80 +77,70 @@ function createFileItem(file, id) {
     <div class="check-icon">✓</div>
   `;
 
-  // Colonne 3 : Bouton Télécharger (initialement masqué)
+  // 3) Bouton Télécharger (masqué tant que pas traité)
   const downloadButton = document.createElement("button");
-  downloadButton.className = "button button-secondary download-button hidden";
+  downloadButton.className = "download-button hidden";
   downloadButton.textContent = "Télécharger";
+  downloadButton.disabled = true;
   downloadButton.dataset.fileId = id;
   downloadButton.dataset.original = file.name;
-  downloadButton.disabled = true; // sera activé après traitement
 
+  // Assemblage
   fileItem.appendChild(infoDiv);
   fileItem.appendChild(statusDiv);
   fileItem.appendChild(downloadButton);
-
   return fileItem;
 }
 
-/**
- * Réinitialise l’interface pour un nouvel envoi :
- * - Vide la liste des fichiers.
- * - Masque le résumé final.
- * - Réaffiche la dropzone.
- * - Désactive le bouton “Télécharger tous les fichiers”.
- * - Masque le texte globalStatus.
- */
+/* =================================================
+   Réinitialisation de l’interface pour recommencer
+================================================= */
 function resetInterface() {
-  // Efface tout le contenu de fileList
+  // Supprimer tous les messages de statut texte restants
+  document.querySelectorAll(".status-text").forEach(el => el.remove());
+
+  // Vider la liste de fichiers
   fileList.innerHTML = "";
-
-  // Réinitialise les statuts globaux
-  globalStatus.classList.add("hidden");
-  globalStatus.textContent = "";
-
-  // Masque résumé
+  
+  // Cacher la section “Télécharger tous”
+  downloadAllSection.classList.add("hidden");
+  
+  // Cacher le résumé final
   summaryDiv.classList.add("hidden");
-  summaryDiv.innerHTML = "";
-
-  // Masque “Télécharger tous” ou désactive-le
-  downloadAllBtn.disabled = true;
-
-  // Réaffiche la dropzone
+  
+  // Réafficher la dropzone
   dropzone.classList.remove("hidden");
-
-  // Vide l’input file
+  
+  // Réinitialiser l’input
   fileInput.value = "";
-
-  // Supprime tout message d’erreur éventuel
-  document.querySelectorAll(".error-message").forEach(e => e.remove());
+  
+  // Réactiver les boutons d’action
+  downloadAllButton.disabled = false;
+  restartButton.disabled = false;
 }
 
-/**
- * Gestion du clic sur “Sélectionner un ou plusieurs fichiers”.
- */
-selectBtn.onclick = () => {
-  fileInput.click();
-};
+/* =================================================
+   Clic sur “Sélectionner un ou plusieurs fichiers”
+================================================= */
+selectBtn.onclick = () => fileInput.click();
 
-/**
- * Gestion du clic sur “Recommencer”.
- */
-restartBtn.onclick = resetInterface;
+/* =================================================
+   Clic sur “Recommencer”
+================================================= */
+restartButton.onclick = resetInterface;
 
-/**
- * Quand l’utilisateur choisit un fichier via l’input.
- */
-fileInput.onchange = (e) => {
+/* =================================================
+   Détection du changement dans l’input file (upload)
+================================================= */
+fileInput.onchange = e => {
   if (e.target.files.length) {
     uploadFiles(e.target.files);
   }
 };
 
-/**
- * Interaction “Drag & Drop” sur la dropzone :
- * - Change la classe “hover” pour l’effet visuel.
- * - Lorsque l’on drop des fichiers, on appelle uploadFiles().
- */
+/* =================================================
+   Style drag’n’drop : ajout/suppression de la classe “hover”
+================================================= */
 ["dragenter", "dragover"].forEach(evt => {
   dropzone.addEventListener(evt, e => {
     e.preventDefault();
@@ -169,6 +155,10 @@ fileInput.onchange = (e) => {
     dropzone.classList.remove("hover");
   });
 });
+
+/* =================================================
+   Drop des fichiers dans la dropzone
+================================================= */
 dropzone.addEventListener("drop", e => {
   const files = e.dataTransfer.files;
   if (files.length) {
@@ -176,32 +166,22 @@ dropzone.addEventListener("drop", e => {
   }
 });
 
-/**
- * uploadFiles(files)
- *
- * - Masque la dropzone, affiche la liste de “file-item” pour chaque fichier.
- * - Initialise un XHR pour l’upload (afin d’afficher le % global).
- * - Dès que l’upload XHR est terminé, appelle beginProcessingPhase() pour suivre le statut OCR.
- *
- * @param {FileList|File[]} files
- */
+/* =================================================
+   Fonction principale : upload AJAX + progression
+================================================= */
 async function uploadFiles(files) {
-  // 1) Réinitialisation visuelle
+  // 1) Cacher la dropzone / vider ancienne liste / masquer “Télécharger tous”
   fileList.innerHTML = "";
-  globalStatus.classList.remove("hidden");
-  globalStatus.classList.remove("processed", "downloaded");
-  globalStatus.classList.add("processing");
-  globalStatus.textContent = "Téléversement en cours…";
+  downloadAllSection.classList.add("hidden");
   summaryDiv.classList.add("hidden");
-  summaryDiv.innerHTML = "";
-  downloadAllBtn.disabled = true;
   dropzone.classList.add("hidden");
 
-  // 2) Création des file-items et préparation du FormData
-  const fileItems = new Map(); // clé = id, valeur = { fileItem, fileName }
-  const fileIdMap = {};        // clé = nom original, valeur = id
+  // 2) Préparer un Map pour stocker les éléments liés à chaque ID
+  const fileItems = new Map();
+  const fileIdMap = {};
   const formData = new FormData();
 
+  // 3) Pour chaque fichier sélectionné :
   for (const file of files) {
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
@@ -211,220 +191,200 @@ async function uploadFiles(files) {
     fileList.appendChild(fileItem);
     fileItems.set(id, { fileItem, fileName: file.name });
   }
+  // 4) Inclure la map des IDs dans le FormData (JSON)
   formData.append("file_ids", JSON.stringify(fileIdMap));
 
-  // 3) Lancement du XHR pour le téléversement
+  // 5) Préparer XHR pour affiner la progression
   const xhr = new XMLHttpRequest();
   xhr.open("POST", `${API_BASE}/upload`, true);
 
   const startTime = Date.now();
+  // Message global au‐dessus de la liste
+  const globalInfo = document.createElement("div");
+  globalInfo.className = "status-text processing";
+  globalInfo.textContent = "Début du téléversement…";
+  fileList.parentElement.insertBefore(globalInfo, fileList);
 
-  // Événement “progress” de l’upload : mise à jour de toutes les barres
-  xhr.upload.addEventListener("progress", (e) => {
+  /* ----------------------------------------
+     Événement “progress” pendant l’upload
+  ---------------------------------------- */
+  xhr.upload.addEventListener("progress", e => {
     if (!e.lengthComputable) return;
     const percentComplete = (e.loaded / e.total) * 100;
-    const elapsed = (Date.now() - startTime) / 1000;    // secondes écoulées
-    const speed = e.loaded / elapsed;                   // octets/seconde
-    const remaining = Math.ceil((e.total - e.loaded) / speed); // sec restantes
+    const elapsed = (Date.now() - startTime) / 1000; // secondes
+    const speed = e.loaded / elapsed;                // octets/sec
+    const remaining = (e.total - e.loaded) / speed;  // sec restantes
 
-    // Mise à jour de la barre de chaque file-item
+    // Mettre à jour la barre pour chaque file‐item
     fileItems.forEach(({ fileItem }) => {
       const progressFill = fileItem.querySelector(".progress-fill");
       progressFill.style.width = `${percentComplete.toFixed(1)}%`;
     });
 
-    // Texte global
-    globalStatus.textContent = `Téléversement : ${percentComplete.toFixed(1)} % — Temps estimé : ${remaining}s`;
+    // Mettre à jour le message global
+    globalInfo.textContent = `Téléversement : ${percentComplete.toFixed(1)} % — Temps estimé : ${Math.ceil(remaining)} s`;
   });
 
-  // Événement “load” XHR (upload terminé)
+  /* ----------------------------------------
+     Lorsqu’upload terminé (réponse 200)
+  ---------------------------------------- */
   xhr.onload = async function () {
     if (xhr.status === 200) {
-      globalStatus.textContent = "Téléversement terminé ✓";
-      globalStatus.classList.remove("processing");
-      globalStatus.classList.add("processed");
+      // Indiquer “Téléversement terminé”
+      globalInfo.textContent = "Téléversement terminé ✓";
+      globalInfo.className = "status-text processed";
 
-      // Court délai avant de passer à l’étape “traitement”
+      // Après un bref délai, lancer la phase “Traitement OCR” 
       setTimeout(() => {
-        beginProcessingPhase(fileItems, JSON.parse(xhr.responseText).job_id);
-      }, 300);
-
+        const { job_id } = JSON.parse(xhr.responseText);
+        beginProcessingPhase(fileItems, job_id);
+      }, 500);
     } else {
       showError("Erreur lors du téléversement");
       dropzone.classList.remove("hidden");
-      globalStatus.classList.add("error");
-      globalStatus.textContent = "Erreur de téléversement";
     }
   };
 
+  /* ----------------------------------------
+     Erreur réseau pendant l’upload
+  ---------------------------------------- */
   xhr.onerror = function () {
     showError("Erreur réseau lors du téléversement");
     dropzone.classList.remove("hidden");
-    globalStatus.classList.add("error");
-    globalStatus.textContent = "Erreur réseau";
   };
 
+  // 6) Envoyer la requête
   xhr.send(formData);
 }
 
-/**
- * beginProcessingPhase(fileItems, jobId)
- *
- * - Met à jour le texte global pour “Traitement en cours…”.
- * - Modifie chaque file-item pour indiquer le statut “processing”.
- * - Cache le spinner initial (upload) et fait apparaître le spinner de traitement si besoin.
- * - Démarre le polling via checkStatus().
- *
- * @param {Map<string, {fileItem:HTMLElement, fileName:string}>} fileItems
- * @param {string} jobId
- */
+/* =================================================
+   Phase “Traitement OCR” : modifier visuel + polling
+   - fileItems : Map(id → { fileItem, fileName })
+   - jobId     : identifiant du job retourné par /upload
+================================================= */
 async function beginProcessingPhase(fileItems, jobId) {
-  // Texte global
-  globalStatus.textContent = "Traitement en cours…";
-  globalStatus.classList.remove("processed");
-  globalStatus.classList.add("processing");
+  // 1) Remplacer le message global “Téléversement terminé” → “Traitement en cours”
+  const globalInfo = document.querySelector(".status-text.processed");
+  if (globalInfo) {
+    globalInfo.textContent = "Traitement en cours…";
+    globalInfo.className = "status-text processing";
+  }
 
-  // Pour chaque file-item, on passe en “processing”
+  // 2) Pour chaque fileItem, modifier texte / afficher spinner
   fileItems.forEach(({ fileItem }) => {
-    fileItem.dataset.fileStatus = "processing";
     const statusText = fileItem.querySelector(".status-text");
     const spinner    = fileItem.querySelector(".spinner");
     const checkIcon  = fileItem.querySelector(".check-icon");
 
     statusText.textContent = "Traitement en cours…";
-    statusText.className   = "status-text processing";
+    statusText.className = "status-text processing";
     spinner.style.display  = "block";
     checkIcon.classList.remove("show");
-    // On garde la barre de progression pleine (100%) après upload
-    const progressFill = fileItem.querySelector(".progress-fill");
-    progressFill.style.width = "100%";
   });
 
-  // Démarre le polling sur /status/{jobId}
+  // 3) Démarrer le polling vers /status/{jobId}
   await checkStatus(jobId, fileItems);
 }
 
-/**
- * checkStatus(jobId, fileItems)
- *
- * - Interroge /api/status/{jobId}.
- * - Si “done” avec files[], on met à jour chaque file-item :
- *     • statut “Traitement terminé” + couleur verte.
- *     • On récupère size_after (octets) pour l’afficher.
- *     • On active le bouton “Télécharger” pour chaque fichier.
- * - On active aussi “Télécharger tous les fichiers”.
- * - Sinon, on attend 2 secondes puis on ré-appelle checkStatus().
- *
- * @param {string} jobId
- * @param {Map<string, {fileItem:HTMLElement, fileName:string}>} fileItems
- */
+/* =================================================
+   Polling de /status pour mettre à jour les items
+================================================= */
 async function checkStatus(jobId, fileItems) {
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
-    if (!response.ok) {
-      throw new Error(`Statut HTTP : ${response.status}`);
-    }
-    const data = await response.json();
+    const data     = await response.json();
 
-    if (data.status === "done" && Array.isArray(data.files)) {
-      // Mise à jour globale
-      globalStatus.textContent = "Traitement terminé ✓";
-      globalStatus.classList.remove("processing");
-      globalStatus.classList.add("processed");
-
-      // Pour chaque fichier traité
+    if (data.status === "done" && data.files) {
+      /* ------------------------------------------------
+         1) Marquer chaque fichier “terminé” & afficher taille après
+      ------------------------------------------------ */
       data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
         const { fileItem } = entry;
 
-        // 1) Changer le statut du file-item
-        fileItem.dataset.fileStatus = "processed";
-        const statusText  = fileItem.querySelector(".status-text");
-        const spinner     = fileItem.querySelector(".spinner");
-        const checkIcon   = fileItem.querySelector(".check-icon");
-        const downloadBtn = fileItem.querySelector(".download-button");
-        const fileSizeEl  = fileItem.querySelector(".file-size");
+        const statusText   = fileItem.querySelector(".status-text");
+        const spinner      = fileItem.querySelector(".spinner");
+        const checkIcon    = fileItem.querySelector(".check-icon");
+        const downloadBtn  = fileItem.querySelector(".download-button");
+        const fileSizeEl   = fileItem.querySelector(".file-size");
 
+        // a) Texte + couleur “Traitement terminé”
         statusText.textContent = "Traitement terminé ✓";
         statusText.className   = "status-text processed";
         spinner.style.display  = "none";
         checkIcon.classList.add("show");
 
-        // 2) Mise à jour de la taille : “<ancienne> → <nouvelle>”
+        // b) Mettre à jour la taille affichée :
+        //    “XX.XX MB → YY.YY MB” (size_after en octets reçu)
         const originalSize = parseInt(fileSizeEl.dataset.originalSize, 10);
-        const afterSize    = fileInfo.size_after || 0;
-        fileSizeEl.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(afterSize)}`;
+        const newSize      = fileInfo.size_after || 0;
+        fileSizeEl.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(newSize)}`;
 
-        // 3) Activer et afficher le bouton “Télécharger”
+        // c) Afficher & activer le bouton “Télécharger”
         downloadBtn.classList.remove("hidden");
         downloadBtn.disabled = false;
-
-        // Lorsque l’on clique dessus, on appelle downloadFile()
-        downloadBtn.onclick = () => {
-          downloadFile(jobId, fileInfo.id, fileInfo.original);
-        }
+        downloadBtn.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
       });
 
-      // 4) Activer “Télécharger tous les fichiers”
-      downloadAllBtn.disabled = false;
-      downloadAllBtn.onclick = () => {
-        downloadAllFiles(jobId, data.files);
-      };
+      /* ------------------------------------------------
+         2) Afficher le bouton “Télécharger tous” 
+      ------------------------------------------------ */
+      downloadAllSection.classList.remove("hidden");
+      downloadAllButton.disabled = false;
+      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
 
-      // 5) Afficher le résumé final
+      /* ------------------------------------------------
+         3) Afficher le résumé final
+      ------------------------------------------------ */
       showSummary(data.files);
 
     } else if (data.status === "error") {
       throw new Error(data.details || "Erreur pendant le traitement");
     } else {
-      // Pas encore terminé → on patiente 2 secondes
+      // Si pas terminé ni error, attendre 2 s puis relancer
       setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
-  } catch (err) {
-    showError(err.message);
-    globalStatus.textContent = "Erreur de statut";
-    globalStatus.classList.add("error");
+  } catch (error) {
+    showError(error.message);
     dropzone.classList.remove("hidden");
   }
 }
 
-/**
- * downloadFile(jobId, fileId, originalName)
- *
- * - Désactive et change le texte du bouton “Télécharger” pour indiquer “Téléchargement en cours…”.
- * - Affiche le spinner et masque le ✓.
- * - Envoie un fetch() pour récupérer le PDF compressé.
- * - Crée un Blob et déclenche le download “a.click()” côté client.
- * - Lorsque terminé, change le statut en “Téléchargement terminé ✓” et réactive le bouton.
- *
- * @param {string} jobId
- * @param {string} fileId
- * @param {string} originalName
- */
+/* =================================================
+   Téléchargement d’un seul fichier (XHR + progression implémentable)
+   - jobId        : identifiant du job
+   - fileId       : ID unique du fichier
+   - originalName : nom d’utilisateur pour le fichier téléchargé
+================================================= */
 async function downloadFile(jobId, fileId, originalName) {
-  const selector = `.download-button[data-file-id="${fileId}"]`;
-  const downloadBtn = document.querySelector(selector);
-  if (!downloadBtn) return;
+  const selector       = `.download-button[data-file-id="${fileId}"]`;
+  const downloadButton = document.querySelector(selector);
+  if (!downloadButton) return;
 
-  const fileItem = downloadBtn.closest(".file-item");
+  const fileItem   = downloadButton.closest(".file-item");
   const statusText = fileItem.querySelector(".status-text");
   const spinner    = fileItem.querySelector(".spinner");
   const checkIcon  = fileItem.querySelector(".check-icon");
 
-  // Mise à jour visuelle avant fetch
-  downloadBtn.disabled = true;
-  downloadBtn.textContent = "Téléchargement…";
-  statusText.textContent = "Téléchargement en cours…";
-  statusText.className = "status-text downloading";
-  spinner.style.display = "block";
+  // 1) Verrouiller le bouton, modifier le texte, afficher spinner
+  downloadButton.disabled = true;
+  downloadButton.textContent = "Téléchargement…";
+  statusText.textContent    = "Téléchargement en cours…";
+  statusText.className      = "status-text downloading";
+  spinner.style.display     = "block";
   checkIcon.classList.remove("show");
 
   try {
+    /* ------------------------------------------------
+       NB : Utilisation ici d’un simple fetch/blocage pour la progression :
+       Si vous souhaitez afficher la progression, il faudrait recourir à
+       XMLHttpRequest avec xhr.onprogress pour mise à jour de .progress-fill
+       ou créer une barre séparée. Pour simplicité, on se contente d’un spinner.
+    ------------------------------------------------ */
     const response = await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    if (!response.ok) throw new Error("Erreur lors du téléchargement");
+
     const blob = await response.blob();
     const url  = window.URL.createObjectURL(blob);
     const a    = document.createElement("a");
@@ -435,48 +395,42 @@ async function downloadFile(jobId, fileId, originalName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    // Lorsque le téléchargement est terminé
+    // 2) Mise à jour visuelle “Téléchargement terminé”
     statusText.textContent = "Téléchargement terminé ✓";
     statusText.className   = "status-text downloaded";
     spinner.style.display  = "none";
     checkIcon.classList.add("show");
 
-    downloadBtn.disabled = false;
-    downloadBtn.textContent = "Télécharger à nouveau";
+    // 3) Réactiver le bouton pour retélécharger si besoin
+    downloadButton.disabled = false;
+    downloadButton.textContent = "Télécharger à nouveau";
 
-  } catch (err) {
+  } catch (error) {
     statusText.textContent = "Erreur de téléchargement";
     statusText.className   = "status-text";
-    showError(`Erreur de téléchargement : ${err.message}`);
-    downloadBtn.disabled   = false;
-    downloadBtn.textContent = "Télécharger";
+    showError(`Erreur de téléchargement : ${error.message}`);
+    downloadButton.disabled = false;
+    downloadButton.textContent = "Télécharger";
   }
 }
 
-/**
- * downloadAllFiles(jobId, filesArray)
- *
- * - Appelle séquentiellement downloadFile() pour chaque fichier du tableau “files”.
- * - “files” est l’array renvoyé par /status avec {id, original, size_after, …}.
- *
- * @param {string} jobId
- * @param {Array} filesArray
- */
-async function downloadAllFiles(jobId, filesArray) {
-  for (const fileInfo of filesArray) {
+/* =================================================
+   Téléchargement de tous les fichiers, un à un
+================================================= */
+async function downloadAllFiles(jobId, files) {
+  // Désactiver le bouton global pendant la séquence
+  downloadAllButton.disabled = true;
+  for (const fileInfo of files) {
     await downloadFile(jobId, fileInfo.id, fileInfo.original);
   }
+  // Après tous les téléchargements, réactiver
+  downloadAllButton.disabled = false;
 }
 
-/**
- * showSummary(filesArray)
- *
- * - Affiche la liste des noms de fichiers traités (final) dans #summary.
- * - Met en évidence une section “Résumé” sous la liste.
- *
- * @param {Array} filesArray
- */
-function showSummary(filesArray) {
+/* =================================================
+   Afficher le résumé final (liste des noms originaux)
+================================================= */
+function showSummary(files) {
   summaryDiv.innerHTML = "";
   summaryDiv.classList.remove("hidden");
 
@@ -485,7 +439,7 @@ function showSummary(filesArray) {
   summaryDiv.appendChild(heading);
 
   const ul = document.createElement("ul");
-  filesArray.forEach(f => {
+  files.forEach(f => {
     const li = document.createElement("li");
     li.textContent = f.original;
     ul.appendChild(li);
@@ -493,16 +447,12 @@ function showSummary(filesArray) {
   summaryDiv.appendChild(ul);
 }
 
-/**
- * showError(message)
- *
- * - Ajoute un <div class="error-message"> sous la liste pour informer l’utilisateur.
- * - L’erreur peut provenir de l’upload, du polling, du téléchargement, etc.
- */
+/* =================================================
+   Afficher un message d’erreur dans fileList
+================================================= */
 function showError(message) {
   const errorDiv = document.createElement("div");
   errorDiv.className = "error-message";
   errorDiv.textContent = message;
   fileList.appendChild(errorDiv);
 }
-

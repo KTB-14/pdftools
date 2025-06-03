@@ -2,28 +2,28 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OCR & Compression – PDFTools</title>
   <link rel="stylesheet" href="assets/css/style.css" />
-  <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
   <!-- Header fixe -->
   <header class="header-container">
-    <a href="index.html" class="return-button">← Retour à l’accueil</a>
+    <a href="index.html" class="return-button">← Retour à l'accueil</a>
     <h1>OCR & Compression PDF</h1>
   </header>
   <div class="header-space"></div>
 
   <main class="container">
-    <!-- Barre d’actions : Téléch. tous / Recommencer -->
+    <!-- Barre d'actions (Télécharger tous / Recommencer) -->
     <div id="actionBar" class="action-bar">
-      <button id="downloadAllButton" class="button" disabled>Télécharger tous les fichiers</button>
-      <button id="restartButton" class="button button-secondary">↻ Recommencer</button>
+      <button id="downloadAllButton" class="button">Télécharger tous les fichiers</button>
+      <button id="restartButton"    class="button button-secondary">↻ Recommencer</button>
     </div>
 
-    <!-- Section Upload / Dropzone -->
+    <!-- Section d'upload + liste + résumé -->
     <section class="upload-section">
+      <!-- Dropzone -->
       <div id="dropzone" class="dropzone">
         <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
         <button id="selectFile" class="button">Sélectionner un ou plusieurs fichiers</button>
@@ -31,13 +31,10 @@
         <p class="text-muted">Format accepté : PDF uniquement</p>
       </div>
 
-      <!-- Texte de statut global (upload + traitement) -->
-      <div id="globalStatus" class="status-text processing hidden">Traitement en cours…</div>
-
-      <!-- Liste des fichiers en cours / traités -->
+      <!-- Liste des fichiers en cours d'upload/traitement -->
       <div id="fileList" class="file-list"></div>
 
-      <!-- Résumé final (après traitement) -->
+      <!-- Résumé final -->
       <div id="summary" class="summary-section hidden"></div>
     </section>
   </main>
