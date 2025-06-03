@@ -196,9 +196,8 @@ async function checkStatus(jobId, fileItems) {
       if (globalInfo) {
         globalInfo.textContent = 'Traitement terminé ✓';
         globalInfo.className = 'status-text processed';
-        globalInfo.remove();
       }
-      
+
       data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
