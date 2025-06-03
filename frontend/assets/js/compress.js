@@ -1,4 +1,4 @@
-const API_BASE = "api";
+const API_BASE = "/api";
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectFile');
