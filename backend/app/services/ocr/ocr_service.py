@@ -96,17 +96,17 @@ class OCRService:
                 )
 
                 # Récupérer taille compressée après OCR
+                size_before = os.path.getsize(input_path)
                 output_size = os.path.getsize(output_path)
-
-                # 📝 Construire aussi le nom final pour l'utilisateur
-                final_name = f"{path.stem}_compressed{path.suffix}"
+                ratio = round(output_size / size_before * 100, 1)  # 51.7 (%)
 
                 output_files.append({
-                    "id": self.file_ids.get(filename, ""),  # seulement ça ajouté
+                    "id": self.file_ids.get(filename, ""),
                     "original": filename,
                     "output": out_name,
-                    "final_name": final_name,
-                    "size_after": output_size  # <<--- ici nouvelle clé
+                    "size_before": size_before,
+                    "size_after":  output_size,
+                    "ratio": ratio
                 })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
