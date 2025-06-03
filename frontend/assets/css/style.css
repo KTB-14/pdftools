@@ -75,8 +75,19 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--gr
 .error-message{background:#fee2e2;border:1px solid #ef4444;color:#b91c1c;padding:1rem;border-radius:8px;margin:1rem 0}
 
 /* FOOTER  */
-.footer-info {margin-top: 50px;padding: 20px;background-color: var(--gray-50);text-align: center;border-top: 1px solid var(--gray-300);}
-.footer-logo img {width: 100px;height: auto;margin-bottom: 15px;}
+/* --- Fixe body pour que le footer reste collé en bas --- */
+html, body {height: 100%;}
+body {display: flex;flex-direction: column;}
+/* --- Le main prend tout l'espace disponible --- */
+main.container {flex: 1;}
+/* --- Footer normal déjà fait --- */
+.footer-info {padding: 20px;background-color: var(--gray-50);text-align: center;border-top: 1px solid var(--gray-300);}
+/* --- Logo centré --- */
+.footer-logo img {width: 100px;height: auto;margin-bottom: 15px;transition: transform 0.3s ease; /* Animation smooth hover */}
+/* --- Hover du logo --- */
+.footer-logo img:hover {transform: scale(1.1); /* Petit zoom */}
+/* --- Texte --- */
 .footer-text p {margin: 5px 0;color: var(--gray-600);font-size: 0.9rem;}
+/* --- Lien --- */
 .footer-text a {color: var(--primary);text-decoration: none;font-weight: bold;}
 .footer-text a:hover {text-decoration: underline;}
