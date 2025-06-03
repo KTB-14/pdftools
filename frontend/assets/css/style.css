@@ -81,4 +81,4 @@ main.container {flex: 1;}
 .footer-text {text-align: center;}
 .footer-text p {margin: 5px 0;color: var(--gray-600);font-size: 0.9rem;}
 .footer-logo img { width: 100px; height: auto; margin-bottom: 15px; transition: transform 0.3s ease; }
-.footer-logo img:hover { transform: scale(1.1); }
+.footer-logo img:hover { transform: scale(1.1); filter: brightness(1.1);}
