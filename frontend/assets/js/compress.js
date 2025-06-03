@@ -1,46 +1,43 @@
-/* ------------------------------------------------------------------ */
-/*  PDFTools – compress.js (version “taille avant → après”)           */
-/* ------------------------------------------------------------------ */
-
-/* ---------- CONFIG ------------------------------------------------ */
+/* ------------- CONFIG ------------------------------------------------- */
 const API_BASE = "/api";
-const dropzone           = document.getElementById("dropzone");
-const fileInput          = document.getElementById("fileInput");
-const selectBtn          = document.getElementById("selectFile");
-const fileList           = document.getElementById("fileList");
+const dropzone  = document.getElementById("dropzone");
+const fileInput = document.getElementById("fileInput");
+const selectBtn = document.getElementById("selectFile");
+const fileList  = document.getElementById("fileList");
 const downloadAllButton  = document.getElementById("downloadAllButton");
 const restartButton      = document.getElementById("restartButton");
 const summaryDiv         = document.getElementById("summary");
 
-/* ---------- HELPERS ---------------------------------------------- */
+/* ------------- HELPERS ------------------------------------------------ */
 function generateUniqueId(){
-  return Math.random().toString(36).substring(2,10)+Date.now().toString(36);
-}
-// Convertit des octets → Ko / Mo / Go
-function formatBytes(b){
-  if(!b) return "0 B";
-  const k=1024, u=["B","KB","MB","GB","TB"];
-  const i=Math.floor(Math.log(b)/Math.log(k));
-  return (b/Math.pow(k,i)).toFixed(2)+" "+u[i];
+  return Math.random().toString(36).substring(2,10) + Date.now().toString(36);
 }
 
-/* ---------- UI : création d’une carte fichier -------------------- */
-function createFileItem(file,id){
-  const fileItem=document.createElement("div");
-  fileItem.className="file-item";
+// Convertit octets → unité lisible
+function formatFileSize(bytes){
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024, sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
 
-  // Colonne 1 : Nom + taille AVANT
-  const infoDiv=document.createElement("div");
-  infoDiv.className="file-info";
-  infoDiv.innerHTML=`
+/* ------------- UI ELEMENTS ------------------------------------------- */
+function createFileItem(file, id){
+  const fileItem = document.createElement("div");
+  fileItem.className = "file-item";
+
+  /* Col 1 : infos */
+  const infoDiv = document.createElement("div");
+  infoDiv.className = "file-info";
+  infoDiv.innerHTML = `
     <div class="file-name" title="${file.name}">${file.name}</div>
-    <div class="file-size">${formatBytes(file.size)}</div>
+    <div class="file-size">${formatFileSize(file.size)}</div>
   `;
 
-  // Colonne 2 : statut + barre
-  const statusBlock=document.createElement("div");
-  statusBlock.className="status-block";
-  statusBlock.innerHTML=`
+  /* Col 2 : statut + barre */
+  const statusBlock = document.createElement("div");
+  statusBlock.className = "status-block";
+  statusBlock.innerHTML = `
     <div class="status-area">
       <span class="status-text uploading" aria-live="polite">Téléversement en cours…</span>
       <div class="spinner"></div>
@@ -51,206 +48,269 @@ function createFileItem(file,id){
     </div>
   `;
 
-  // Colonne 3 : bouton
-  const downloadButton=document.createElement("button");
-  downloadButton.className="button button-secondary download-button hidden";
-  downloadButton.textContent="Télécharger";
-  downloadButton.dataset.fileId=id;
+  /* Col 3 : bouton télécharger */
+  const downloadButton = document.createElement("button");
+  downloadButton.className = "button button-secondary download-button hidden";
+  downloadButton.textContent = "Télécharger";
+  downloadButton.dataset.fileId = id;
+  downloadButton.dataset.original = file.name;
 
-  fileItem.append(infoDiv,statusBlock,downloadButton);
+  fileItem.appendChild(infoDiv);
+  fileItem.appendChild(statusBlock);
+  fileItem.appendChild(downloadButton);
+
   return fileItem;
 }
 
-/* ---------- RESET ------------------------------------------------- */
 function resetInterface(){
-  document.querySelectorAll(".status-text").forEach(el=>el.remove());
-  fileList.innerHTML="";
-  summaryDiv.classList.add("hidden");
-  dropzone.classList.remove("hidden");
-  fileInput.value="";
+  document.querySelectorAll('.status-text').forEach(el => el.remove());
+  fileList.innerHTML = '';
+  summaryDiv.classList.add('hidden');
+  dropzone.classList.remove('hidden');
+  fileInput.value = '';
 }
-selectBtn.onclick=()=>fileInput.click();
-restartButton.onclick=resetInterface;
 
-/* ---------- DRAG & DROP ------------------------------------------ */
-["dragenter","dragover"].forEach(evt=>{
-  dropzone.addEventListener(evt,e=>{
-    e.preventDefault();e.stopPropagation();dropzone.classList.add("hover");
+selectBtn.onclick = () => fileInput.click();
+restartButton.onclick = resetInterface;
+
+/* ------------- DRAG & DROP ------------------------------------------- */
+['dragenter', 'dragover'].forEach(evt => {
+  dropzone.addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.add('hover');
   });
 });
-["dragleave","drop"].forEach(evt=>{
-  dropzone.addEventListener(evt,e=>{
-    e.preventDefault();e.stopPropagation();dropzone.classList.remove("hover");
+['dragleave', 'drop'].forEach(evt => {
+  dropzone.addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.remove('hover');
   });
 });
-dropzone.addEventListener("drop",e=>{
-  if(e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
-});
-
-/* ---------- UPLOAD ------------------------------------------------ */
-async function uploadFiles(files){
-  fileList.innerHTML="";
-  summaryDiv.classList.add("hidden");
-  dropzone.classList.add("hidden");
-
-  const fileItems=new Map();       // id → {fileItem, sizeBefore}
-  const fileIdMap={}, formData=new FormData();
-
-  for(const file of files){
-    const id=generateUniqueId();
-    fileIdMap[file.name]=id;
-    formData.append("files",file);
-
-    const fileItem=createFileItem(file,id);
-    fileList.appendChild(fileItem);
-    fileItems.set(id,{fileItem,sizeBefore:file.size});
+dropzone.addEventListener('drop', e => {
+  const files = e.dataTransfer.files;
+  if (files.length) {
+    uploadFiles(files);
   }
-  formData.append("file_ids",JSON.stringify(fileIdMap));
+});
 
-  /* XHR avec barre de progression */
-  const xhr=new XMLHttpRequest();
-  xhr.open("POST",`${API_BASE}/upload`,true);
+/* ------------ UPLOAD -------------------------------------------------- */
+async function uploadFiles(files){
+  fileList.innerHTML = '';
+  summaryDiv.classList.add('hidden');
+  dropzone.classList.add('hidden');
 
-  const globalInfo=document.createElement("div");
-  globalInfo.className="status-text processing";
-  globalInfo.textContent="Début du téléversement…";
-  fileList.parentElement.insertBefore(globalInfo,fileList);
+  const fileItems = new Map();
+  const fileIdMap = {};
+  const formData = new FormData();
 
-  const t0=Date.now();
-  xhr.upload.addEventListener("progress",e=>{
-    if(!e.lengthComputable) return;
-    const pct=e.loaded/e.total*100;
-    const dt=(Date.now()-t0)/1000;      // s
-    const speed=e.loaded/dt;
-    const remain=(e.total-e.loaded)/speed;
+  for (const file of files) {
+    const id = generateUniqueId();
+    fileIdMap[file.name] = id;
+    formData.append('files', file);
 
-    fileItems.forEach(({fileItem})=>{
-      fileItem.querySelector(".progress-fill").style.width=`${pct.toFixed(1)}%`;
+    const fileItem = createFileItem(file, id);
+    fileList.appendChild(fileItem);
+
+    // NEW: on stocke sizeBefore pour chaque fichier
+    fileItems.set(id, { fileItem, sizeBefore: file.size });
+  }
+  formData.append('file_ids', JSON.stringify(fileIdMap));
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', `${API_BASE}/upload`, true);
+
+  const startTime = Date.now();
+  const globalInfo = document.createElement('div');
+  globalInfo.className = 'status-text processing';
+  globalInfo.textContent = 'Début du téléversement…';
+  fileList.parentElement.insertBefore(globalInfo, fileList);
+
+  xhr.upload.addEventListener('progress', (e) => {
+    if (!e.lengthComputable) return;
+    const percentComplete = (e.loaded / e.total) * 100;
+    const elapsed = (Date.now() - startTime) / 1000;
+    const speed = e.loaded / elapsed;
+    const remaining = (e.total - e.loaded) / speed;
+
+    fileItems.forEach(({ fileItem }) => {
+      const progressFill = fileItem.querySelector('.progress-fill');
+      progressFill.style.width = `${percentComplete.toFixed(1)}%`;
     });
-    globalInfo.textContent=`Téléversement : ${pct.toFixed(1)} % — ${Math.ceil(remain)} s restants`;
+    globalInfo.textContent = `Téléversement : ${percentComplete.toFixed(1)} % — Temps estimé : ${Math.ceil(remaining)} s`;
   });
 
-  xhr.onload=()=>{
-    if(xhr.status===200){
-      globalInfo.textContent="Téléversement terminé ✓";
-      globalInfo.className="status-text uploaded";
-      const jobId=JSON.parse(xhr.responseText).job_id;
-      setTimeout(()=>beginProcessingPhase(fileItems,jobId),500);
-    }else{
-      showError("Erreur lors du téléversement");dropzone.classList.remove("hidden");
+  xhr.onload = async function () {
+    if (xhr.status === 200) {
+      globalInfo.textContent = 'Téléversement terminé ✓';
+      globalInfo.className = 'status-text uploaded';
+      setTimeout(() => {
+        beginProcessingPhase(fileItems, JSON.parse(xhr.responseText).job_id);
+      }, 500);
+    } else {
+      showError('Erreur lors du téléversement');
+      dropzone.classList.remove('hidden');
     }
   };
-  xhr.onerror=()=>{showError("Erreur réseau lors du téléversement");dropzone.classList.remove("hidden");};
+
+  xhr.onerror = function () {
+    showError('Erreur réseau lors du téléversement');
+    dropzone.classList.remove('hidden');
+  };
 
   xhr.send(formData);
 }
 
-/* ---------- PROCESSING STATUS POLLING ----------------------------- */
-async function beginProcessingPhase(fileItems,jobId){
-  const gInfo=document.querySelector(".status-text.uploaded");
-  if(gInfo){gInfo.textContent="Traitement en cours…";gInfo.className="status-text processing";}
+/* -------- PROCESSING + CHECK STATUS ---------------------------------- */
+async function beginProcessingPhase(fileItems, jobId){
+  const globalInfo = document.querySelector('.status-text.uploaded');
+  if (globalInfo) {
+    globalInfo.textContent = 'Traitement en cours…';
+    globalInfo.className = 'status-text processing';
+  }
 
-  fileItems.forEach(({fileItem})=>{
-    const st=fileItem.querySelector(".status-text");
-    st.textContent="Traitement en cours…";st.className="status-text processing";
-    fileItem.querySelector(".spinner").style.display="block";
-    fileItem.querySelector(".check-icon").classList.remove("show");
+  fileItems.forEach(({ fileItem }) => {
+    const statusText = fileItem.querySelector('.status-text');
+    const spinner = fileItem.querySelector('.spinner');
+    const checkIcon = fileItem.querySelector('.check-icon');
+
+    statusText.textContent = 'Traitement en cours…';
+    statusText.className = 'status-text processing';
+    spinner.style.display = 'block';
+    checkIcon.classList.remove('show');
   });
 
-  await checkStatus(jobId,fileItems);
+  await checkStatus(jobId, fileItems);
 }
 
-async function checkStatus(jobId,fileItems){
-  try{
-    const res=await fetch(`${API_BASE}/status/${jobId}`);
-    const data=await res.json();
+async function checkStatus(jobId, fileItems){
+  try {
+    const response = await fetch(`${API_BASE}/status/${jobId}`);
+    const data = await response.json();
 
-    if(data.status==="done" && data.files){
-      const gInfo=document.querySelector(".status-text.processing");
-      if(gInfo){gInfo.textContent="Traitement terminé ✓";gInfo.className="status-text processed";}
+    if (data.status === 'done' && data.files) {
+      const globalInfo = document.querySelector('.status-text.processing');
+      if (globalInfo) {
+        globalInfo.textContent = 'Traitement terminé ✓';
+        globalInfo.className = 'status-text processed';
+      }
 
-      data.files.forEach(f=>{
-        const entry=fileItems.get(f.id);if(!entry) return;
-        const {fileItem,sizeBefore}=entry;
+      data.files.forEach(fileInfo => {
+        const entry = fileItems.get(fileInfo.id);
+        if (!entry) return;
+        const { fileItem, sizeBefore } = entry;
 
-        fileItem.querySelector(".status-text").textContent="Traitement terminé ✓";
-        fileItem.querySelector(".status-text").className="status-text processed";
-        fileItem.querySelector(".spinner").style.display="none";
-        fileItem.querySelector(".check-icon").classList.add("show");
+        const statusText = fileItem.querySelector('.status-text');
+        const spinner = fileItem.querySelector('.spinner');
+        const checkIcon = fileItem.querySelector('.check-icon');
+        const downloadButton = fileItem.querySelector('.download-button');
+        const sizeDiv = fileItem.querySelector('.file-size'); // NEW
 
-        // Afficher taille avant → après
-        const sizeDiv=fileItem.querySelector(".file-size");
-        sizeDiv.textContent=`${formatBytes(sizeBefore)} → ${formatBytes(f.size_after)}`;
+        statusText.textContent = 'Traitement terminé ✓';
+        statusText.className = 'status-text processed';
+        spinner.style.display = 'none';
+        checkIcon.classList.add('show');
 
-        const btn=fileItem.querySelector(".download-button");
-        btn.classList.remove("hidden");btn.disabled=false;
-        btn.addEventListener("click",()=>downloadFile(jobId,f.id,f.original));
+        downloadButton.classList.remove('hidden');
+        downloadButton.disabled = false;
+        downloadButton.addEventListener('click', () => {
+          downloadFile(jobId, fileInfo.id, fileInfo.original);
+        });
+
+        // NEW: affiche "taille avant → taille après"
+        sizeDiv.textContent = `${formatFileSize(sizeBefore)} → ${formatFileSize(fileInfo.size_after)}`;
       });
 
-      // Gère bouton « tout télécharger »
-      summaryDiv.classList.remove("hidden");
-      if(data.files.length<=1){downloadAllButton.style.display="none";}
-      else{downloadAllButton.style.display="inline-block";}
-      downloadAllButton.onclick=()=>downloadAllFiles(jobId,data.files);
+      summaryDiv.classList.remove('hidden');
+      if (data.files.length <= 1) {
+        downloadAllButton.style.display = 'none';
+      } else {
+        downloadAllButton.style.display = 'inline-block';
+      }
+      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
       showSummary(data.files);
 
-    }else if(data.status==="error"){
-      throw new Error(data.details||"Erreur pendant le traitement");
-    }else{
-      setTimeout(()=>checkStatus(jobId,fileItems),2000);
+    } else if (data.status === 'error') {
+      throw new Error(data.details || 'Erreur pendant le traitement');
+    } else {
+      setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
-  }catch(err){
-    showError(err.message);dropzone.classList.remove("hidden");
+  } catch (error) {
+    showError(error.message);
+    dropzone.classList.remove('hidden');
   }
 }
 
-/* ---------- DOWNLOAD ---------------------------------------------- */
-async function downloadFile(jobId,fileId,originalName){
-  const btn=document.querySelector(`.download-button[data-file-id="${fileId}"]`);
-  if(!btn) return;
-  const fileItem=btn.closest(".file-item");
-  const st=fileItem.querySelector(".status-text");
-  const sp=fileItem.querySelector(".spinner");
-  const ck=fileItem.querySelector(".check-icon");
+/* ---------- DOWNLOAD FUNCTIONS -------------------------------------- */
+async function downloadFile(jobId, fileId, originalName){
+  const selector = `.download-button[data-file-id="${fileId}"]`;
+  const downloadButton = document.querySelector(selector);
+  if (!downloadButton) return;
 
-  btn.disabled=true;btn.textContent="Téléchargement…";
-  st.textContent="Téléchargement en cours…";st.className="status-text downloading";
-  sp.style.display="block";ck.classList.remove("show");
+  const fileItem = downloadButton.closest('.file-item');
+  const statusText = fileItem.querySelector('.status-text');
+  const spinner = fileItem.querySelector('.spinner');
+  const checkIcon = fileItem.querySelector('.check-icon');
 
-  try{
-    const res=await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
-    if(!res.ok) throw new Error("Erreur lors du téléchargement");
-    const blob=await res.blob();
-    const url=window.URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;a.download=originalName;document.body.appendChild(a);a.click();
-    document.body.removeChild(a);window.URL.revokeObjectURL(url);
+  downloadButton.disabled = true;
+  downloadButton.textContent = 'Téléchargement…';
+  statusText.textContent = 'Téléchargement en cours…';
+  statusText.className = 'status-text downloading';
+  spinner.style.display = 'block';
+  checkIcon.classList.remove('show');
 
-    st.textContent="Téléchargement terminé ✓";st.className="status-text downloaded";
-    sp.style.display="none";ck.classList.add("show");
-    btn.disabled=false;btn.textContent="Télécharger à nouveau";
-  }catch(e){
-    st.textContent="Erreur de téléchargement";st.className="status-text";
-    showError(e.message);btn.disabled=false;btn.textContent="Télécharger";
+  try {
+    const response = await fetch(`${API_BASE}/download/${jobId}/file/${fileId}`);
+    if (!response.ok) throw new Error('Erreur lors du téléchargement');
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = originalName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    statusText.textContent = 'Téléchargement terminé ✓';
+    statusText.className = 'status-text downloaded';
+    spinner.style.display = 'none';
+    checkIcon.classList.add('show');
+
+    downloadButton.disabled = false;
+    downloadButton.textContent = 'Télécharger à nouveau';
+  } catch (error) {
+    statusText.textContent = 'Erreur de téléchargement';
+    statusText.className = 'status-text';
+    showError(`Erreur de téléchargement : ${error.message}`);
+    downloadButton.disabled = false;
+    downloadButton.textContent = 'Télécharger';
   }
 }
 
-async function downloadAllFiles(jobId,files){
-  for(const f of files){ await downloadFile(jobId,f.id,f.original); }
+async function downloadAllFiles(jobId, files){
+  for (const fileInfo of files) {
+    await downloadFile(jobId, fileInfo.id, fileInfo.original);
+  }
 }
 
-/* ---------- SUMMARY ------------------------------------------------ */
+/* ------------ SUMMARY & ERRORS -------------------------------------- */
 function showSummary(files){
-  const ul=summaryDiv.querySelector("ul");
-  ul.innerHTML="";
-  files.forEach(f=>{
-    const li=document.createElement("li");
-    li.textContent=f.original;ul.appendChild(li);
+  const ul = summaryDiv.querySelector('ul');
+  ul.innerHTML = '';
+
+  files.forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = `${f.original}`;
+    ul.appendChild(li);
   });
 }
 
-/* ---------- ERROR -------------------------------------------------- */
-function showError(msg){
-  const err=document.createElement("div");
-  err.className="error-message";err.textContent=msg;fileList.appendChild(err);
+function showError(message){
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message';
+  errorDiv.textContent = message;
+  fileList.appendChild(errorDiv);
 }
