@@ -90,6 +90,7 @@ async function uploadFiles(files) {
   for (const file of files) {
     const id = generateUniqueId();
     fileIdMap[file.name] = id;
+
     formData.append('files', file);
 
     const fileItem = createFileItem(file);
@@ -99,23 +100,36 @@ async function uploadFiles(files) {
 
   formData.append('file_ids', JSON.stringify(fileIdMap));
 
-  try {
-    const uploadRes = await fetch(`${API_BASE}/upload`, {
-      method: 'POST',
-      body: formData
-    });
+  // Passer à XMLHttpRequest pour progression
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', `${API_BASE}/upload`, true);
 
-    if (!uploadRes.ok) {
-      throw new Error('Échec du téléversement');
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      const percentComplete = (e.loaded / e.total) * 100;
+      fileItems.forEach(fileItem => {
+        const progressFill = fileItem.querySelector('.progress-fill');
+        progressFill.style.width = `${percentComplete}%`;
+      });
     }
+  });
 
-    const { job_id } = await uploadRes.json();
-    await checkStatus(job_id, fileItems);
+  xhr.onload = async function () {
+    if (xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      await checkStatus(response.job_id, fileItems);
+    } else {
+      showError('Erreur lors de l\'upload');
+      dropzone.classList.remove('hidden');
+    }
+  };
 
-  } catch (error) {
-    showError(error.message);
+  xhr.onerror = function () {
+    showError('Erreur réseau lors de l\'upload');
     dropzone.classList.remove('hidden');
-  }
+  };
+
+  xhr.send(formData);
 }
 
 async function checkStatus(jobId, fileItems) {
@@ -125,12 +139,13 @@ async function checkStatus(jobId, fileItems) {
 
     if (data.status === 'done' && data.files) {
       downloadAllSection.classList.remove('hidden');
+
       data.files.forEach(fileInfo => {
         const fileItem = fileItems.get(fileInfo.id);
         if (fileItem) {
           const progressFill = fileItem.querySelector('.progress-fill');
-          const downloadButton = fileItem.querySelector('.download-button');
           progressFill.style.width = '100%';
+          const downloadButton = fileItem.querySelector('.download-button');
           downloadButton.classList.remove('hidden');
           downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
         }
@@ -178,7 +193,7 @@ async function downloadAllFiles(jobId, files) {
   }
 
   for (const fileInfo of files) {
-    await downloadFile(jobId, fileInfo.id);
+    await downloadFile(jobId, fileInfo.id, fileInfo.original);
   }
 }
 
