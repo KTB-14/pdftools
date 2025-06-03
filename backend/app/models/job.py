@@ -20,6 +20,7 @@ class FileEntry(BaseModel):
     id: str
     original: str
     output: str
+    final_name: str  # <--- AJOUT IMPORTANT
     size_before: Optional[int] = None  
     size_after:  Optional[int] = None  
     ratio: Optional[float] = None      

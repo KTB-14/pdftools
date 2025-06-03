@@ -1,51 +1,37 @@
 /* ------------- CONFIG ------------------------------------------------- */
 const API_BASE = "/api";
-const dropzone  = document.getElementById("dropzone");
+const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
 const selectBtn = document.getElementById("selectFile");
-const fileList  = document.getElementById("fileList");
-const downloadAllButton  = document.getElementById("downloadAllButton");
-const restartButton      = document.getElementById("restartButton");
-const summaryDiv         = document.getElementById("summary");
+const fileList = document.getElementById("fileList");
+const downloadAllButton = document.getElementById("downloadAllButton");
+const restartButton = document.getElementById("restartButton");
+const summaryDiv = document.getElementById("summary");
 
 /* ------------- HELPERS ------------------------------------------------ */
-function generateUniqueId(){
-  return Math.random().toString(36).substring(2,10) + Date.now().toString(36);
+function generateUniqueId() {
+  return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
 }
 
-function formatFileSize(bytes){
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024, sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-}
-
-// ───────── NEW ─────────
-// Cette fonction fait exactement la même chose (formatage),
-// mais on la baptise `formatBytes` pour pouvoir l'utiliser
-// quand on aura deux valeurs à afficher (avant → après).
-function formatBytes(b){
+function formatBytes(b) {
   if (!b) return "0 B";
-  const k = 1024, u = ["B","KB","MB","GB","TB"];
+  const k = 1024, u = ["B", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(b) / Math.log(k));
   return (b / Math.pow(k, i)).toFixed(2) + " " + u[i];
 }
 
-
 /* ------------- UI ELEMENTS ------------------------------------------- */
-function createFileItem(file, id){
+function createFileItem(file, id) {
   const fileItem = document.createElement("div");
   fileItem.className = "file-item";
 
-  /* Col 1 : infos */
   const infoDiv = document.createElement("div");
   infoDiv.className = "file-info";
   infoDiv.innerHTML = `
     <div class="file-name" title="${file.name}">${file.name}</div>
-    <div class="file-size">${formatFileSize(file.size)}</div>
+    <div class="file-size">${formatBytes(file.size)}</div>
   `;
 
-  /* Col 2 : statut + barre */
   const statusBlock = document.createElement("div");
   statusBlock.className = "status-block";
   statusBlock.innerHTML = `
@@ -59,13 +45,10 @@ function createFileItem(file, id){
     </div>
   `;
 
-  /* Col 3 : bouton télécharger */
   const downloadButton = document.createElement("button");
   downloadButton.className = "button button-secondary download-button hidden";
   downloadButton.textContent = "Télécharger";
   downloadButton.dataset.fileId = id;
-  downloadButton.dataset.original = file.name;
-
   fileItem.appendChild(infoDiv);
   fileItem.appendChild(statusBlock);
   fileItem.appendChild(downloadButton);
@@ -73,7 +56,7 @@ function createFileItem(file, id){
   return fileItem;
 }
 
-function resetInterface(){
+function resetInterface() {
   document.querySelectorAll('.status-text').forEach(el => el.remove());
   fileList.innerHTML = '';
   summaryDiv.classList.add('hidden');
@@ -111,7 +94,7 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-async function uploadFiles(files){
+async function uploadFiles(files) {
   fileList.innerHTML = '';
   summaryDiv.classList.add('hidden');
   dropzone.classList.add('hidden');
@@ -175,7 +158,7 @@ async function uploadFiles(files){
   xhr.send(formData);
 }
 
-async function beginProcessingPhase(fileItems, jobId){
+async function beginProcessingPhase(fileItems, jobId) {
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
     globalInfo.textContent = 'Traitement en cours…';
@@ -196,7 +179,7 @@ async function beginProcessingPhase(fileItems, jobId){
   await checkStatus(jobId, fileItems);
 }
 
-async function checkStatus(jobId, fileItems){
+async function checkStatus(jobId, fileItems) {
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
@@ -208,7 +191,7 @@ async function checkStatus(jobId, fileItems){
         globalInfo.className = 'status-text processed';
       }
 
-      data.files.forEach(fileInfo => {        
+      data.files.forEach(fileInfo => {
         const entry = fileItems.get(fileInfo.id);
         if (!entry) return;
         const { fileItem } = entry;
@@ -217,11 +200,15 @@ async function checkStatus(jobId, fileItems){
         const spinner = fileItem.querySelector('.spinner');
         const checkIcon = fileItem.querySelector('.check-icon');
         const downloadButton = fileItem.querySelector('.download-button');
-        // Récupérer la taille avant (stockée dans fileItems) et la taille après (venue du back)
         const sizeDiv = fileItem.querySelector('.file-size');
+
         const originalBytes = entry.sizeBefore;
-        const compressedBytes = fileInfo.size_after; // JSON renvoyé par le back
-        sizeDiv.textContent = `${formatBytes(originalBytes)} → ${formatBytes(compressedBytes)}`;
+        const compressedBytes = fileInfo.size_after;
+        const ratioRetained = fileInfo.ratio || 0;
+        const reductionPercent = (100 - ratioRetained).toFixed(1);
+
+        sizeDiv.textContent = `${formatBytes(originalBytes)} → ${formatBytes(compressedBytes)} (${reductionPercent}% de réduction)`;
+
         statusText.textContent = 'Traitement terminé ✓';
         statusText.className = 'status-text processed';
         spinner.style.display = 'none';
@@ -230,22 +217,19 @@ async function checkStatus(jobId, fileItems){
         downloadButton.classList.remove('hidden');
         downloadButton.disabled = false;
         downloadButton.addEventListener('click', () => {
-          downloadFile(jobId, fileInfo.id, fileInfo.original);
+          downloadFile(jobId, fileInfo.id, fileInfo.final_name);
         });
       });
 
       summaryDiv.classList.remove('hidden');
-      // Si un seul fichier : cacher bouton "Télécharger tous les fichiers"
       if (data.files.length <= 1) {
         downloadAllButton.style.display = 'none';
       } else {
         downloadAllButton.style.display = 'inline-block';
       }
 
-      // Bind action      
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
       showSummary(data.files);
-
     } else if (data.status === 'error') {
       throw new Error(data.details || 'Erreur pendant le traitement');
     } else {
@@ -257,7 +241,7 @@ async function checkStatus(jobId, fileItems){
   }
 }
 
-async function downloadFile(jobId, fileId, originalName){
+async function downloadFile(jobId, fileId, finalName) {
   const selector = `.download-button[data-file-id="${fileId}"]`;
   const downloadButton = document.querySelector(selector);
   if (!downloadButton) return;
@@ -282,7 +266,7 @@ async function downloadFile(jobId, fileId, originalName){
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = originalName;
+    a.download = finalName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -304,16 +288,15 @@ async function downloadFile(jobId, fileId, originalName){
   }
 }
 
-async function downloadAllFiles(jobId, files){
+async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
-    await downloadFile(jobId, fileInfo.id, fileInfo.original);
+    await downloadFile(jobId, fileInfo.id, fileInfo.final_name);
   }
 }
 
-function showSummary(files){
+function showSummary(files) {
   const ul = summaryDiv.querySelector('ul');
   ul.innerHTML = '';
-
   files.forEach(f => {
     const li = document.createElement('li');
     li.textContent = `${f.original}`;
@@ -321,7 +304,7 @@ function showSummary(files){
   });
 }
 
-function showError(message){
+function showError(message) {
   const errorDiv = document.createElement('div');
   errorDiv.className = 'error-message';
   errorDiv.textContent = message;

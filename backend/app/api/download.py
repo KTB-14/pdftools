@@ -57,8 +57,7 @@ def download_by_file_id(job_id: str, file_id: str):
             raise HTTPException(status_code=404, detail="Fichier non trouvé pour cet ID")
 
         output_name = file_entry["output"]
-        original_name = file_entry["original"]
-
+        final_name = file_entry.get("final_name", output_name)  
         file_path = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR / output_name
 
         if not file_path.exists():
@@ -66,10 +65,11 @@ def download_by_file_id(job_id: str, file_id: str):
 
         return FileResponse(
             path=str(file_path),
-            filename=original_name,  # Renvoie au navigateur le nom d'origine
+            filename=final_name,  
             media_type="application/pdf"
         )
 
     except Exception as e:
         logger.exception(f"[{job_id}] ❌ Erreur pendant le téléchargement par ID : {e}")
         raise HTTPException(status_code=500, detail=f"Erreur : {str(e)}")
+    

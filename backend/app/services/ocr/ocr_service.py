@@ -104,8 +104,9 @@ class OCRService:
                     "id": self.file_ids.get(filename, ""),
                     "original": filename,
                     "output": out_name,
+                    "final_name": out_name,
                     "size_before": size_before,
-                    "size_after":  output_size,
+                    "size_after": output_size,
                     "ratio": ratio
                 })
 
