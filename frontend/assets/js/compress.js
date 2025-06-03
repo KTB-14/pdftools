@@ -4,27 +4,28 @@ const dropzone  = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
 const selectBtn = document.getElementById("selectFile");
 const fileList  = document.getElementById("fileList");
-const downloadAllSection = document.getElementById("downloadAll");
 const downloadAllButton  = document.getElementById("downloadAllButton");
 const restartButton      = document.getElementById("restartButton");
 const summaryDiv         = document.getElementById("summary");
 
 /* ------------- HELPERS ------------------------------------------------ */
 function generateUniqueId(){
-  return Math.random().toString(36).substring(2,10)+Date.now().toString(36);
+  return Math.random().toString(36).substring(2,10) + Date.now().toString(36);
 }
+
 function formatFileSize(bytes){
-  if(bytes===0) return "0 Bytes";
-  const k=1024,sizes=["Bytes","KB","MB","GB"],i=Math.floor(Math.log(bytes)/Math.log(k));
-  return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+" "+sizes[i];
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024, sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
 /* ------------- UI ELEMENTS ------------------------------------------- */
-function createFileItem(file,id){
+function createFileItem(file, id){
   const fileItem = document.createElement("div");
-  fileItem.className = "file-item";              // + ombre déjà dans CSS
+  fileItem.className = "file-item";
 
-  /* Col 1 : infos --------------------------------------------------- */
+  /* Col 1 : infos */
   const infoDiv = document.createElement("div");
   infoDiv.className = "file-info";
   infoDiv.innerHTML = `
@@ -32,7 +33,7 @@ function createFileItem(file,id){
     <div class="file-size">${formatFileSize(file.size)}</div>
   `;
 
-  /* Col 2 : statut + barre ----------------------------------------- */
+  /* Col 2 : statut + barre */
   const statusBlock = document.createElement("div");
   statusBlock.className = "status-block";
   statusBlock.innerHTML = `
@@ -46,30 +47,24 @@ function createFileItem(file,id){
     </div>
   `;
 
-  /* Col 3 : actions ------------------------------------------------- */
+  /* Col 3 : bouton télécharger */
   const downloadButton = document.createElement("button");
   downloadButton.className = "button button-secondary download-button hidden";
   downloadButton.textContent = "Télécharger";
   downloadButton.dataset.fileId = id;
   downloadButton.dataset.original = file.name;
 
-  /* Assemblage ------------------------------------------------------ */
   fileItem.appendChild(infoDiv);
   fileItem.appendChild(statusBlock);
   fileItem.appendChild(downloadButton);
+
   return fileItem;
 }
 
-function resetInterface() {
-  // 1) Supprime toutes les div .status-text (effacer « Téléversement… », « Traitement en cours… »…)
+function resetInterface(){
   document.querySelectorAll('.status-text').forEach(el => el.remove());
-
-  // 2) Vider la liste de fichiers + masquer “Télécharger tous” + résumé
   fileList.innerHTML = '';
-  downloadAllSection.classList.add('hidden');
   summaryDiv.classList.add('hidden');
-
-  // 3) Ré-afficher la dropzone et vider le champ fileInput
   dropzone.classList.remove('hidden');
   fileInput.value = '';
 }
@@ -104,9 +99,8 @@ dropzone.addEventListener('drop', e => {
   }
 });
 
-async function uploadFiles(files) {
+async function uploadFiles(files){
   fileList.innerHTML = '';
-  downloadAllSection.classList.add('hidden');
   summaryDiv.classList.add('hidden');
   dropzone.classList.add('hidden');
 
@@ -169,7 +163,7 @@ async function uploadFiles(files) {
   xhr.send(formData);
 }
 
-async function beginProcessingPhase(fileItems, jobId) {
+async function beginProcessingPhase(fileItems, jobId){
   const globalInfo = document.querySelector('.status-text.uploaded');
   if (globalInfo) {
     globalInfo.textContent = 'Traitement en cours…';
@@ -190,7 +184,7 @@ async function beginProcessingPhase(fileItems, jobId) {
   await checkStatus(jobId, fileItems);
 }
 
-async function checkStatus(jobId, fileItems) {
+async function checkStatus(jobId, fileItems){
   try {
     const response = await fetch(`${API_BASE}/status/${jobId}`);
     const data = await response.json();
@@ -224,7 +218,7 @@ async function checkStatus(jobId, fileItems) {
         });
       });
 
-      downloadAllSection.classList.remove('hidden');
+      summaryDiv.classList.remove('hidden');
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
       showSummary(data.files);
 
@@ -239,7 +233,7 @@ async function checkStatus(jobId, fileItems) {
   }
 }
 
-async function downloadFile(jobId, fileId, originalName) {
+async function downloadFile(jobId, fileId, originalName){
   const selector = `.download-button[data-file-id="${fileId}"]`;
   const downloadButton = document.querySelector(selector);
   if (!downloadButton) return;
@@ -286,29 +280,24 @@ async function downloadFile(jobId, fileId, originalName) {
   }
 }
 
-async function downloadAllFiles(jobId, files) {
+async function downloadAllFiles(jobId, files){
   for (const fileInfo of files) {
     await downloadFile(jobId, fileInfo.id, fileInfo.original);
   }
 }
 
-function showSummary(files) {
-  summaryDiv.innerHTML = '';
-  summaryDiv.classList.remove('hidden');
-  const heading = document.createElement('h2');
-  heading.textContent = 'Résumé des fichiers traités :';
-  summaryDiv.appendChild(heading);
+function showSummary(files){
+  const ul = summaryDiv.querySelector('ul');
+  ul.innerHTML = '';
 
-  const ul = document.createElement('ul');
   files.forEach(f => {
     const li = document.createElement('li');
     li.textContent = `${f.original}`;
     ul.appendChild(li);
   });
-  summaryDiv.appendChild(ul);
 }
 
-function showError(message) {
+function showError(message){
   const errorDiv = document.createElement('div');
   errorDiv.className = 'error-message';
   errorDiv.textContent = message;
