@@ -219,6 +219,14 @@ async function checkStatus(jobId, fileItems){
       });
 
       summaryDiv.classList.remove('hidden');
+      // Si un seul fichier : cacher bouton "Télécharger tous les fichiers"
+      if (data.files.length <= 1) {
+        downloadAllButton.style.display = 'none';
+      } else {
+        downloadAllButton.style.display = 'inline-block';
+      }
+
+      // Bind action      
       downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
       showSummary(data.files);
 
