@@ -132,7 +132,7 @@ async function checkStatus(jobId, fileItems) {
           const downloadButton = fileItem.querySelector('.download-button');
           progressFill.style.width = '100%';
           downloadButton.classList.remove('hidden');
-          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.original);
+          downloadButton.onclick = () => downloadFile(jobId, fileInfo.id, fileInfo.originalName);
         }
       });
 
