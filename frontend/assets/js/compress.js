@@ -214,7 +214,7 @@ async function checkStatus(jobId, fileItems) {
 
         // ➔ Ici on met à jour la taille affichée
         const fileSizeElement = fileItem.querySelector('.file-size');
-        const originalSize = parseInt(fileSizeElement.getAttribute('data-original-size'), 10);
+        const originalSize = parseInt(fileSizeElement.dataset.originalSize, 10);
         fileSizeElement.textContent = `${formatFileSize(originalSize)} → ${formatFileSize(fileInfo.size_after)}`;
       });
 
