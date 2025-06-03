@@ -8,14 +8,17 @@
 :root {
   --primary: #7b222e;
   --primary-dark: #5c1a22;
-  --success: #28a745;
   --gray-100: #f4f6f9;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-600: #6c757d;
   --gray-800: #343a40;
+  --status-yellow: #f6c23e;   /* Jaune/orange pour upload/processing */
+  --status-green: #1cc88a;    /* Vert pour terminé */
+  --status-blue: #36b9cc;     /* Bleu pour téléchargement en cours */
 }
 
+/* Corps général */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--gray-100);
@@ -25,7 +28,7 @@ body {
   flex-direction: column;
 }
 
-/* HEADER */
+/* HEADER FIXE */
 .header-container {
   background-color: var(--primary);
   color: white;
@@ -37,41 +40,47 @@ body {
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .header-container h1 {
   font-size: 1.5rem;
   margin: 0;
 }
-
 .return-button {
   color: white;
   text-decoration: none;
   display: inline-block;
   margin-bottom: 0.5rem;
 }
-
 .return-button:hover {
   text-decoration: underline;
 }
-
 .header-space {
-  height: 100px;
+  height: 100px; /* pour laisser de l’espace sous le header fix */
 }
 
-/* MAIN CONTENT */
+/* CONTENU PRINCIPAL */
 .container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* UPLOAD SECTION */
+/* BARRE D’ACTIONS (Télécharger tous / Recommencer) */
+.action-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+.action-bar.hidden {
+  display: none;
+}
+
+/* SECTION UPLOAD */
 .upload-section {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   padding: 2rem;
-  margin-bottom: 2rem;
 }
 
 /* DROPZONE */
@@ -84,33 +93,33 @@ body {
   margin-bottom: 2rem;
   text-align: center;
 }
-
 .dropzone:hover,
 .dropzone.hover {
-  background-color: #fbeaea;
+  background-color: #fdf0f0;
   border-color: var(--primary-dark);
 }
 
-/* FILE LIST */
+/* LISTE DES FICHIERS */
 .file-list {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
+/* ÉLÉMENT PAR FICHIER */
 .file-item {
   background: var(--gray-100);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
   display: grid;
-  grid-template-columns: 2fr 1fr 2fr auto;
+  grid-template-columns: 2fr 3fr auto;
   gap: 1rem;
   align-items: center;
 }
 
+/* Partie « nom + taille » */
 .file-info {
   min-width: 0;
 }
-
 .file-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -118,94 +127,27 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .file-size {
   color: var(--gray-600);
   font-size: 0.875rem;
 }
 
-/* STATUS AREA */
+/* PROGRESSION ET STATUTS */
 .status-area {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
-
-.status-text {
-  font-size: 0.9rem;
-  color: var(--gray-600);
-}
-
-.status-text.uploading {
-  color: var(--gray-600);
-}
-
-.status-text.uploaded {
-  color: var(--success);
-}
-
-.status-text.processing {
-  color: var(--primary);
-}
-
-.status-text.processed {
-  color: var(--success);
-}
-
-.status-text.downloading {
-  color: var(--gray-600);
-}
-
-.status-text.downloaded {
-  color: var(--success);
-}
-
-/* SPINNER */
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--gray-300);
-  border-top: 2px solid var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* CHECK ICON */
-.check-icon {
-  font-size: 16px;
-  color: var(--success);
-  transform: scale(0.8);
-  opacity: 0;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.check-icon.show {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* PROGRESS BAR (UPLOAD) */
 .progress-container {
   width: 100%;
-  background-color: var(--gray-200);
-  border-radius: 5px;
-  overflow: hidden;
-  margin-top: 5px;
 }
-
 .progress-bar {
   width: 100%;
-  height: 6px;
-  background: var(--gray-300);
-  border-radius: 5px;
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
 }
-
 .progress-fill {
   height: 100%;
   background: var(--primary);
@@ -213,97 +155,137 @@ body {
   transition: width 0.3s ease;
 }
 
-/* BUTTONS */
-.button {
-  background-color: var(--primary);
-  color: white;
-  padding: 0.6rem 1.2rem;
+/* Texte de statut (uploading / processing / processed / downloading / downloaded) */
+.status-text {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  color: var(--gray-800);
+}
+.status-text.uploading {
+  color: var(--status-yellow);
+}
+.status-text.processing {
+  color: var(--status-yellow);
+}
+.status-text.processed {
+  color: var(--status-green);
+}
+.status-text.downloading {
+  color: var(--status-blue);
+}
+.status-text.downloaded {
+  color: var(--status-green);
+}
+
+/* SPINNER (pour upload / processing / download) */
+.spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--gray-300);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* CHECK ICON (✓) */
+.check-icon {
+  display: none;
+  color: var(--status-green);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* BOUTON « Télécharger » individuel */
+.download-button {
+  background-color: var(--gray-200);
+  color: var(--gray-800);
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.download-button:hover:not(:disabled) {
+  background-color: var(--gray-300);
+}
+.download-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.download-button.hidden {
+  display: none !important;
+}
+
+/* BOUTONS GLOBAUX */
+.button {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
   text-decoration: none;
   display: inline-block;
   white-space: nowrap;
 }
-
 .button:hover {
   background-color: var(--primary-dark);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
-
 .button:disabled {
   background-color: var(--gray-300);
   cursor: not-allowed;
   transform: none;
 }
-
 .button-secondary {
   background-color: var(--gray-200);
   color: var(--gray-800);
 }
-
 .button-secondary:hover {
   background-color: var(--gray-300);
 }
 
-/* DOWNLOAD SECTION */
-.download-section {
-  text-align: center;
-  margin-top: 2rem;
-  padding: 1rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-/* SUMMARY */
-.summary {
-  margin-top: 2rem;
-  background: var(--gray-100);
-  padding: 1rem;
+/* SECTION RÉSUMÉ FINAL */
+.summary-section {
+  background: var(--gray-200);
   border-radius: 8px;
-  font-size: 0.95rem;
-  color: var(--gray-800);
-  border: 1px solid var(--gray-300);
+  padding: 1rem;
+  margin-top: 2rem;
 }
-
-.summary h2 {
-  font-size: 1.1rem;
+.summary-section h2 {
   margin-bottom: 0.5rem;
+  font-size: 1.1rem;
 }
-
-.summary ul {
-  margin-left: 1rem;
+.summary-section ul {
   list-style-type: disc;
-  color: var(--gray-600);
+  padding-left: 1.5rem;
+}
+.summary-section.hidden {
+  display: none;
 }
 
-/* UTILITIES */
-.hidden {
-  display: none !important;
-}
-
-/* ERROR MESSAGE */
-.error-message {
-  background-color: #fee2e2;
-  border: 1px solid #ef4444;
-  color: #b91c1c;
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-}
-
-/* RESPONSIVE DESIGN */
+/* RWD / Responsive */
 @media (max-width: 768px) {
   .file-item {
     grid-template-columns: 1fr;
   }
   .status-area {
-    margin-top: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .button {
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .action-bar button {
     width: 100%;
   }
 }

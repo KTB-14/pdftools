@@ -8,13 +8,21 @@
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
+  <!-- Header fixe -->
   <header class="header-container">
     <a href="index.html" class="return-button">← Retour à l'accueil</a>
-    <h1>OCR &amp; Compression PDF</h1>
+    <h1>OCR & Compression PDF</h1>
   </header>
   <div class="header-space"></div>
 
   <main class="container">
+    <!-- Barre d’actions : Téléch. tous / Recommencer -->
+    <div id="actionBar" class="action-bar hidden">
+      <button id="downloadAllButton" class="button">Télécharger tous les fichiers</button>
+      <button id="restartButton" class="button button-secondary">↻ Recommencer</button>
+    </div>
+
+    <!-- Section d’upload (dropzone) -->
     <section class="upload-section">
       <div id="dropzone" class="dropzone">
         <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
@@ -23,15 +31,11 @@
         <p class="text-muted">Format accepté : PDF uniquement</p>
       </div>
 
+      <!-- Zone où on listera chaque fichier pendant l’upload / traitement -->
       <div id="fileList" class="file-list"></div>
 
-      <div id="downloadAll" class="download-section hidden">
-        <button id="downloadAllButton" class="button">Télécharger tous les fichiers</button>
-        <button id="restartButton" class="button button-secondary">↻ Recommencer</button>
-      </div>
-
-      <!-- Résumé final après traitement -->
-      <div id="summary" class="summary hidden"></div>
+      <!-- Résumé final (liste des originaux) -->
+      <div id="summary" class="summary-section hidden"></div>
     </section>
   </main>
 
