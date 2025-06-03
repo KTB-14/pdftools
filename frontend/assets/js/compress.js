@@ -161,7 +161,6 @@ async function downloadFile(jobId, fileId) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'document.pdf'; // Le serveur renverra le vrai nom original
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
