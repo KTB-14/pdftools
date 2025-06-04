@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Aller à la racine du projet
+# Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$PROJECT_ROOT"
+APACHE_SRC="$PROJECT_ROOT/deploy/apache2/pdftools.conf"
+APACHE_DEST="/etc/apache2/sites-available/pdftools.conf"
 
 echo "==================================================================="
 echo "=========== INSTALLATION CONFIGURATION APACHE2 PDFTOOLS ==========="

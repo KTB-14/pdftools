@@ -1,9 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-# Aller à la racine du projet
+# Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$PROJECT_ROOT"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
+VENV_DIR="$PROJECT_ROOT/venv"
+LOGFILE="$BACKEND_DIR/logs/ocr.log"
+
 
 echo "==================================================================="
 echo "============== INSTALLATION DES DÉPENDANCES APT ==================="
@@ -26,5 +30,20 @@ for list in deploy/apt/*.txt; do
     done < "$list"
 done
 
+# Installation de jbig2enc
 echo
-echo "✅ Installation complète des dépendances APT terminée."
+echo "➤ Installation de jbig2enc (optimisation OCR PDF)..."
+cd /opt
+if [ -d "jbig2enc" ]; then
+  echo "    ➔ jbig2enc existe déjà, suppression pour réinstallation."
+  sudo rm -rf jbig2enc
+fi
+sudo git clone https://github.com/agl/jbig2enc.git
+cd jbig2enc
+sudo ./autogen.sh
+sudo ./configure
+sudo make -j"$(nproc)"
+sudo make install
+
+echo
+echo "Installation complète des dépendances APT + jbig2enc terminée."

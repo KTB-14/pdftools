@@ -1,41 +1,43 @@
 #!/bin/bash
 set -euo pipefail
 
-# Aller à la racine du projet
+# Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$PROJECT_ROOT"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
+VENV_DIR="$PROJECT_ROOT/venv"
+REQUIREMENTS_DIR="$PROJECT_ROOT/requirements"
 
+echo
 echo "==================================================================="
-echo "============ INSTALLATION ENVIRONNEMENT PYTHON ===================="
+echo "============== INSTALLATION ENV PYTHON & LIBS ===================="
 echo "==================================================================="
 echo
 
-# Définir les chemins
-VENV_DIR="$PROJECT_ROOT/venv"
-REQUIREMENTS_FILE="$PROJECT_ROOT/requirements/prod.txt"
-
-# Vérifier que requirements existe
-if [ ! -f "$REQUIREMENTS_FILE" ]; then
-  echo "❌ Erreur : $REQUIREMENTS_FILE introuvable."
-  exit 1
+# Création et activation de l'environnement virtuel
+echo "➤ Création de l'environnement virtuel Python..."
+if [ -d "$VENV_DIR" ]; then
+  echo "    ➔ Environnement existant détecté, suppression pour recréation."
+  rm -rf "$VENV_DIR"
 fi
 
-# Créer un venv si non existant
-if [ ! -d "$VENV_DIR" ]; then
-    echo "➤ Création de l'environnement virtuel..."
-    python3 -m venv "$VENV_DIR"
-else
-    echo "ℹ️ Environnement virtuel déjà existant."
-fi
-
-# Activer venv
+python3 -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 
-# Mettre à jour pip
+# Mise à jour pip
+echo "➤ Mise à jour de pip..."
 pip install --upgrade pip
 
-# Installer requirements
+# Installation des dépendances
+REQUIREMENTS_FILE="$REQUIREMENTS_DIR/prod.txt"
+
+if [ ! -f "$REQUIREMENTS_FILE" ]; then
+    echo "❌ Fichier requirements non trouvé : $REQUIREMENTS_FILE"
+    exit 1
+fi
+
+echo "➤ Installation des dépendances Python depuis $REQUIREMENTS_FILE..."
 pip install -r "$REQUIREMENTS_FILE"
 
 echo
-echo "✅ Installation Python terminée dans $VENV_DIR"
+echo "Installation des dépendances Python terminée avec succès."

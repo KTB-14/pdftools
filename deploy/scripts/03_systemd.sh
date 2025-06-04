@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Aller à la racine du projet
+# Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$PROJECT_ROOT"
+SYSTEMD_DIR="/etc/systemd/system"
+SOURCE_DIR="$PROJECT_ROOT/deploy/systemd"
 
 echo "==================================================================="
 echo "=========== INSTALLATION DES SERVICES SYSTEMD PDFTOOLS ============"

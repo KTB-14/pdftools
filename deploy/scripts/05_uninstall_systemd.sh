@@ -49,4 +49,4 @@ sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 
 echo
-echo
+echo "Désinstallation complète des services systemd PDFTools."

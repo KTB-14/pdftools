@@ -1,8 +1,9 @@
 #!/bin/bash
+set -euo pipefail
 
-# ================================
-# Désactivation de la config Apache PDFTools
-# ================================
+# Variables globales
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+APACHE_SITE="pdftools.conf"
 
 echo
 echo "==================================================================="
@@ -10,13 +11,11 @@ echo "============== DÉSINSTALLATION DE LA CONFIG APACHE ================"
 echo "==================================================================="
 echo
 
-SITE_NAME="pdftools.conf"
+echo "➤ Désactivation du site Apache PDFTools..."
+sudo a2dissite "$APACHE_SITE"
 
-echo "Désactivation du site PDFTools..."
-sudo a2dissite "$SITE_NAME"
-
-echo "Reload Apache pour appliquer les changements..."
+echo "➤ Reload d'Apache pour prise en compte..."
 sudo systemctl reload apache2
 
 echo
-echo "✅ Config Apache désactivée et rechargée."
+echo " Config Apache PDFTools désactivée avec succès."
