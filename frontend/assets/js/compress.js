@@ -375,8 +375,8 @@ async function checkStatus(jobId, fileItems) {
           progressFill.classList.remove("indeterminate");
           progressFill.style.width = "0%";
 
-          statusText.textContent = fileInfo.error;
-          statusText.className = "status-text error";  // 👈 Classe CSS rouge
+          statusText.textContent = texts[currentLang].errors[fileInfo.error] || fileInfo.error;
+          statusText.className = "status-text error";  
           
           sizeDiv.textContent = currentLang === "fr" ? "Non traité" : "Not processed";
 
