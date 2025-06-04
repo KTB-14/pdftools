@@ -1,0 +1,28 @@
+# =======================
+# 🚀 Core Base
+# =======================
+-r base.txt                 # Base de production (FastAPI, Celery, OCR, etc.)
+
+# =======================
+# 🧪 Test & Développement
+# =======================
+pytest                       # Framework de tests unitaires
+pytest-asyncio               # Support des tests asynchrones pour FastAPI
+black                        # Formatteur automatique de code Python (PEP8)
+flake8                       # Linter pour vérifier la conformité du code Python
+mypy                         # Typage statique (type checking)
+
+# =======================
+# 📚 Future Features — Outils supplémentaires
+# =======================
+img2pdf                      # Conversion d'images en PDF (futur traitement)
+pi-heif                      # Support des formats d'image HEIF/HEIC (ex: iPhone photos)
+coloredlogs                  # Affichage coloré des logs dans la console
+rich                          # Affichage enrichi (joli) pour logs, tableaux, et plus encore
+pygments                      # Coloration syntaxique pour logs et code source
+markdown-it-py                # Parsing ultra-rapide de fichiers Markdown
+mdurl                         # Parsing et gestion des URLs dans les Markdown
+python-docx                   # Manipulation de documents Word (.docx)
+Deprecated                    # Annotation des fonctions dépréciées (versionnage d'API)
+deprecation                   # Générateur d'avertissements de dépréciation (alternative)
+wrapt                         # Utilities avancés pour les décorateurs Python
