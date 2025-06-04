@@ -15,6 +15,10 @@ class Config(BaseSettings):
     OUTPUT_SUBDIR: str = "output_ocr"
     STATUS_FILENAME: str = "status.json"  
 
+    # === Backend FastAPI Fallback default ===
+    API_HOST: str = "0.0.0.0"
+    API_PORT: int = 8000 
+
     # === Celery / Redis ===
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/1"
