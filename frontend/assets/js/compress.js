@@ -470,6 +470,7 @@ async function downloadFile(jobId, fileId, finalName) {
 
 async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
+    if (fileInfo.error) continue;
     await downloadFile(jobId, fileInfo.id, fileInfo.final_name);
   }
 }
