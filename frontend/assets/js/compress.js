@@ -30,7 +30,6 @@ const texts = {
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
-    footerLinkText: "Accès direct Fareva Intranet",
   },
   en: {
     dropzonePrompt: `Drag & drop your PDF files here<br/><span class="text-muted">or</span>`,
@@ -56,7 +55,6 @@ const texts = {
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
-    footerLinkText: "Direct Access Fareva Intranet",
   },
 };
 
@@ -71,7 +69,6 @@ const summaryDiv = document.getElementById("summary");
 // Éléments du pied de page (pour mise à jour langue)
 const footerLogo = document.querySelector(".footer-logo img");
 const footerTextParagraphs = document.querySelectorAll(".footer-text p");
-const footerLink = document.querySelector(".footer-text a");
 
 // Boutons de changement de langue (drapeaux)
 const langButtons = document.querySelectorAll(".flag-btn");
@@ -127,7 +124,6 @@ function updateStaticText() {
   // --- PIED DE PAGE ---
   footerTextParagraphs[0].textContent = t.footerLine1;
   footerTextParagraphs[1].textContent = t.footerLine2;
-  footerLink.textContent = t.footerLinkText;
 
   // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
   const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");
