@@ -5,5 +5,4 @@ Description=Purge des jobs OCR expirés
 Type=oneshot
 WorkingDirectory=/opt/pdftools/backend
 Environment=PYTHONPATH=/opt/pdftools/backend
-ExecStart=/usr/bin/python3 scripts/purge_old_jobs.py
- 
+ExecStart=/opt/pdftools/venv/bin/python scripts/purge_old_jobs.py

@@ -4,10 +4,14 @@ After=network.target redis.service
 
 [Service]
 WorkingDirectory=/opt/pdftools/backend
+Environment=PYTHONPATH=/opt/pdftools/backend
+ExecStart=/opt/pdftools/venv/bin/celery -A worker.tasks worker --loglevel=INFO
 
-ExecStart=/usr/bin/python3 -m celery -A worker.tasks worker --loglevel=INFO
 Restart=always
+
+# Logs
+StandardOutput=append:/opt/pdftools/backend/logs/ocr.log
+StandardError=append:/opt/pdftools/backend/logs/ocr.log
 
 [Install]
 WantedBy=multi-user.target
- 

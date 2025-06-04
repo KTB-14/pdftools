@@ -1,10 +1,9 @@
 [Unit]
-Description=Planification horaire de la purge OCR
+Description=Planification périodique de la purge OCR
 
 [Timer]
-OnCalendar=hourly
+OnUnitActiveSec=30m
 Persistent=true
 
 [Install]
 WantedBy=timers.target
- 

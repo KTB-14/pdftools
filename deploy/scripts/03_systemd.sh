@@ -1,50 +1,44 @@
 #!/bin/bash
+set -euo pipefail
+
+# Aller à la racine du projet
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "==================================================================="
-echo "=========== DEBUT DU SCRIPT - DEPLOY_SYSTEMD.SH ==================="
+echo "=========== INSTALLATION DES SERVICES SYSTEMD PDFTOOLS ============"
 echo "==================================================================="
 echo
-echo
-
-echo "----------------------------------------------------------------------"
-echo "        Ce script déploie les services systemd pour PDFTools         "
-echo "----------------------------------------------------------------------"
-echo
-
-# Variables
-PROJECT_DIR="/opt/pdftools"
-SYSTEMD_DIR="/etc/systemd/system"
-SOURCE_DIR="$PROJECT_DIR/install/systemd"
 
 # Vérification des privilèges root
 if [ "$EUID" -ne 0 ]; then
-  echo "Ce script doit être exécuté en tant que root."
-  exit 1
+    echo "❌ Ce script doit être exécuté en tant que root (sudo)."
+    exit 1
 fi
 
-echo "Copie des fichiers .service et .timer..."
+# Chemins
+SYSTEMD_DIR="/etc/systemd/system"
+SOURCE_DIR="$PROJECT_ROOT/deploy/systemd"
+
+# Copier tous les .service et .timer
+echo "➤ Copie des fichiers .service et .timer vers $SYSTEMD_DIR"
 sudo cp "$SOURCE_DIR"/*.service "$SYSTEMD_DIR"/
 sudo cp "$SOURCE_DIR"/*.timer "$SYSTEMD_DIR"/
 
-echo "Rechargement de systemd..."
+# Recharger systemd
+echo "➤ Rechargement de systemd..."
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 
-echo "Activation et démarrage des services OCR et Celery..."
+# Activer et démarrer services
+echo "➤ Activation et démarrage de ocr-api.service..."
 sudo systemctl enable --now ocr-api.service
+
+echo "➤ Activation et démarrage de celery-ocr.service..."
 sudo systemctl enable --now celery-ocr.service
 
-echo "Activation et démarrage du timer de purge automatique..."
+echo "➤ Activation et démarrage de purge-ocr.timer..."
 sudo systemctl enable --now purge-ocr.timer
 
 echo
-echo "Vérification des statuts :"
-sudo systemctl status ocr-api.service --no-pager
-sudo systemctl status celery-ocr.service --no-pager
-sudo systemctl list-timers --all | grep purge-ocr || echo "(Timer inactif)"
-
-echo
-echo "==================================================================="
-echo "=========== FIN DU SCRIPT - DEPLOY_SYSTEMD.SH ====================="
-echo "==================================================================="
- 
+echo "✅ Services systemd installés et démarrés avec succès."
