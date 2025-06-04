@@ -80,7 +80,7 @@ main.container {flex: 1;}
 .footer-info {padding: 20px;background-color: var(--gray-50);text-align: center;border-top: 1px solid var(--gray-300); display: flex; flex-direction: column; align-items: center;}
 .footer-text {text-align: center;}
 .footer-text p {margin: 5px 0;color: var(--gray-600);font-size: 0.9rem;}
-.footer-logo img { width: 130px; height: auto; margin-bottom: 15px; transition: transform 0.3s ease; }
+.footer-logo img { width: 150px; height: auto; margin-bottom: 8px; transition: transform 0.3s ease; }
 .footer-logo img:hover { transform: scale(1.1); filter: brightness(1.1);}
 
 /* LANG SWITCH */
