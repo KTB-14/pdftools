@@ -30,6 +30,10 @@ echo "         INSTALLATION COMPLETE DE PDFTOOLS"
 echo "==================================================================="
 echo
 
+# 0️ - Sélection de l'environnement
+log "0. Sélection de l'environnement (DEV ou PROD)"
+bash "$SCRIPTS_DIR/00_select_env.sh"
+
 # 1️ - Installation des dépendances système APT
 log "1. Installation des dépendances système (APT)"
 bash "$SCRIPTS_DIR/01_apt.sh"

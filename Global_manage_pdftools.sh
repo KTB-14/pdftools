@@ -24,6 +24,12 @@ to_log() {
   echo -e "[\033[0;36m$(date '+%Y-%m-%d %H:%M:%S')\033[0m] $message" | tee -a "$LOGFILE"
 }
 
+
+if [ "$EUID" -ne 0 ]; then
+  echo "❌ Ce script doit être exécuté avec sudo."
+  exit 1
+fi
+
 # ================================ VÉRIFICATION PRÉREQUIS ================================
 
 check_prerequisites() {
@@ -48,6 +54,7 @@ show_menu() {
   echo "==================================================================="
   echo
   echo "====================== INSTALLATION & PRÉPARATION ======================"
+  echo " 0) Sélectionner l'environnement (DEV / PROD)"
   echo " 1) Installer les dépendances système (APT)"
   echo " 2) Installer les dépendances Python (venv + pip)"
   echo " 3) Installer/Configurer Apache2 (reverse proxy)"
@@ -71,6 +78,11 @@ show_menu() {
 }
 
 # ================================ ACTIONS ================================
+
+select_env() {
+  to_log "Selection de l'environnement dev/prod"
+  bash "$PROJECT_ROOT/deploy/scripts/00_select_env.sh"
+}
 
 install_apt() {
   to_log "Installation des dépendances système APT"
@@ -151,9 +163,10 @@ check_prerequisites
 
 while true; do
   show_menu
-  read -p "Choix [1-12] : " choice
+  read -p "Choix [0-13] : " choice
 
   case "$choice" in
+    0) select_env; read -p "Appuyez sur Entrée pour continuer..." ;;
     1) install_apt; read -p "Appuyez sur Entrée pour continuer..." ;;
     2) install_python; read -p "Appuyez sur Entrée pour continuer..." ;;
     3) install_apache; read -p "Appuyez sur Entrée pour continuer..." ;;

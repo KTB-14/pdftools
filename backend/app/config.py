@@ -17,8 +17,8 @@ class Config(BaseSettings):
 
     # === Backend FastAPI Fallback default ===
     API_HOST: str = "0.0.0.0"
-    API_PORT: int = 8000 
-
+    API_PORT: int = 8001
+    
     # === Celery / Redis ===
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/1"
