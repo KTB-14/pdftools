@@ -1,45 +1,41 @@
 #!/bin/bash
+set -euo pipefail
+
+# Aller à la racine du projet
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "==================================================================="
-echo "=========== DEBUT DU SCRIPT - INSTALL_PYTHON.SH ==================="
+echo "============ INSTALLATION ENVIRONNEMENT PYTHON ===================="
 echo "==================================================================="
 echo
-echo
 
-echo "----------------------------------------------------------------------"
-echo "       Ce script installe les dépendances Python de PDFTools         "
-echo "----------------------------------------------------------------------"
-echo
+# Définir les chemins
+VENV_DIR="$PROJECT_ROOT/venv"
+REQUIREMENTS_FILE="$PROJECT_ROOT/requirements/prod.txt"
 
-# Vérification des privilèges root
-if [ "$EUID" -ne 0 ]; then
-  echo "Ce script doit être exécuté avec sudo."
+# Vérifier que requirements existe
+if [ ! -f "$REQUIREMENTS_FILE" ]; then
+  echo "❌ Erreur : $REQUIREMENTS_FILE introuvable."
   exit 1
 fi
 
-REQUIREMENTS="/opt/pdftools/backend/requirements.txt"
-
-echo "Chemin du fichier requirements : $REQUIREMENTS"
-if [ ! -f "$REQUIREMENTS" ]; then
-  echo "Erreur : fichier requirements.txt introuvable."
-  exit 1
-fi
-
-echo
-echo "Installation des paquets Python globaux (hors environnement virtuel)"
-echo
-pip3 install -r "$REQUIREMENTS" --upgrade
-
-if [ $? -eq 0 ]; then
-  echo
-  echo "Les dépendances Python ont été installées avec succès."
+# Créer un venv si non existant
+if [ ! -d "$VENV_DIR" ]; then
+    echo "➤ Création de l'environnement virtuel..."
+    python3 -m venv "$VENV_DIR"
 else
-  echo
-  echo "Erreur lors de l'installation des dépendances Python."
-  exit 1
+    echo "ℹ️ Environnement virtuel déjà existant."
 fi
 
-echo 
-echo "==================================================================="
-echo "============ FIN DU SCRIPT - INSTALL_PYTHON.SH ===================="
-echo "==================================================================="
+# Activer venv
+source "$VENV_DIR/bin/activate"
+
+# Mettre à jour pip
+pip install --upgrade pip
+
+# Installer requirements
+pip install -r "$REQUIREMENTS_FILE"
+
+echo
+echo "✅ Installation Python terminée dans $VENV_DIR"
