@@ -27,7 +27,7 @@ const texts = {
     downloadAgain: "Télécharger à nouveau",
     downloadError: "Erreur de téléchargement",
     errorPrefix: "Erreur : ",
-    notProcessed: "Non traité",
+    notProcessed: "Non traité", 
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
@@ -53,7 +53,7 @@ const texts = {
     downloadAgain: "Download again",
     downloadError: "Download error",
     errorPrefix: "Error: ",
-    notProcessed: "Not processed",
+        notProcessed: "Not processed",   
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
@@ -99,6 +99,7 @@ function updateStaticText() {
   const t = texts[currentLang];
 
   // --- DROPZONE ---
+  // On remplace uniquement les enfants du dropzone pour éviter de casser la structure
   dropzone.innerHTML = `
     <p>${t.dropzonePrompt}</p>
     <button id="selectFile" class="button">${t.selectButton}</button>
@@ -126,9 +127,10 @@ function updateStaticText() {
   footerTextParagraphs[0].textContent = t.footerLine1;
   footerTextParagraphs[1].textContent = t.footerLine2;
 
-  // --- Statut global éventuel ---
+  // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
   const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");
   if (globalInfo) {
+    // On ne sait pas exactement où en est, on peut forcer le texte "upload start"
     globalInfo.textContent = t.uploadStart;
   }
 }
@@ -341,6 +343,22 @@ async function checkStatus(jobId, fileItems) {
         if (!entry) return;
         const { fileItem } = entry;
 
+        if (fileInfo.error) {                                         // NEW
+          progressFill.classList.remove("indeterminate");            // NEW
+          progressFill.style.width = "0%";                           // NEW
+          spinner.style.display = "none";                            // NEW
+          checkIcon.classList.remove("show");                        // NEW
+
+          statusText.textContent = fileInfo.error;                   // NEW
+          statusText.className = "status-text";                      // NEW
+          statusText.style.color = "red";                            // NEW
+          sizeDiv.textContent = texts[currentLang].notProcessed;     // NEW
+
+          downloadButton.classList.add("hidden");                    // NEW
+          downloadButton.disabled = true;                            // NEW
+          return;                                                    
+        }
+        
         const statusText = fileItem.querySelector(".status-text");
         const spinner = fileItem.querySelector(".spinner");
         const checkIcon = fileItem.querySelector(".check-icon");
@@ -348,58 +366,44 @@ async function checkStatus(jobId, fileItems) {
         const sizeDiv = fileItem.querySelector(".file-size");
         const progressFill = fileItem.querySelector(".progress-fill");
 
+        const originalBytes = entry.sizeBefore;
+        const compressedBytes = fileInfo.size_after;
         const ratioRetained = fileInfo.ratio || 0;
+        const reductionPercent = (100 - ratioRetained).toFixed(1);
 
         progressFill.classList.remove("indeterminate");
-        // NEW ▶ branche « erreur » (PDF non traité)
-        if (fileInfo.status === "error") {                              // NEW ▶
-          progressFill.style.width = "0%";                              // NEW ▶
-          spinner.style.display = "none";                               // NEW ▶
-          checkIcon.style.display = "none";                             // NEW ▶
-          statusText.textContent = fileInfo.reason ||
-                                   texts[currentLang].notProcessed;     // NEW ▶
-          statusText.className = "status-text";                         // NEW ▶
-          downloadButton.classList.add("hidden");                       // NEW ▶
-        } else {                                                        // NEW ▶ début branche « succès »
-          const originalBytes   = entry.sizeBefore;
-          const compressedBytes = fileInfo.size_after;
-          const reductionPercent = (100 - (fileInfo.ratio || 0)).toFixed(1);
+        progressFill.style.width = "100%";
 
-          progressFill.style.width = "100%";
-          sizeDiv.textContent = texts[currentLang].fileSizeInfo(
-            formatBytes(originalBytes),
-            formatBytes(compressedBytes),
-            reductionPercent
-          );
+        sizeDiv.textContent = texts[currentLang].fileSizeInfo(
+          formatBytes(originalBytes),
+          formatBytes(compressedBytes),
+          reductionPercent
+        );
 
-          statusText.textContent = texts[currentLang].processingDone;
-          statusText.className = "status-text processed";
-          spinner.style.display = "none";
-          checkIcon.classList.add("show");
+        statusText.textContent = texts[currentLang].processingDone;
+        statusText.className = "status-text processed";
+        spinner.style.display = "none";
+        checkIcon.classList.add("show");
 
-          downloadButton.textContent =
-            currentLang === "fr" ? "Télécharger" : "Download";
-          downloadButton.classList.remove("hidden");
-          downloadButton.disabled = false;
-          downloadButton.addEventListener("click", () => {
-            downloadFile(jobId, fileInfo.id, fileInfo.final_name);
-          });
-        }                                                               // NEW ▶ fin branche succès/erreur
+        downloadButton.textContent =
+          currentLang === "fr" ? "Télécharger" : "Download";
+        downloadButton.classList.remove("hidden");
+        downloadButton.disabled = false;
+        downloadButton.addEventListener("click", () => {
+          downloadFile(jobId, fileInfo.id, fileInfo.final_name);
+        });
       });
 
-      /* ---------- Récap et boutons ---------- */
       summaryDiv.classList.remove("hidden");
-
-      const processedCount = data.files.filter(f => f.status !== "error").length; // NEW ▶
-      if (processedCount <= 1) {                                        // NEW ▶
-        downloadAllButton.style.display = "none";                       // NEW ▶
+      if (data.files.length <= 1) {
+        downloadAllButton.style.display = "none";
       } else {
         downloadAllButton.style.display = "inline-block";
       }
 
       downloadAllButton.textContent = texts[currentLang].downloadAll;
       downloadAllButton.onclick = () =>
-        downloadAllFiles(jobId, data.files.filter(f => f.status !== "error"));   // NEW ▶
+        downloadAllFiles(jobId, data.files);
       showSummary(data.files);
     } else if (data.status === "error") {
       throw new Error(data.details || "Erreur pendant le traitement");
@@ -468,13 +472,12 @@ async function downloadAllFiles(jobId, files) {
   }
 }
 
-function showSummary(files) {                                           // NEW ▶
+function showSummary(files) {
   const ul = summaryDiv.querySelector("ul");
   ul.innerHTML = "";
   files.forEach((f) => {
     const li = document.createElement("li");
-    li.textContent =
-      (f.status === "error" ? "❌ " : "✓ ") + f.original;               // NEW ▶
+    li.textContent = f.original + (f.error ? ` — ${f.error}` : "");
     ul.appendChild(li);
   });
 }

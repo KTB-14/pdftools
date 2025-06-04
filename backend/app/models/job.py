@@ -24,8 +24,7 @@ class FileEntry(BaseModel):
     size_before: Optional[int] = None
     size_after:  Optional[int] = None
     ratio: Optional[float] = None
-    status: Optional[str] = None          # NEW ▶ success / error
-    reason: Optional[str] = None          # NEW ▶ message d’erreur
+    error: Optional[str] = None          
 
 # ───────── Réponse /status/{job_id}
 class StatusOut(BaseModel):
