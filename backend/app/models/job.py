@@ -19,11 +19,13 @@ class JobOut(BaseModel):
 class FileEntry(BaseModel):
     id: str
     original: str
-    output: str
-    final_name: str  # <--- AJOUT IMPORTANT
-    size_before: Optional[int] = None  
-    size_after:  Optional[int] = None  
-    ratio: Optional[float] = None      
+    output: str | None
+    final_name: str | None
+    size_before: Optional[int] = None
+    size_after:  Optional[int] = None
+    ratio: Optional[float] = None
+    status: Optional[str] = None          # NEW ▶ success / error
+    reason: Optional[str] = None          # NEW ▶ message d’erreur
 
 # ───────── Réponse /status/{job_id}
 class StatusOut(BaseModel):

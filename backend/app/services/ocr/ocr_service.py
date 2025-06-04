@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import ocrmypdf
 import pikepdf
+# NEW ▶ on importe l’exception pour signature
+from ocrmypdf.exceptions import DigitalSignatureError           # NEW ▶
 from app.config import config
 from app.logger import logger
 
@@ -63,56 +65,89 @@ class OCRService:
 
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
-                # Détection "tagged PDF"
-                try:
-                    with pikepdf.open(str(input_path)) as pdf:
-                        is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
-                except Exception as e:
-                    logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
-                    is_tagged = False
+                # NEW ▶ bloc try/except interne — permet de continuer sur les autres fichiers
+                try:                                            # NEW ▶ début bloc
+                    # Détection "tagged PDF"
+                    try:
+                        with pikepdf.open(str(input_path)) as pdf:
+                            is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
+                    except Exception as e:
+                        logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
+                        is_tagged = False
 
-                if is_tagged:
-                    logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
-                    ocr_args = {
-                        "optimize": 3,
-                        "redo_ocr": False,
-                        "force_ocr": False,
-                        "skip_text": True,
-                        "output_type": "pdf"
-                    }
-                else:
-                    logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
-                    ocr_args = {
-                        "optimize": 3,
-                        "deskew": True,
-                        "skip_text": True
-                    }
+                    if is_tagged:
+                        logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
+                        ocr_args = {
+                            "optimize": 3,
+                            "redo_ocr": False,
+                            "force_ocr": False,
+                            "skip_text": True,
+                            "output_type": "pdf"
+                        }
+                    else:
+                        logger.info(f"[{self.job_id}] 🧾 PDF non taggé → OCR normal avec deskew et skip_text")
+                        ocr_args = {
+                            "optimize": 3,
+                            "deskew": True,
+                            "skip_text": True
+                        }
 
-                # 🚀 Traitement OCR ou compression
-                ocrmypdf.ocr(
-                    str(input_path),
-                    str(output_path),
-                    **ocr_args
-                )
+                    # 🚀 Traitement OCR ou compression
+                    ocrmypdf.ocr(
+                        str(input_path),
+                        str(output_path),
+                        skip_digital_signatures=True,            # NEW ▶ évite l’erreur sur signature
+                        **ocr_args
+                    )
 
-                # Récupérer taille compressée après OCR
-                size_before = os.path.getsize(input_path)
-                output_size = os.path.getsize(output_path)
-                ratio = round(output_size / size_before * 100, 1)  # 51.7 (%)
+                    # Récupérer taille compressée après OCR
+                    size_before = os.path.getsize(input_path)
+                    output_size = os.path.getsize(output_path)
+                    ratio = round(output_size / size_before * 100, 1)  # 51.7 (%)
 
-                output_files.append({
-                    "id": self.file_ids.get(filename, ""),
-                    "original": filename,
-                    "output": out_name,
-                    "final_name": out_name,
-                    "size_before": size_before,
-                    "size_after": output_size,
-                    "ratio": ratio
-                })
+                    output_files.append({
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": out_name,
+                        "final_name": out_name,
+                        "size_before": size_before,
+                        "size_after": output_size,
+                        "ratio": ratio,
+                        "status": "processed"                    # NEW ▶ indicateur succès
+                    })
 
-                logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
+                    logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
-            self._write_status("done", "Traitement OCR terminé avec succès", output_files)
+                except DigitalSignatureError:                    # NEW ▶ gestion PDF signé
+                    logger.warning(f"[{self.job_id}] 🔏 {filename} signé — non traité")
+                    output_files.append({
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": None,
+                        "size_after": None,
+                        "ratio": None,
+                        "status": "error",                       # NEW ▶ indicateur erreur
+                        "reason": "PDF signé – non modifié"      # NEW ▶ cause retournée
+                    })
+                except Exception as e:                           # NEW ▶ capture toute autre erreur
+                    logger.exception(f"[{self.job_id}] ❌ Erreur fichier {filename} : {e}")
+                    output_files.append({
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": None,
+                        "size_after": None,
+                        "ratio": None,
+                        "status": "error",                       # NEW ▶
+                        "reason": str(e)[:120]                   # NEW ▶ message court
+                    })
+                # NEW ▶ fin du bloc interne
+
+            # Fin de boucle → on écrit le status global
+            self._write_status("done", "Traitement OCR terminé (voir détails par fichier)", output_files)
 
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
