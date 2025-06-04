@@ -4,7 +4,7 @@ set -euo pipefail
 # ================================ CONFIGURATION GLOBALE ================================
 
 # Variables globales
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPTS_DIR="$PROJECT_ROOT/deploy/scripts"
 
 # Fonction de log
