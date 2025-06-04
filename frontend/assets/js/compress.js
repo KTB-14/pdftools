@@ -32,7 +32,7 @@ const texts = {
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
     errors: { 
-      SIGNED_PDF: "PDF signé numériquement — non modifié",
+      SIGNED_PDF: "PDF signé -> Traitement non prise en charge",
       TOO_LARGE: "Fichier trop volumineux",
       PASSWORD_PROTECTED: "PDF protégé par mot de passe",
       INVALID_PDF: "Fichier non-PDF ou corrompu",
