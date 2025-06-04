@@ -31,6 +31,15 @@ const texts = {
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
+    errors: { 
+      SIGNED_PDF: "PDF signé numériquement — non modifié",
+      TOO_LARGE: "Fichier trop volumineux",
+      PASSWORD_PROTECTED: "PDF protégé par mot de passe",
+      INVALID_PDF: "Fichier non-PDF ou corrompu",
+      PDF_OPEN_ERROR: "Erreur lors de l'ouverture du PDF",
+      OCR_FAILED: "Erreur lors du traitement OCR",
+      SIZE_READ_ERROR: "Erreur de lecture de la taille"
+    },
   },
   en: {
     dropzonePrompt: `Drag & drop your PDF files here<br/><span class="text-muted">or</span>`,
@@ -57,6 +66,15 @@ const texts = {
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
+    errors: {  
+      SIGNED_PDF: "Digitally signed PDF — not modified",
+      TOO_LARGE: "File too large",
+      PASSWORD_PROTECTED: "Password-protected PDF",
+      INVALID_PDF: "Invalid or corrupted PDF file",
+      PDF_OPEN_ERROR: "Error opening PDF file",
+      OCR_FAILED: "OCR processing failed",
+      SIZE_READ_ERROR: "Error reading file size",
+    },
   },
 };
 
@@ -480,7 +498,7 @@ function showSummary(files) {
   ul.innerHTML = "";
   files.forEach((f) => {
     const li = document.createElement("li");
-    li.textContent = f.original + (f.error ? ` — ${f.error}` : "");
+    li.textContent = f.original + (f.error ? ` — ${texts[currentLang].errors[f.error] || f.error}` : "");
     ul.appendChild(li);
   });
 }

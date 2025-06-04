@@ -3,12 +3,12 @@ import json
 from pathlib import Path
 import ocrmypdf
 import pikepdf
-from pikepdf import PasswordError, PdfError                # NEW
-from ocrmypdf.exceptions import DigitalSignatureError      # NEW
+from pikepdf import PasswordError, PdfError  # EXISTANT
+from ocrmypdf.exceptions import DigitalSignatureError  # EXISTANT
 from app.config import config
 from app.logger import logger
 
-MAX_FILE_SIZE_MB = 50                                       # NEW – limite max par fichier
+MAX_FILE_SIZE_MB = 50  # EXISTANT
 
 class OCRService:
     def __init__(self, job_id: str):
@@ -20,8 +20,6 @@ class OCRService:
 
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
-
-        # Charger uniquement file_ids pour status.json
         self.file_ids = {}
         file_ids_path = self.job_dir / "file_ids.json"
         if file_ids_path.exists():
@@ -68,44 +66,41 @@ class OCRService:
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
                 # ----------------------------- VALIDATIONS ----------------------------- #
-                file_error: str | None = None                                         # NEW
+                file_error: str | None = None 
 
-                # 1) Taille max
                 try:
-                    size_before = os.path.getsize(input_path)                         # MOD (déplacé avant)
-                    if size_before > MAX_FILE_SIZE_MB * 1024 * 1024:                 # NEW
-                        file_error = f"Fichier trop volumineux (> {MAX_FILE_SIZE_MB} Mo)"  # NEW
-                except Exception as e:                                               # NEW
-                    file_error = f"Impossible de lire la taille : {e}"               # NEW
+                    size_before = os.path.getsize(input_path)  # EXISTANT
+                    if size_before > MAX_FILE_SIZE_MB * 1024 * 1024:
+                        file_error = "TOO_LARGE"  # 🔥 NEW: code d'erreur
+                except Exception as e:
+                    file_error = "SIZE_READ_ERROR"  # 🔥 NEW
 
-                # 2) Validité PDF + mot de passe
-                if not file_error:                                                   # NEW
+                if not file_error:
                     try:
                         with pikepdf.open(str(input_path)) as pdf:
-                            if pdf.is_encrypted:                                     # NEW
-                                file_error = "PDF protégé par mot de passe"          # NEW
+                            if pdf.is_encrypted:
+                                file_error = "PASSWORD_PROTECTED"  # 🔥 NEW
                             is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
-                    except PasswordError:                                            # NEW
-                        file_error = "PDF protégé par mot de passe"
-                    except PdfError:                                                 # NEW
-                        file_error = "Fichier non-PDF ou PDF corrompu"
-                    except Exception as e:                                           # NEW
-                        file_error = f"Erreur ouverture PDF : {e}"
+                    except PasswordError:
+                        file_error = "PASSWORD_PROTECTED"  # 🔥 NEW
+                    except PdfError:
+                        file_error = "INVALID_PDF"  # 🔥 NEW
+                    except Exception:
+                        file_error = "PDF_OPEN_ERROR"  # 🔥 NEW
 
-                # Si une erreur bloquante a été détectée, on ajoute l'entrée et on continue
-                if file_error:                                                       # NEW
+                if file_error:  # EXISTANT
                     output_files.append({
-                        "id"          : self.file_ids.get(filename, ""),
-                        "original"    : filename,
-                        "output"      : None,
-                        "final_name"  : None,
-                        "size_before" : None,
-                        "size_after"  : None,
-                        "ratio"       : None,
-                        "error"       : file_error                                 # NEW
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": None,
+                        "size_after": None,
+                        "ratio": None,
+                        "error": file_error  # ✅ CODE
                     })
-                    logger.warning(f"[{self.job_id}] ⛔ {filename} ignoré : {file_error}")  # NEW
-                    continue                                                         # NEW
+                    logger.warning(f"[{self.job_id}] ⛔ {filename} ignoré : {file_error}")
+                    continue
 
                 # ----------------------- CHOIX DES ARGUMENTS OCR ---------------------- #
                 if is_tagged:
@@ -126,34 +121,32 @@ class OCRService:
                     }
 
                 # ----------------------------- TRAITEMENT OCR -------------------------- #
-                try:                                                                 # NEW (bloc try)
+                try:
                     ocrmypdf.ocr(
                         str(input_path),
                         str(output_path),
                         **ocr_args
                     )
-                except DigitalSignatureError:                                        # NEW
-                    file_error = "PDF signé numériquement Traitement non prise en charge"
-                except Exception as e:                                               # NEW
-                    file_error = f"OCR impossible : {e}"
+                except DigitalSignatureError:
+                    file_error = "SIGNED_PDF"  # ✅ CODE
+                except Exception:
+                    file_error = "OCR_FAILED"  # ✅ CODE
 
-                # Si erreur pendant OCR, on enregistre l'échec et on poursuit la boucle
-                if file_error:                                                       # NEW
+                if file_error:
                     output_files.append({
-                        "id"          : self.file_ids.get(filename, ""),
-                        "original"    : filename,
-                        "output"      : None,
-                        "final_name"  : None,
-                        "size_before" : size_before,
-                        "size_after"  : None,
-                        "ratio"       : None,
-                        "error"       : file_error
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": size_before,
+                        "size_after": None,
+                        "ratio": None,
+                        "error": file_error
                     })
                     logger.warning(f"[{self.job_id}] ⛔ {filename} ignoré : {file_error}")
-                    continue                                                         # NEW
+                    continue
 
-                # ---------------- Calculs si OCR réussi ------------------------------ #
-                output_size = os.path.getsize(output_path)                           # MOD (size_before déjà dispo)
+                output_size = os.path.getsize(output_path)
                 ratio = round(output_size / size_before * 100, 1)
 
                 output_files.append({
@@ -164,7 +157,7 @@ class OCRService:
                     "size_before": size_before,
                     "size_after": output_size,
                     "ratio": ratio,
-                    "error": None                                                    # NEW (champ vide)
+                    "error": None
                 })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
