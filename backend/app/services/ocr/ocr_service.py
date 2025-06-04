@@ -96,7 +96,7 @@ class OCRService:
                     ocrmypdf.ocr(
                         str(input_path),
                         str(output_path),
-                        skip_digital_signatures=True,            # NEW ▶ évite l’erreur sur signature
+                        skip_digital_signature=True,            # NEW ▶ évite l’erreur sur signature
                         **ocr_args
                     )
 
