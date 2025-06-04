@@ -3,7 +3,7 @@ uvicorn==0.34.2
 celery==5.5.2
 redis==6.1.0
 
-ocrmypdf==16.10.1
+ocrmypdf==18.8.0
 reportlab==4.4.1
 pdfminer.six==20250506
 Pillow==11.2.1
