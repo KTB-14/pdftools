@@ -133,7 +133,7 @@ class OCRService:
                         **ocr_args
                     )
                 except DigitalSignatureError:                                        # NEW
-                    file_error = "PDF signé numériquement – non modifié"
+                    file_error = "PDF signé numériquement - Traitement impossible"
                 except Exception as e:                                               # NEW
                     file_error = f"OCR impossible : {e}"
 
