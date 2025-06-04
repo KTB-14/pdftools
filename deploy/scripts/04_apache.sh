@@ -1,90 +1,63 @@
 #!/bin/bash
+set -euo pipefail
+
+# Aller à la racine du projet
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$PROJECT_ROOT"
 
 echo "==================================================================="
-echo "          SCRIPT DE GESTION D'APACHE2 POUR PDFTOOLS"
+echo "=========== INSTALLATION CONFIGURATION APACHE2 PDFTOOLS ==========="
 echo "==================================================================="
+echo
 
-APACHE_CONF_SRC="/opt/pdftools/install/apache2/pdftools.conf"
+APACHE_CONF_SRC="$PROJECT_ROOT/deploy/apache/pdftools.conf"
 APACHE_CONF_DEST="/etc/apache2/sites-available/pdftools.conf"
-APACHE_SYMLINK="/etc/apache2/sites-enabled/pdftools.conf"
 
-echo
-echo "1) Installer et activer Apache2 pour PDFTools"
-echo "2) Désinstaller la configuration Apache2 PDFTools"
-echo "3) Quitter"
-echo
-read -p "Choix [1-3] : " choice
+# Vérification des privilèges root
+if [ "$EUID" -ne 0 ]; then
+    echo "❌ Ce script doit être exécuté en tant que root (sudo)."
+    exit 1
+fi
 
-case "$choice" in
-  1)
-    echo
-    echo "----------------------------------------------------------------------"
-    echo "           [1/2] INSTALLATION ET CONFIGURATION D'APACHE2              "
-    echo "----------------------------------------------------------------------"
-
-    echo "Installation de Apache2 si nécessaire..."
+# Installation Apache2 si non présent
+if ! dpkg -l | grep -q apache2; then
+    echo "➤ Installation d'Apache2..."
     sudo apt install -y apache2
+else
+    echo "ℹ️ Apache2 déjà installé."
+fi
 
-    echo "Activation des modules nécessaires..."
-    sudo a2enmod proxy proxy_http headers rewrite
+# Activation des modules
+echo "➤ Activation des modules nécessaires..."
+sudo a2enmod proxy proxy_http headers rewrite
 
-    echo "Copie de la configuration PDFTools..."
-    if [ -f "$APACHE_CONF_SRC" ]; then
-      sudo cp "$APACHE_CONF_SRC" "$APACHE_CONF_DEST"
-    else
-      echo "Erreur : fichier introuvable à $APACHE_CONF_SRC"
-      exit 1
-    fi
+# Copie de la configuration
+echo "➤ Copie de la configuration Apache PDFTools..."
+sudo cp "$APACHE_CONF_SRC" "$APACHE_CONF_DEST"
 
-    echo "Activation du site PDFTools..."
-    sudo a2ensite pdftools.conf
+# Activation du site
+echo "➤ Activation du site PDFTools..."
+sudo a2ensite pdftools.conf
 
-    echo "Désactivation du site par défaut..."
+# Désactivation du site par défaut si actif
+if sudo a2query -s 000-default.conf > /dev/null 2>&1; then
+    echo "➤ Désactivation du site par défaut..."
     sudo a2dissite 000-default.conf
+fi
 
-    echo "Test de configuration Apache..."
-    sudo apache2ctl configtest || exit 1
+# Test de config Apache
+echo "➤ Test de la configuration Apache..."
+sudo apache2ctl configtest
 
-    echo "Redémarrage d'Apache..."
-    sudo systemctl restart apache2
+# Redémarrage Apache
+echo "➤ Redémarrage d'Apache2..."
+sudo systemctl restart apache2
 
-    if command -v ufw > /dev/null; then
-      echo "Ouverture du pare-feu pour Apache2..."
-      sudo ufw allow 'Apache Full'
-    fi
+# Firewall (optionnel)
+if command -v ufw > /dev/null; then
+    echo "➤ Ouverture du pare-feu pour Apache2..."
+    sudo ufw allow 'Apache Full'
+fi
 
-    echo
-    echo "✅ Apache2 est maintenant configuré pour PDFTools à http://<IP_DU_SERVEUR>/"
-    echo
-    ;;
-
-  2)
-    echo
-    echo "----------------------------------------------------------------------"
-    echo "            [2/2] DÉSINSTALLATION DE LA CONFIGURATION APACHE2         "
-    echo "----------------------------------------------------------------------"
-
-    echo "Désactivation de la configuration PDFTools..."
-    sudo a2dissite pdftools.conf
-
-    echo "Suppression du fichier de configuration PDFTools..."
-    sudo rm -f "$APACHE_CONF_DEST"
-
-    echo "Redémarrage de Apache2..."
-    sudo systemctl restart apache2
-
-    echo
-    echo "✅ Configuration PDFTools supprimée d'Apache2"
-    echo
-    ;;
-
-  3)
-    echo "Sortie."
-    exit 0
-    ;;
-
-  *)
-    echo "❌ Option invalide."
-    ;;
-esac
- 
+echo
+echo "✅ Apache2 est maintenant configuré pour PDFTools."
