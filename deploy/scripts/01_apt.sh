@@ -8,17 +8,11 @@ FRONTEND_DIR="$PROJECT_ROOT/frontend"
 VENV_DIR="$PROJECT_ROOT/venv"
 LOGFILE="$BACKEND_DIR/logs/ocr.log"
 
+
 echo "==================================================================="
 echo "============== INSTALLATION DES DÉPENDANCES APT ==================="
 echo "==================================================================="
 echo
-
-# 🔒 Attendre que APT soit libre
-echo "🔍 Vérification du lock APT..."
-while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-  echo "⏳ Attente de libération du lock APT..."
-  sleep 5
-done
 
 # Mise à jour système
 echo "➤ Mise à jour du système..."
