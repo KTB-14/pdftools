@@ -53,7 +53,7 @@ const texts = {
     downloadAgain: "Download again",
     downloadError: "Download error",
     errorPrefix: "Error: ",
-        notProcessed: "Not processed",   
+    notProcessed: "Not processed",   
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
@@ -343,29 +343,31 @@ async function checkStatus(jobId, fileItems) {
         if (!entry) return;
         const { fileItem } = entry;
 
-        if (fileInfo.error) {                                         // NEW
-          progressFill.classList.remove("indeterminate");            // NEW
-          progressFill.style.width = "0%";                           // NEW
-          spinner.style.display = "none";                            // NEW
-          checkIcon.classList.remove("show");                        // NEW
+        const statusText = fileItem.querySelector(".status-text");     // (déclaré en premier)
+        const spinner = fileItem.querySelector(".spinner");           // (déclaré en premier)
+        const checkIcon = fileItem.querySelector(".check-icon");      // (déclaré en premier)
+        const downloadButton = fileItem.querySelector(".download-button"); // (déclaré en premier)
+        const sizeDiv = fileItem.querySelector(".file-size");         // (déclaré en premier)
+        const progressFill = fileItem.querySelector(".progress-fill");// (déclaré en premier)
 
-          statusText.textContent = fileInfo.error;                   // NEW
-          statusText.className = "status-text";                      // NEW
-          statusText.style.color = "red";                            // NEW
-          sizeDiv.textContent = texts[currentLang].notProcessed;     // NEW
+        if (fileInfo.error) {  // --- ✅ NOUVEAU : gestion fichier en erreur
+          spinner.style.display = "none";
+          checkIcon.classList.remove("show");
 
-          downloadButton.classList.add("hidden");                    // NEW
-          downloadButton.disabled = true;                            // NEW
-          return;                                                    
+          progressFill.classList.remove("indeterminate");
+          progressFill.style.width = "0%";
+
+          statusText.textContent = fileInfo.error;
+          statusText.className = "status-text error";  // 👈 Classe CSS rouge
+          
+          sizeDiv.textContent = currentLang === "fr" ? "Non traité" : "Not processed";
+
+          downloadButton.classList.add("hidden");
+          downloadButton.disabled = true;
+          return; // ne pas continuer plus bas
         }
-        
-        const statusText = fileItem.querySelector(".status-text");
-        const spinner = fileItem.querySelector(".spinner");
-        const checkIcon = fileItem.querySelector(".check-icon");
-        const downloadButton = fileItem.querySelector(".download-button");
-        const sizeDiv = fileItem.querySelector(".file-size");
-        const progressFill = fileItem.querySelector(".progress-fill");
 
+        // --- Le fichier est traité normalement
         const originalBytes = entry.sizeBefore;
         const compressedBytes = fileInfo.size_after;
         const ratioRetained = fileInfo.ratio || 0;
