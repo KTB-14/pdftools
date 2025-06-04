@@ -23,13 +23,13 @@ const texts = {
       `${orig} → ${comp} (${reduction}% de réduction)`,
     downloading: "Téléchargement en cours…",
     downloadStart: "Téléchargement…",
-    downloadDone: "Téléchargement terminé",
+    downloadDone: "Téléchargement terminé ",
     downloadAgain: "Télécharger à nouveau",
     downloadError: "Erreur de téléchargement",
     errorPrefix: "Erreur : ",
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
-      "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles."
+      "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
   },
   en: {
     dropzonePrompt: `Drag & drop your PDF files here<br/><span class="text-muted">or</span>`,
@@ -38,7 +38,7 @@ const texts = {
     uploading: "Uploading…",
     uploadProgress: (pct, remaining) => `Upload: ${pct}% — Estimated time: ${remaining}s`,
     uploadStart: "Starting upload…",
-    uploadDone: "Upload complete",
+    uploadDone: "Upload complete ",
     processing: "Processing…",
     processingDone: "Processing complete",
     summaryTitle: "Summary of processed files:",
@@ -54,8 +54,8 @@ const texts = {
     errorPrefix: "Error: ",
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
-      "Please do not use public web platforms for your sensitive PDF files."
-  }
+      "Please do not use public web platforms for your sensitive PDF files.",
+  },
 };
 
 const dropzone = document.getElementById("dropzone");
@@ -67,6 +67,7 @@ const restartButton = document.getElementById("restartButton");
 const summaryDiv = document.getElementById("summary");
 
 // Éléments du pied de page (pour mise à jour langue)
+const footerLogo = document.querySelector(".footer-logo img");
 const footerTextParagraphs = document.querySelectorAll(".footer-text p");
 
 // Boutons de changement de langue (drapeaux)
@@ -96,6 +97,7 @@ function updateStaticText() {
   const t = texts[currentLang];
 
   // --- DROPZONE ---
+  // On remplace uniquement les enfants du dropzone pour éviter de casser la structure
   dropzone.innerHTML = `
     <p>${t.dropzonePrompt}</p>
     <button id="selectFile" class="button">${t.selectButton}</button>
@@ -123,11 +125,10 @@ function updateStaticText() {
   footerTextParagraphs[0].textContent = t.footerLine1;
   footerTextParagraphs[1].textContent = t.footerLine2;
 
-  // --- Si un upload est déjà en cours, rafraîchir le statut global ---
-  const globalInfo = document.querySelector(
-    ".status-text.processing, .status-text.uploaded, .status-text.uploading"
-  );
+  // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
+  const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");
   if (globalInfo) {
+    // On ne sait pas exactement où en est, on peut forcer le texte "upload start"
     globalInfo.textContent = t.uploadStart;
   }
 }
@@ -240,11 +241,7 @@ async function uploadFiles(files) {
 
     const fileItem = createFileItem(file, id);
     fileList.appendChild(fileItem);
-    fileItems.set(id, {
-      fileItem,
-      fileName: file.name,
-      sizeBefore: file.size
-    });
+    fileItems.set(id, { fileItem, fileName: file.name, sizeBefore: file.size });
   }
   formData.append("file_ids", JSON.stringify(fileIdMap));
 
@@ -351,61 +348,48 @@ async function checkStatus(jobId, fileItems) {
         const sizeDiv = fileItem.querySelector(".file-size");
         const progressFill = fileItem.querySelector(".progress-fill");
 
-        // Arrêter l’animation et masquer spinner/icon pour cette rangée
+        const originalBytes = entry.sizeBefore;
+        const compressedBytes = fileInfo.size_after;
+        const ratioRetained = fileInfo.ratio || 0;
+        const reductionPercent = (100 - ratioRetained).toFixed(1);
+
         progressFill.classList.remove("indeterminate");
+        progressFill.style.width = "100%";
+
+        sizeDiv.textContent = texts[currentLang].fileSizeInfo(
+          formatBytes(originalBytes),
+          formatBytes(compressedBytes),
+          reductionPercent
+        );
+
+        statusText.textContent = texts[currentLang].processingDone;
+        statusText.className = "status-text processed";
         spinner.style.display = "none";
-        checkIcon.classList.remove("show");
+        checkIcon.classList.add("show");
 
-        if (fileInfo.status === "error") {
-          // Si le fichier a échoué, afficher l’erreur à la place
-          statusText.textContent =
-            fileInfo.reason || texts[currentLang].downloadError;
-          statusText.className = "status-text"; // style par défaut
-          sizeDiv.textContent = ""; // on vide la taille
-          downloadButton.classList.add("hidden");
-        } else {
-          // Succès de traitement pour ce fichier
-          const originalBytes = entry.sizeBefore;
-          const compressedBytes = fileInfo.size_after;
-          const ratioRetained = fileInfo.ratio || 0;
-          const reductionPercent = (100 - ratioRetained).toFixed(1);
-
-          // Afficher taille avant → après
-          sizeDiv.textContent = texts[currentLang].fileSizeInfo(
-            formatBytes(originalBytes),
-            formatBytes(compressedBytes),
-            reductionPercent
-          );
-
-          statusText.textContent = texts[currentLang].processingDone;
-          statusText.className = "status-text processed";
-          checkIcon.classList.add("show");
-
-          downloadButton.textContent =
-            currentLang === "fr" ? "Télécharger" : "Download";
-          downloadButton.classList.remove("hidden");
-          downloadButton.disabled = false;
-          downloadButton.addEventListener("click", () => {
-            downloadFile(jobId, fileInfo.id, fileInfo.final_name);
-          });
-        }
+        downloadButton.textContent =
+          currentLang === "fr" ? "Télécharger" : "Download";
+        downloadButton.classList.remove("hidden");
+        downloadButton.disabled = false;
+        downloadButton.addEventListener("click", () => {
+          downloadFile(jobId, fileInfo.id, fileInfo.final_name);
+        });
       });
 
-      // Afficher le résumé (pouvant inclure erreurs)
       summaryDiv.classList.remove("hidden");
       if (data.files.length <= 1) {
         downloadAllButton.style.display = "none";
       } else {
         downloadAllButton.style.display = "inline-block";
       }
-      downloadAllButton.textContent = texts[currentLang].downloadAll;
-      downloadAllButton.onclick = () => downloadAllFiles(jobId, data.files);
 
+      downloadAllButton.textContent = texts[currentLang].downloadAll;
+      downloadAllButton.onclick = () =>
+        downloadAllFiles(jobId, data.files);
       showSummary(data.files);
     } else if (data.status === "error") {
       throw new Error(data.details || "Erreur pendant le traitement");
     } else {
-      // Toujours en cours, on relance après 2s
       setTimeout(() => checkStatus(jobId, fileItems), 2000);
     }
   } catch (error) {
@@ -466,9 +450,7 @@ async function downloadFile(jobId, fileId, finalName) {
 
 async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
-    if (fileInfo.status !== "error") {
-      await downloadFile(jobId, fileInfo.id, fileInfo.final_name);
-    }
+    await downloadFile(jobId, fileInfo.id, fileInfo.final_name);
   }
 }
 
@@ -477,13 +459,7 @@ function showSummary(files) {
   ul.innerHTML = "";
   files.forEach((f) => {
     const li = document.createElement("li");
-    if (f.status === "error") {
-      // Affiche le fichier non traité + raison d’erreur
-      li.textContent = `${f.original} — ${f.reason || "Erreur inconnue"}`;
-      li.style.color = "red";
-    } else {
-      li.textContent = f.original;
-    }
+    li.textContent = f.original;
     ul.appendChild(li);
   });
 }
