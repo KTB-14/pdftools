@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../environments" && pwd)"
+ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../environments" && pwd)"
 TARGET_ENV="$ENV_DIR/../.env"
 
 echo
