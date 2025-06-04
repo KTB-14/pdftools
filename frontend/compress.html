@@ -4,53 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compression – PDFTools</title>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Flag-icons CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
+  
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
   <header class="header-container">
-    <a href="index.html" class="return-button">← Retour à l'accueil</a>
-    <h1>Compression PDF</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <a href="index.html" class="return-button">← Retour à l'accueil</a>
+      <div class="lang-switch">
+        <button data-lang="fr" class="flag-btn" title="Français">
+          <span class="fi fi-fr"></span>
+        </button>
+        <button data-lang="en" class="flag-btn" title="English">
+          <span class="fi fi-gb"></span>
+        </button>
+      </div>
+    </div>
+    <h1 id="title-main">Compression PDF</h1>
   </header>
+
   <div class="header-space"></div>
 
   <main class="container">
     <section class="upload-section">
-      <!-- DROPZONE ------------------------------------------------------- -->
+      <!-- DROPZONE -->
       <div id="dropzone" class="dropzone">
-        <p>Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span></p>
-        <button id="selectFile" class="button">Sélectionner un ou plusieurs fichiers</button>
+        <p id="drop-text">Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted" id="or-text">ou</span></p>
+        <button id="selectFile" class="button" data-i18n="select_files">Sélectionner un ou plusieurs fichiers</button>
         <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
-        <p class="text-muted">Format accepté : PDF uniquement</p>
+        <p class="text-muted" id="accepted-format">Format accepté : PDF uniquement</p>
       </div>
 
-      <!-- LISTE DES FICHIERS --------------------------------------------- -->
+      <!-- LISTE DES FICHIERS -->
       <div id="fileList" class="file-list"></div>
 
-      <!-- RÉSUMÉ ---------------------------------------------------------- -->
+      <!-- RÉSUMÉ -->
       <div id="summary" class="summary hidden">
-        <h2>Résumé des fichiers traités :</h2>
+        <h2 id="summary-title">Résumé des fichiers traités :</h2>
         <ul></ul>
         <div class="summary-actions">
-          <button id="downloadAllButton" class="button button-light">Télécharger tous les fichiers</button>
-          <button id="restartButton" class="button button-secondary-light">↻ Recommencer</button>
+          <button id="downloadAllButton" class="button button-light" data-i18n="download_all">Télécharger tous les fichiers</button>
+          <button id="restartButton" class="button button-secondary-light" data-i18n="restart">↻ Recommencer</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer avec logo et texte -->
+  <!-- Footer -->
   <footer class="footer-info">
     <div class="footer-logo">
       <img src="img/logo_vdp.jpg" alt="Logo VDP" />
     </div>
     <div class="footer-text">
-      <p>Mise à disposition plateforme Compression PDF</p>
-      <p>Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
-      <p><a href="https://intranet.fareva.com/plateforme_compression" target="_blank">Accès direct Fareva Intranet</a></p>
+      <p id="footer-text-1">Mise à disposition plateforme Compression PDF</p>
+      <p id="footer-text-2">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
+      <p><a id="footer-link" href="https://intranet.fareva.com/plateforme_compression" target="_blank">Accès direct Fareva Intranet</a></p>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="assets/js/compress.js"></script>
+  <script src="assets/js/lang.js"></script> <!-- NOUVEAU pour gérer la langue -->
 </body>
 </html>
