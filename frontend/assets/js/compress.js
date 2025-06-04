@@ -27,9 +27,19 @@ const texts = {
     downloadAgain: "Télécharger à nouveau",
     downloadError: "Erreur de téléchargement",
     errorPrefix: "Erreur : ",
+    notProcessed: "Non traité", 
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
+    errors: { 
+      SIGNED_PDF: "PDF signé -> Traitement non prise en charge",
+      TOO_LARGE: "Fichier trop volumineux",
+      PASSWORD_PROTECTED: "PDF protégé par mot de passe",
+      INVALID_PDF: "Fichier non-PDF ou corrompu",
+      PDF_OPEN_ERROR: "Erreur lors de l'ouverture du PDF",
+      OCR_FAILED: "Erreur lors du traitement OCR",
+      SIZE_READ_ERROR: "Erreur de lecture de la taille"
+    },
   },
   en: {
     dropzonePrompt: `Drag & drop your PDF files here<br/><span class="text-muted">or</span>`,
@@ -52,9 +62,19 @@ const texts = {
     downloadAgain: "Download again",
     downloadError: "Download error",
     errorPrefix: "Error: ",
+    notProcessed: "Not processed",   
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
+    errors: {  
+      SIGNED_PDF: "Digitally signed PDF — not modified",
+      TOO_LARGE: "File too large",
+      PASSWORD_PROTECTED: "Password-protected PDF",
+      INVALID_PDF: "Invalid or corrupted PDF file",
+      PDF_OPEN_ERROR: "Error opening PDF file",
+      OCR_FAILED: "OCR processing failed",
+      SIZE_READ_ERROR: "Error reading file size",
+    },
   },
 };
 
@@ -341,13 +361,31 @@ async function checkStatus(jobId, fileItems) {
         if (!entry) return;
         const { fileItem } = entry;
 
-        const statusText = fileItem.querySelector(".status-text");
-        const spinner = fileItem.querySelector(".spinner");
-        const checkIcon = fileItem.querySelector(".check-icon");
-        const downloadButton = fileItem.querySelector(".download-button");
-        const sizeDiv = fileItem.querySelector(".file-size");
-        const progressFill = fileItem.querySelector(".progress-fill");
+        const statusText = fileItem.querySelector(".status-text");     // (déclaré en premier)
+        const spinner = fileItem.querySelector(".spinner");           // (déclaré en premier)
+        const checkIcon = fileItem.querySelector(".check-icon");      // (déclaré en premier)
+        const downloadButton = fileItem.querySelector(".download-button"); // (déclaré en premier)
+        const sizeDiv = fileItem.querySelector(".file-size");         // (déclaré en premier)
+        const progressFill = fileItem.querySelector(".progress-fill");// (déclaré en premier)
 
+        if (fileInfo.error) {  // --- ✅ NOUVEAU : gestion fichier en erreur
+          spinner.style.display = "none";
+          checkIcon.classList.remove("show");
+
+          progressFill.classList.remove("indeterminate");
+          progressFill.style.width = "0%";
+
+          statusText.textContent = texts[currentLang].errors[fileInfo.error] || fileInfo.error;
+          statusText.className = "status-text error";  
+          
+          sizeDiv.textContent = currentLang === "fr" ? "Non traité" : "Not processed";
+
+          downloadButton.classList.add("hidden");
+          downloadButton.disabled = true;
+          return; // ne pas continuer plus bas
+        }
+
+        // --- Le fichier est traité normalement
         const originalBytes = entry.sizeBefore;
         const compressedBytes = fileInfo.size_after;
         const ratioRetained = fileInfo.ratio || 0;
@@ -450,6 +488,7 @@ async function downloadFile(jobId, fileId, finalName) {
 
 async function downloadAllFiles(jobId, files) {
   for (const fileInfo of files) {
+    if (fileInfo.error) continue;
     await downloadFile(jobId, fileInfo.id, fileInfo.final_name);
   }
 }
@@ -459,7 +498,7 @@ function showSummary(files) {
   ul.innerHTML = "";
   files.forEach((f) => {
     const li = document.createElement("li");
-    li.textContent = f.original;
+    li.textContent = f.original + (f.error ? ` — ${texts[currentLang].errors[f.error] || f.error}` : "");
     ul.appendChild(li);
   });
 }

@@ -3,8 +3,12 @@ import json
 from pathlib import Path
 import ocrmypdf
 import pikepdf
+from pikepdf import PasswordError, PdfError  # EXISTANT
+from ocrmypdf.exceptions import DigitalSignatureError  # EXISTANT
 from app.config import config
 from app.logger import logger
+
+MAX_FILE_SIZE_MB = 50  # EXISTANT
 
 class OCRService:
     def __init__(self, job_id: str):
@@ -16,8 +20,6 @@ class OCRService:
 
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
-
-        # Charger uniquement file_ids pour status.json
         self.file_ids = {}
         file_ids_path = self.job_dir / "file_ids.json"
         if file_ids_path.exists():
@@ -63,14 +65,44 @@ class OCRService:
 
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
-                # Détection "tagged PDF"
-                try:
-                    with pikepdf.open(str(input_path)) as pdf:
-                        is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
-                except Exception as e:
-                    logger.warning(f"[{self.job_id}] ⚠️ Impossible de vérifier si PDF est taggé : {e}")
-                    is_tagged = False
+                # ----------------------------- VALIDATIONS ----------------------------- #
+                file_error: str | None = None 
 
+                try:
+                    size_before = os.path.getsize(input_path)  # EXISTANT
+                    if size_before > MAX_FILE_SIZE_MB * 1024 * 1024:
+                        file_error = "TOO_LARGE"  # 🔥 NEW: code d'erreur
+                except Exception as e:
+                    file_error = "SIZE_READ_ERROR"  # 🔥 NEW
+
+                if not file_error:
+                    try:
+                        with pikepdf.open(str(input_path)) as pdf:
+                            if pdf.is_encrypted:
+                                file_error = "PASSWORD_PROTECTED"  # 🔥 NEW
+                            is_tagged = "/MarkInfo" in pdf.Root and pdf.Root["/MarkInfo"].get("/Marked", False)
+                    except PasswordError:
+                        file_error = "PASSWORD_PROTECTED"  # 🔥 NEW
+                    except PdfError:
+                        file_error = "INVALID_PDF"  # 🔥 NEW
+                    except Exception:
+                        file_error = "PDF_OPEN_ERROR"  # 🔥 NEW
+
+                if file_error:  # EXISTANT
+                    output_files.append({
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": None,
+                        "size_after": None,
+                        "ratio": None,
+                        "error": file_error  # ✅ CODE
+                    })
+                    logger.warning(f"[{self.job_id}] ⛔ {filename} ignoré : {file_error}")
+                    continue
+
+                # ----------------------- CHOIX DES ARGUMENTS OCR ---------------------- #
                 if is_tagged:
                     logger.info(f"[{self.job_id}] 📌 PDF taggé → compression seule sans re-OCR")
                     ocr_args = {
@@ -88,17 +120,34 @@ class OCRService:
                         "skip_text": True
                     }
 
-                # 🚀 Traitement OCR ou compression
-                ocrmypdf.ocr(
-                    str(input_path),
-                    str(output_path),
-                    **ocr_args
-                )
+                # ----------------------------- TRAITEMENT OCR -------------------------- #
+                try:
+                    ocrmypdf.ocr(
+                        str(input_path),
+                        str(output_path),
+                        **ocr_args
+                    )
+                except DigitalSignatureError:
+                    file_error = "SIGNED_PDF"  # ✅ CODE
+                except Exception:
+                    file_error = "OCR_FAILED"  # ✅ CODE
 
-                # Récupérer taille compressée après OCR
-                size_before = os.path.getsize(input_path)
+                if file_error:
+                    output_files.append({
+                        "id": self.file_ids.get(filename, ""),
+                        "original": filename,
+                        "output": None,
+                        "final_name": None,
+                        "size_before": size_before,
+                        "size_after": None,
+                        "ratio": None,
+                        "error": file_error
+                    })
+                    logger.warning(f"[{self.job_id}] ⛔ {filename} ignoré : {file_error}")
+                    continue
+
                 output_size = os.path.getsize(output_path)
-                ratio = round(output_size / size_before * 100, 1)  # 51.7 (%)
+                ratio = round(output_size / size_before * 100, 1)
 
                 output_files.append({
                     "id": self.file_ids.get(filename, ""),
@@ -107,7 +156,8 @@ class OCRService:
                     "final_name": out_name,
                     "size_before": size_before,
                     "size_after": output_size,
-                    "ratio": ratio
+                    "ratio": ratio,
+                    "error": None
                 })
 
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
