@@ -51,21 +51,22 @@ show_menu() {
   echo " 1) Installer les dépendances système (APT)"
   echo " 2) Installer les dépendances Python (venv + pip)"
   echo " 3) Installer/Configurer Apache2 (reverse proxy)"
+  echo " 4) Désinstaller la config Apache2 "
   echo
   echo "=========== GESTION DES SERVICES (ocr-api, celery, purge OCR)==========="
-  echo " 4) Déployer les services systemd"
-  echo " 5) Désinstaller les services systemd"
-  echo " 6) Vérifier l'état des services"
-  echo " 7) Redémarrer les services"
-  echo " 8) Stopper tous les services"
+  echo " 5) Déployer les services systemd"
+  echo " 6) Désinstaller les services systemd"
+  echo " 7) Vérifier l'état des services"
+  echo " 8) Redémarrer les services"
+  echo " 9) Stopper tous les services"
   echo
   echo "==================== SUPERVISION & MAINTENANCE ======================"
-  echo " 9) Voir les derniers logs du backend (50 lignes)"
-  echo "10) Purger manuellement les jobs expirés"
-  echo "11) Supprimer tous les jobs OCR"
+  echo " 10) Voir les derniers logs du backend (50 lignes)"
+  echo "11) Purger manuellement les jobs expirés"
+  echo "12) Supprimer tous les jobs OCR"
   echo
   echo "============================= QUITTER =============================="
-  echo "12) Quitter"
+  echo "13) Quitter"
   echo
 }
 
@@ -84,6 +85,11 @@ install_python() {
 install_apache() {
   to_log "Installation/Configuration Apache2"
   bash "$PROJECT_ROOT/deploy/scripts/04_apache.sh"
+}
+
+uninstall_apache() {
+  to_log "Désinstallation de la config Apache"
+  bash "$PROJECT_ROOT/deploy/scripts/06_uninstall_apache.sh"
 }
 
 deploy_services() {
@@ -151,15 +157,16 @@ while true; do
     1) install_apt; read -p "Appuyez sur Entrée pour continuer..." ;;
     2) install_python; read -p "Appuyez sur Entrée pour continuer..." ;;
     3) install_apache; read -p "Appuyez sur Entrée pour continuer..." ;;
-    4) deploy_services; read -p "Appuyez sur Entrée pour continuer..." ;;
-    5) uninstall_services; read -p "Appuyez sur Entrée pour continuer..." ;;
-    6) check_services; read -p "Appuyez sur Entrée pour continuer..." ;;
-    7) restart_services; read -p "Appuyez sur Entrée pour continuer..." ;;
-    8) stop_services; read -p "Appuyez sur Entrée pour continuer..." ;;
-    9) show_logs; read -p "Appuyez sur Entrée pour continuer..." ;;
-    10) purge_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
-    11) delete_all_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
-    12) echo -e "${BLUE}Bye !${NC}"; exit 0 ;;
+    4) uninstall_apache; read -p "Appuyez sur Entrée pour continuer..." ;;
+    5) deploy_services; read -p "Appuyez sur Entrée pour continuer..." ;;
+    6) uninstall_services; read -p "Appuyez sur Entrée pour continuer..." ;;
+    7) check_services; read -p "Appuyez sur Entrée pour continuer..." ;;
+    8) restart_services; read -p "Appuyez sur Entrée pour continuer..." ;;
+    9) stop_services; read -p "Appuyez sur Entrée pour continuer..." ;;
+    10) show_logs; read -p "Appuyez sur Entrée pour continuer..." ;;
+    11) purge_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
+    12) delete_all_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
+    13) echo -e "${BLUE}Bye !${NC}"; exit 0 ;;
     *) echo -e "${RED}❌ Option invalide.${NC}"; read -p "Appuyez sur Entrée pour réessayer..." ;;
   esac
 done
