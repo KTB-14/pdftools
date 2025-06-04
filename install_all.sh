@@ -1,11 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+# ================================ CONFIGURATION GLOBALE ================================
+
 # Variables globales
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS_DIR="$PROJECT_ROOT/deploy/scripts"
 
-# Fonction log
+# Fonction de log
 log() {
   echo
   echo "==================================================================="
@@ -23,7 +25,8 @@ ask_continue() {
   fi
 }
 
-# --- SCRIPT GLOBAL ---
+# ================================ SCRIPT D'INSTALLATION ================================
+
 echo
 echo "==================================================================="
 echo "         INSTALLATION COMPLETE DE PDFTOOLS"
@@ -54,4 +57,6 @@ log "4. Déploiement de la configuration Apache2 (Reverse Proxy)"
 bash "$SCRIPTS_DIR/04_apache.sh"
 
 echo
-echo "Installation complète terminée avec succès."
+echo "==================================================================="
+echo "✅ INSTALLATION COMPLETE TERMINEE AVEC SUCCES."
+echo
