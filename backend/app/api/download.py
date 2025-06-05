@@ -71,7 +71,8 @@ def download_by_file_id(job_id: str, file_id: str):
             filename=final_name,  
             media_type="application/pdf"
         )
-
+    except HTTPException:
+            raise
     except Exception as e:
         logger.exception(f"[{job_id}] ❌ Erreur pendant le téléchargement par ID : {e}")
         raise HTTPException(status_code=500, detail=f"Erreur : {str(e)}")
