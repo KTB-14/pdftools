@@ -56,8 +56,11 @@ def download_by_file_id(job_id: str, file_id: str):
         if not file_entry:
             raise HTTPException(status_code=404, detail="Fichier non trouvé pour cet ID")
 
-        output_name = file_entry["output"]
-        final_name = file_entry.get("final_name", output_name)  
+        output_name = file_entry.get("output")
+        if not output_name:
+            raise HTTPException(status_code=404, detail="Fichier compressé introuvable pour cet ID")
+
+        final_name = file_entry.get("final_name", output_name) 
         file_path = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR / output_name
 
         if not file_path.exists():
