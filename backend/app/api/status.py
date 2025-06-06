@@ -1,8 +1,9 @@
+"""Endpoint de consultation du statut d'un traitement OCR."""
+
 from fastapi import APIRouter, HTTPException
 from app.models.job import StatusOut, JobStatus
 from app.config import config
 from app.logger import logger
-from pathlib import Path
 import json
 
 # =============================== ENDPOINT STATUS =============================

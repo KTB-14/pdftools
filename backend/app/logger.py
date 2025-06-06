@@ -1,3 +1,5 @@
+"""Configuration d'un logger fichier/console partagé."""
+
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path

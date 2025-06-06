@@ -1,3 +1,5 @@
+"""Génération d'identifiants uniques pour les jobs OCR."""
+
 from app.logger import logger
 import uuid
 from datetime import datetime

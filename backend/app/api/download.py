@@ -1,10 +1,10 @@
+"""Endpoints de téléchargement des PDF générés."""
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 from app.config import config
 from app.logger import logger
-from pathlib import Path
 import json
-from urllib.parse import unquote
 
 # ============================== ENDPOINT DOWNLOAD ============================
 # Permet de récupérer un ou plusieurs fichiers PDF générés après OCR. Deux

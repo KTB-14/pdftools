@@ -11,3 +11,10 @@ def test_secure_filename_basic():
     assert secure_filename("Épreuve finale.PDF") == "epreuve-finale.pdf"
     assert secure_filename("Super document final (version 2).pdf") == "super-document-final-(version-2).pdf"
 
+
+def test_secure_filename_empty():
+    name = secure_filename("")
+    # Un nom vide doit être remplacé par un identifiant aléatoire
+    assert name
+    assert "." not in name  # pas d'extension par défaut
+

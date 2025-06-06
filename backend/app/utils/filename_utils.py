@@ -1,4 +1,5 @@
-# backend/app/utils/filename_utils.py
+"""Outils de nettoyage de noms de fichiers pour un usage serveur."""
+
 from __future__ import annotations
 import re
 import unicodedata

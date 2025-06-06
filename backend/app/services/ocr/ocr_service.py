@@ -1,3 +1,5 @@
+"""Service métier réalisant l'OCR et la compression des PDF."""
+
 import os
 import json
 from pathlib import Path

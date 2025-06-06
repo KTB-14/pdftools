@@ -1,13 +1,15 @@
+"""Endpoints de téléversement de fichiers PDF."""
+
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from typing import List
-import shutil, json
+import json
+import shutil
 from app.models.job import JobOut, JobStatus
 from app.utils.id_generator import generate_job_id
 from app.utils.filename_utils import secure_filename
 from app.config import config
 from app.logger import logger
 from worker.tasks import ocr_task
-from pathlib import Path
 
 # =============================== ENDPOINT UPLOAD =============================
 # Reçoit les fichiers PDF depuis le frontend, les enregistre sur disque puis
