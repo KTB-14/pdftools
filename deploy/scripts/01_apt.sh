@@ -29,6 +29,7 @@ for list in deploy/apt/*.txt; do
         echo "    ➔ Installation groupée : $pkgs"
         sudo apt install -y $pkgs
     fi
+
     done < "$list"
 done
 
