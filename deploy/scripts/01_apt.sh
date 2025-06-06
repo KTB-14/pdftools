@@ -20,13 +20,13 @@ sudo apt update && sudo apt upgrade -y
 
 # Lecture des paquets APT depuis les fichiers .txt
 for list in deploy/apt/*.txt; do
+    # Lecture des paquets et installation groupée
     echo "➤ Installation des paquets listés dans : $list"
-    while read -r pkg; do
-        # Ignorer lignes vides ou lignes commentaires
-        if [[ -n "$pkg" && ! "$pkg" =~ ^# ]]; then
-            echo "    ➔ Installation : $pkg"
-            sudo apt install -y "$pkg"
-        fi
+    pkgs=$(grep -vE '^\s*#' "$list" | grep -vE '^\s*$') # supprime commentaires et lignes vides
+    if [[ -n "$pkgs" ]]; then
+        echo "    ➔ Installation groupée : $pkgs"
+        sudo apt install -y $pkgs
+    fi
     done < "$list"
 done
 
