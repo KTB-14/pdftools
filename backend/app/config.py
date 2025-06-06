@@ -3,6 +3,10 @@ from pydantic import Field
 from typing import List
 from pathlib import Path
 
+# =============================== CONFIGURATION ===============================
+# Centralise tous les chemins et paramètres. Les valeurs peuvent être
+# surchargées via le fichier ``.env`` à la racine du projet.
+
 class Config(BaseSettings):
     # === Dossiers principaux ===
     BASE_DIR: Path = Path(__file__).resolve().parents[2]
@@ -33,12 +37,15 @@ class Config(BaseSettings):
     ALLOWED_ORIGINS: List[str] = Field(default=["*"])
 
     class Config:
+        # Lecture automatique d'un fichier ``.env`` pour surcharger les valeurs
         env_file = ".env"
         env_file_encoding = "utf-8"
+
 
 # Instance globale utilisable partout dans le projet
 config = Config()
 
-# Création automatique des dossiers critiques
+# Création automatique des dossiers critiques au démarrage
 config.OCR_ROOT.mkdir(parents=True, exist_ok=True)
-config.LOG_DIR.mkdir(parents=True, exist_ok=True) 
+config.LOG_DIR.mkdir(parents=True, exist_ok=True)
+

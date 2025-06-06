@@ -1,4 +1,5 @@
 [Unit]
+# Service systemd démarrant l'API FastAPI via Uvicorn
 Description=FastAPI backend for PDFTools OCR
 After=network.target
 
@@ -14,3 +15,4 @@ StandardError=append:/opt/pdftools/backend/logs/ocr.log
 
 [Install]
 WantedBy=multi-user.target
+

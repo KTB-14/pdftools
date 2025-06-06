@@ -2,6 +2,9 @@
 
 # ================================ CONFIG GLOBAL ================================
 
+# Script interactif pour installer et gérer les différents composants de
+# PDFTools (dépendances APT, venv Python, services systemd et Apache).
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"
@@ -23,6 +26,9 @@ to_log() {
   local message="$*"
   echo -e "[\033[0;36m$(date '+%Y-%m-%d %H:%M:%S')\033[0m] $message" | tee -a "$LOGFILE"
 }
+
+# ================================ FONCTIONS ===================================
+# Chaque fonction appelle un script dédié situé dans ``deploy/scripts``.
 
 
 if [ "$EUID" -ne 0 ]; then
@@ -48,6 +54,7 @@ check_prerequisites() {
 # ================================ MENU PRINCIPAL ================================
 
 show_menu() {
+  # Affiche le menu principal dans le terminal
   clear
   echo "==================================================================="
   echo "         SCRIPT GLOBAL DE GESTION DU PROJET PDFTOOLS"
@@ -183,3 +190,4 @@ while true; do
     *) echo -e "${RED}❌ Option invalide.${NC}"; read -p "Appuyez sur Entrée pour réessayer..." ;;
   esac
 done
+

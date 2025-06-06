@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Copie les unités systemd et active les services backend/worker/purge.
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SYSTEMD_DIR="/etc/systemd/system"
@@ -43,3 +45,4 @@ sudo systemctl enable --now purge-ocr.timer
 
 echo
 echo "✅ Services systemd installés et démarrés avec succès."
+

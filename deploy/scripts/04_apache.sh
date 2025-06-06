@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Configure Apache2 comme reverse proxy pour l'API et sert le frontend statique.
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 APACHE_SRC="$PROJECT_ROOT/deploy/apache2/pdftools.conf"
@@ -62,3 +64,4 @@ fi
 
 echo
 echo "✅ Apache2 est maintenant configuré pour PDFTools."
+
