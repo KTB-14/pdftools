@@ -9,11 +9,19 @@ from app.logger import logger
 from worker.tasks import ocr_task
 from pathlib import Path
 
+# =============================== ENDPOINT UPLOAD =============================
+# Reçoit les fichiers PDF depuis le frontend, les enregistre sur disque puis
+# déclenche la tâche Celery ``ocr_task``. Les informations de mapping ``file_id``
+# sont sauvegardées afin de pouvoir associer les fichiers compressés en sortie.
+
 router = APIRouter()
 
 @router.post("/upload", response_model=JobOut)
 async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form(...)):
+    """Enregistre les fichiers envoyés et lance leur traitement OCR."""
+    # Identifiant unique pour ce lot de fichiers
     job_id = generate_job_id()
+    # Dossiers de travail : ``input_ocr`` et ``output_ocr``
     job_dir = config.OCR_ROOT / job_id
     job_in_dir = job_dir / config.INPUT_SUBDIR
 
@@ -21,13 +29,14 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
     logger.info(f"[{job_id}] 📁 Dossier prévu pour les fichiers : {job_in_dir}")
 
     try:
+        # Création du dossier d'entrée
         job_in_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f"[{job_id}] ✅ Dossier de destination créé")
     except Exception as e:
         logger.exception(f"[{job_id}] ❌ Erreur création du dossier")
         raise HTTPException(status_code=500, detail=f"Erreur création du dossier : {e}")
 
-    # Charger les file_ids venant du frontend
+    # Chargement du mapping ``filename -> id`` envoyé par le frontend
     try:
         file_ids = json.loads(file_ids)
     except Exception as e:
@@ -40,7 +49,7 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
         safe_name = secure_filename(original_name)
         fixed_file_ids[safe_name] = file_id
 
-    # Sauvegarder file_ids.json
+    # Sauvegarder file_ids.json pour consultation ultérieure
     file_ids_path = job_dir / "file_ids.json"
     try:
         with open(file_ids_path, "w", encoding="utf-8") as f:
@@ -52,6 +61,7 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
 
     # Sauvegarder les fichiers uploadés
     for file in files:
+        # Nom sécurisé pour éviter les caractères spéciaux ou espaces
         safe_filename = secure_filename(file.filename)
         dest = job_in_dir / safe_filename
 
@@ -63,7 +73,7 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
             logger.exception(f"[{job_id}] ❌ Erreur lors de la sauvegarde de {safe_filename}")
             raise HTTPException(status_code=500, detail=f"Erreur sauvegarde fichier : {e}")
 
-    # Lancer la tâche OCR avec Celery
+    # Lancer la tâche OCR avec Celery en arrière-plan
     try:
         ocr_task.delay(job_id)
         logger.info(f"[{job_id}] 🚀 Tâche Celery lancée")
@@ -72,3 +82,4 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
         raise HTTPException(status_code=500, detail=f"Erreur Celery lancement tâche OCR : {e}")
 
     return JobOut(job_id=job_id, status=JobStatus.pending)
+

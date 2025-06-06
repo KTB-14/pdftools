@@ -5,12 +5,16 @@ import unicodedata
 import uuid
 from pathlib import Path
 
+# =============================== FILENAME UTILS ==============================
+# Fonctions utilitaires pour garantir des noms de fichiers sûrs sur tout
+# système de fichiers (ASCII uniquement, aucun espace ni accent).
+
 SAFE_CHARS = "-_.()abcdefghijklmnopqrstuvwxyz0123456789"
 
 def secure_filename(name: str, ext: str | None = None) -> str:
-    """
-    Transforme « Rapport d’audit 2025.pdf » en « rapport-daudit-2025.pdf »
-    (ASCII, pas d’espace, pas de caractères spéciaux).
+    """Nettoie un nom de fichier pour un usage serveur.
+
+    Exemple : ``Rapport d’audit 2025.pdf`` → ``rapport-daudit-2025.pdf``.
     """
     # Séparer extension si absente
     ext = ext or Path(name).suffix.lower()
@@ -27,3 +31,4 @@ def secure_filename(name: str, ext: str | None = None) -> str:
         cleaned = uuid.uuid4().hex[:8]  # fallback
 
     return f"{cleaned}{ext}"
+

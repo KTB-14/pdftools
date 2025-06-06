@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Sélectionne l'environnement (dev ou prod) et copie le fichier .env adapté.
+
 ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../environments" && pwd)"
 TARGET_ENV="$ENV_DIR/../.env"
 
@@ -37,3 +39,4 @@ case "$choice" in
         exit 1
         ;;
 esac
+
