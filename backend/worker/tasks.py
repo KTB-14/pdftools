@@ -1,3 +1,5 @@
+"""Définition des tâches Celery consommées par le worker."""
+
 from celery import Celery, states
 from celery.exceptions import Ignore
 from app.services.ocr.ocr_service import OCRService

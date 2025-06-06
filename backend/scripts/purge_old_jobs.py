@@ -1,6 +1,7 @@
+"""Script de purge des dossiers de jobs périmés."""
+
 import shutil
 import time
-from pathlib import Path
 from app.config import config
 from app.logger import logger
 
