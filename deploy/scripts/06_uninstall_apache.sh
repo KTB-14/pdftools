@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Retire la configuration Apache du site PDFTools.
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 APACHE_SITE="pdftools.conf"

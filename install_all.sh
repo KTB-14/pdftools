@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# Script d'installation automatique regroupant toutes les étapes de mise en
+# place de PDFTools sur un serveur neuf.
+
 # ================================ CONFIGURATION GLOBALE ================================
 
 # Variables globales
@@ -60,3 +63,4 @@ echo
 echo "==================================================================="
 echo "✅ INSTALLATION COMPLETE TERMINEE AVEC SUCCES."
 echo
+
