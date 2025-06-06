@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Crée l'environnement virtuel Python et installe les dépendances ``requirements/prod.txt``.
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"
@@ -41,3 +43,4 @@ pip install -r "$REQUIREMENTS_FILE"
 
 echo
 echo "Installation des dépendances Python terminée avec succès."
+

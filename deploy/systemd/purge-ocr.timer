@@ -1,4 +1,5 @@
 [Unit]
+# Lance purge-ocr.service toutes les 30 minutes
 Description=Planification périodique de la purge OCR
 
 [Timer]
@@ -7,3 +8,4 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
+

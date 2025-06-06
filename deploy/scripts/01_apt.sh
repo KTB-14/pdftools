@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Installe tous les paquets listés dans ``deploy/apt`` et compile jbig2enc.
+
 # Variables globales
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"

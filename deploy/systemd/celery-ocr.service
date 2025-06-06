@@ -1,4 +1,5 @@
 [Unit]
+# Lance le worker Celery traitant les tâches OCR
 Description=Celery Worker for PDFTools OCR
 After=network.target redis.service
 
@@ -15,3 +16,4 @@ StandardError=append:/opt/pdftools/backend/logs/ocr.log
 
 [Install]
 WantedBy=multi-user.target
+

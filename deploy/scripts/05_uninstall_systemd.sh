@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Désactive et supprime toutes les unités systemd PDFTools.
+
 # Aller à la racine du projet
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$PROJECT_ROOT"
@@ -50,3 +52,4 @@ sudo systemctl daemon-reload
 
 echo
 echo "Désinstallation complète des services systemd PDFTools."
+
