@@ -31,6 +31,7 @@ const texts = {
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
+    footerLink: "Accès direct Fareva Intranet",
     errors: { 
       SIGNED_PDF: "PDF signé -> Traitement non prise en charge",
       TOO_LARGE: "Fichier trop volumineux",
@@ -66,6 +67,7 @@ const texts = {
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
+    footerLink: "Direct access to Fareva Intranet",
     errors: {  
       SIGNED_PDF: "Digitally signed PDF — not modified",
       TOO_LARGE: "File too large",
@@ -79,8 +81,8 @@ const texts = {
 };
 
 const dropzone = document.getElementById("dropzone");
-const fileInput = document.getElementById("fileInput");
-const selectBtn = document.getElementById("selectFile");
+let fileInput = document.getElementById("fileInput");
+let selectBtn = document.getElementById("selectFile");
 const fileList = document.getElementById("fileList");
 const downloadAllButton = document.getElementById("downloadAllButton");
 const restartButton = document.getElementById("restartButton");
@@ -126,24 +128,29 @@ function updateStaticText() {
   `;
 
   // Ré-associer l'input et le bouton sélectionné (car recréés)
-  document
-    .getElementById("selectFile")
-    .addEventListener("click", () => fileInput.click());
-  document.getElementById("fileInput").addEventListener("change", (e) => {
-    if (e.target.files.length) {
-      uploadFiles(e.target.files);
-    }
-  });
+  selectBtn = document.getElementById("selectFile");
+  fileInput = document.getElementById("fileInput");
+
+  if (selectBtn && fileInput) {
+    selectBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files.length) {
+        uploadFiles(e.target.files);
+      }
+    });
+  }
 
   // --- RÉSUMÉ ---
   const summaryTitle = summaryDiv.querySelector("h2");
-  summaryTitle.textContent = t.summaryTitle;
-  downloadAllButton.textContent = t.downloadAll;
-  restartButton.textContent = t.restart;
+  if (summaryTitle) summaryTitle.textContent = t.summaryTitle;
+  if (downloadAllButton) downloadAllButton.textContent = t.downloadAll;
+  if (restartButton) restartButton.textContent = t.restart;
 
   // --- PIED DE PAGE ---
-  footerTextParagraphs[0].textContent = t.footerLine1;
-  footerTextParagraphs[1].textContent = t.footerLine2;
+  if (footerTextParagraphs[0]) footerTextParagraphs[0].textContent = t.footerLine1;
+  if (footerTextParagraphs[1]) footerTextParagraphs[1].textContent = t.footerLine2;
+  const footerLink = document.getElementById("footer-link");
+  if (footerLink && t.footerLink) footerLink.textContent = t.footerLink;
 
   // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
   const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");
@@ -211,7 +218,7 @@ function resetInterface() {
   fileList.innerHTML = "";
   summaryDiv.classList.add("hidden");
   dropzone.classList.remove("hidden");
-  fileInput.value = "";
+  if (fileInput) fileInput.value = "";
   updateStaticText();
 }
 

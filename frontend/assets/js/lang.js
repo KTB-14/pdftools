@@ -32,16 +32,49 @@ const translations = {
 
 // Fonction de changement de langue
 function setLanguage(lang) {
-  document.getElementById('title-main').textContent = translations[lang]['Compression PDF'];
-  document.getElementById('drop-text').innerHTML = translations[lang]['Glissez-déposez vos fichiers PDF ici'] + '<br/><span class="text-muted">' + translations[lang]['ou'] + '</span>';
-  document.getElementById('selectFile').textContent = translations[lang]['Sélectionner un ou plusieurs fichiers'];
-  document.getElementById('accepted-format').textContent = translations[lang]['Format accepté : PDF uniquement'];
-  document.getElementById('summary-title').textContent = translations[lang]['Résumé des fichiers traités :'];
-  document.getElementById('downloadAllButton').textContent = translations[lang]['Télécharger tous les fichiers'];
-  document.getElementById('restartButton').textContent = translations[lang]['↻ Recommencer'];
-  document.getElementById('footer-text-1').textContent = translations[lang]['Mise à disposition plateforme Compression PDF'];
-  document.getElementById('footer-text-2').textContent = translations[lang]['Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.'];
-  document.getElementById('footer-link').textContent = translations[lang]['Accès direct Fareva Intranet'];
+  const title = document.getElementById('title-main');
+  if (title) title.textContent = translations[lang]['Compression PDF'];
+
+  const dropText = document.getElementById('drop-text');
+  if (dropText) {
+    dropText.innerHTML =
+      translations[lang]['Glissez-déposez vos fichiers PDF ici'] +
+      '<br/><span class="text-muted">' +
+      translations[lang]['ou'] +
+      '</span>';
+  }
+
+  const selectBtn = document.getElementById('selectFile');
+  if (selectBtn)
+    selectBtn.textContent = translations[lang]['Sélectionner un ou plusieurs fichiers'];
+
+  const accepted = document.getElementById('accepted-format');
+  if (accepted)
+    accepted.textContent = translations[lang]['Format accepté : PDF uniquement'];
+
+  const summaryTitle = document.getElementById('summary-title');
+  if (summaryTitle)
+    summaryTitle.textContent = translations[lang]['Résumé des fichiers traités :'];
+
+  const downloadAll = document.getElementById('downloadAllButton');
+  if (downloadAll)
+    downloadAll.textContent = translations[lang]['Télécharger tous les fichiers'];
+
+  const restart = document.getElementById('restartButton');
+  if (restart) restart.textContent = translations[lang]['↻ Recommencer'];
+
+  const footer1 = document.getElementById('footer-text-1');
+  if (footer1)
+    footer1.textContent = translations[lang]['Mise à disposition plateforme Compression PDF'];
+
+  const footer2 = document.getElementById('footer-text-2');
+  if (footer2)
+    footer2.textContent =
+      translations[lang]['Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.'];
+
+  const footerLink = document.getElementById('footer-link');
+  if (footerLink)
+    footerLink.textContent = translations[lang]['Accès direct Fareva Intranet'];
 }
 
 // Détection du clic sur les drapeaux

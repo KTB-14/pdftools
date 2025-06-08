@@ -10,6 +10,9 @@
   <!-- Flag-icons CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
   
+  <!-- Security -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; img-src 'self';">
+  
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
@@ -61,14 +64,15 @@
       <img src="img/logo_vdp_page.jpg" alt="Logo VDP" />
     </a>
   </div>
-  <div class="footer-text">
-    <p id="footer-text-1">Mise à disposition plateforme Compression PDF</p>
-    <p id="footer-text-2">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
-  </div>
-</footer>
+    <div class="footer-text">
+      <p id="footer-text-1">Mise à disposition plateforme Compression PDF</p>
+      <p id="footer-text-2">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
+      <a id="footer-link" href="https://intranet.fareva.com/" target="_blank">Accès direct Fareva Intranet</a>
+    </div>
+  </footer>
 
   <!-- Scripts -->
-  <script src="assets/js/compress.js"></script>
-  <script src="assets/js/lang.js"></script> <!-- NOUVEAU pour gérer la langue -->
+  <script src="assets/js/compress.js" defer></script>
+  <script src="assets/js/lang.js" defer></script>
 </body>
 </html>
