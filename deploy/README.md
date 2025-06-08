@@ -11,7 +11,6 @@ Administrateurs système.
 - Distribution Debian/Ubuntu conseillée
 
 ## CONTENU DU DOSSIER
-- `apt/` : listes de paquets à installer.
 - `scripts/` : scripts d’installation et de désinstallation.
 - `apache/` : fichier de configuration du virtual host Apache.
 - `systemd/` : unités de services et timer.

@@ -12,7 +12,7 @@ Admins souhaitant automatiser le déploiement de PDFTools.
 
 ## CONTENU DU DOSSIER
 - `00_select_env.sh` : choix de l’environnement (dev ou prod) et génération du fichier `.env`.
-- `01_apt.sh` : installation des paquets listés dans `../apt`.
+- `01_apt.sh` : installation des paquets.
 - `02_python.sh` : mise en place de la venv Python et installation des requirements.
 - `03_systemd.sh` : déploiement des unités systemd.
 - `04_apache.sh` : configuration du virtual host Apache.
