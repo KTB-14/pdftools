@@ -3,31 +3,31 @@
 // Dictionnaire des textes
 const translations = {
   fr: {
-    'Compression PDF': 'Compression PDF',
-    'Glissez-déposez vos fichiers PDF ici': 'Glissez-déposez vos fichiers PDF ici',
+    'Plateforme de Compression PDF': 'Plateforme de Compression PDF',
+    'Déposez vos fichiers PDF ici': 'Déposez vos fichiers PDF ici',
     'ou': 'ou',
-    'Sélectionner un ou plusieurs fichiers': 'Sélectionner un ou plusieurs fichiers',
-    'Format accepté : PDF uniquement': 'Format accepté : PDF uniquement',
-    'Résumé des fichiers traités :': 'Résumé des fichiers traités :',
-    'Télécharger tous les fichiers': 'Télécharger tous les fichiers',
-    '↻ Recommencer': '↻ Recommencer',
-    'Mise à disposition plateforme Compression PDF': 'Mise à disposition plateforme Compression PDF',
-    'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.': 'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.',
-    'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme': 'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme',
+    'Sélectionner des fichiers': 'Sélectionner des fichiers',
+    'Format accepté : PDF': 'Format accepté : PDF',
+    'Fichiers traités :': 'Fichiers traités :',
+    'Télécharger tout': 'Télécharger tout',
+    '↻ Réinitialiser': '↻ Réinitialiser',
+    'Plateforme dédiée à la compression de fichiers PDF.': 'Plateforme dédiée à la compression de fichiers PDF.',
+    'Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.': 'Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.',
+    'Partage sécurisé de fichiers volumineux : utilisez la plateforme.': 'Partage sécurisé de fichiers volumineux : utilisez la plateforme.',
     'DL FAREVA': 'DL FAREVA'
   },
   en: {
-    'Compression PDF': 'PDF Compression',
-    'Glissez-déposez vos fichiers PDF ici': 'Drag and drop your PDF files here',
+    'Plateforme de Compression PDF': 'PDF Compression Platform',
+    'Déposez vos fichiers PDF ici': 'Drop your PDF files here',
     'ou': 'or',
-    'Sélectionner un ou plusieurs fichiers': 'Select one or more files',
-    'Format accepté : PDF uniquement': 'Accepted format: PDF only',
-    'Résumé des fichiers traités :': 'Summary of processed files:',
-    'Télécharger tous les fichiers': 'Download all files',
-    '↻ Recommencer': '↻ Restart',
-    'Mise à disposition plateforme Compression PDF': 'PDF Compression Platform Access',
-    'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.': 'Please do not use public web platforms for your sensitive PDF files.',
-    'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme': 'To share large files securely, use the platform',
+    'Sélectionner des fichiers': 'Select files',
+    'Format accepté : PDF': 'Accepted format: PDF',
+    'Fichiers traités :': 'Processed files:',
+    'Télécharger tout': 'Download all',
+    '↻ Réinitialiser': '↻ Reset',
+    'Plateforme dédiée à la compression de fichiers PDF.': 'PDF Compression Platform.',
+    'Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.': 'Please avoid using public web services for your sensitive PDF files.',
+    'Partage sécurisé de fichiers volumineux : utilisez la plateforme.': 'Secure large file sharing: use the platform',
     'DL FAREVA': 'DL FAREVA'
   }
 };
@@ -35,12 +35,12 @@ const translations = {
 // Fonction de changement de langue
 function setLanguage(lang) {
   const title = document.getElementById('title-main');
-  if (title) title.textContent = translations[lang]['Compression PDF'];
+  if (title) title.textContent = translations[lang]['Plateforme de Compression PDF'];
 
   const dropText = document.getElementById('drop-text');
   if (dropText) {
     dropText.innerHTML =
-      translations[lang]['Glissez-déposez vos fichiers PDF ici'] +
+      translations[lang]['Déposez vos fichiers PDF ici'] +
       '<br/><span class="text-muted">' +
       translations[lang]['ou'] +
       '</span>';
@@ -48,36 +48,35 @@ function setLanguage(lang) {
 
   const selectBtn = document.getElementById('selectFile');
   if (selectBtn)
-    selectBtn.textContent = translations[lang]['Sélectionner un ou plusieurs fichiers'];
+    selectBtn.textContent = translations[lang]['Sélectionner des fichiers'];
 
   const accepted = document.getElementById('accepted-format');
   if (accepted)
-    accepted.textContent = translations[lang]['Format accepté : PDF uniquement'];
+    accepted.textContent = translations[lang]['Format accepté : PDF'];
 
   const summaryTitle = document.getElementById('summary-title');
   if (summaryTitle)
-    summaryTitle.textContent = translations[lang]['Résumé des fichiers traités :'];
+    summaryTitle.textContent = translations[lang]['Fichiers traités :'];
 
   const downloadAll = document.getElementById('downloadAllButton');
   if (downloadAll)
-    downloadAll.textContent = translations[lang]['Télécharger tous les fichiers'];
+    downloadAll.textContent = translations[lang]['Télécharger tout'];
 
   const restart = document.getElementById('restartButton');
-  if (restart) restart.textContent = translations[lang]['↻ Recommencer'];
+  if (restart) restart.textContent = translations[lang]['↻ Réinitialiser'];
 
   const infoTitle = document.querySelector('.footer-text-title');
   if (infoTitle)
-    infoTitle.textContent = translations[lang]['Mise à disposition plateforme Compression PDF'];
+    infoTitle.textContent = translations[lang]['Plateforme dédiée à la compression de fichiers PDF.'];
 
   const infoWarning = document.querySelector('.footer-text-warning');
   if (infoWarning)
     infoWarning.textContent =
-      translations[lang]['Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.'];
+      translations[lang]['Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.'];
 
   const footerInfo = document.getElementById('footer-text-1');
   if (footerInfo)
-    footerInfo.textContent = translations[lang]['Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme'];
-
+    footerInfo.textContent = translations[lang]['Partage sécurisé de fichiers volumineux : utilisez la plateforme.'];
   const footerLink = document.getElementById('footer-link');
   if (footerLink)
     footerLink.textContent = translations[lang]['DL FAREVA'];

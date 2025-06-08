@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compression – PDFTools</title>
+  <title>Plateforme de Compression PDF – PDFTools</title>
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="img/favicon.ico">
   
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; img-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; form-action 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none';">
   
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>
 <body>
   <header class="header-container">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="header-content">
       <a href="index.html" class="return-button">← Retour à l'accueil</a>
       <div class="lang-switch">
         <button data-lang="fr" class="flag-btn" title="Français">
@@ -26,7 +27,7 @@
         </button>
       </div>
     </div>
-    <h1 id="title-main">Compression PDF</h1>
+    <h1 id="title-main">Plateforme de Compression PDF</h1>
   </header>
 
   <div class="header-space"></div>
@@ -34,15 +35,15 @@
   <main class="container">
     <section class="upload-section">
       <!-- Texte -->
-      <p class="footer-text-title">Mise à disposition plateforme Compression PDF</p>
-      <p class="footer-text-warning">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
+      <p class="footer-text-title">Plateforme dédiée à la compression de fichiers PDF.</p>
+      <p class="footer-text-warning">Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.</p>
 
       <!-- DROPZONE -->
       <div id="dropzone" class="dropzone">
-        <p id="drop-text">Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted" id="or-text">ou</span></p>
-        <button id="selectFile" class="button" data-i18n="select_files">Sélectionner un ou plusieurs fichiers</button>
+        <p id="drop-text">Déposez vos fichiers PDF ici<br/><span class="text-muted" id="or-text">ou</span></p>
+        <button id="selectFile" class="button" data-i18n="select_files">Sélectionner des fichiers</button>
         <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
-        <p class="text-muted" id="accepted-format">Format accepté : PDF uniquement</p>
+        <p class="text-muted" id="accepted-format">Format accepté : PDF</p>
       </div>
 
       <!-- LISTE DES FICHIERS -->
@@ -50,11 +51,11 @@
 
       <!-- RÉSUMÉ -->
       <div id="summary" class="summary hidden">
-        <h2 id="summary-title">Résumé des fichiers traités :</h2>
+        <h2 id="summary-title">Fichiers traités :</h2>
         <ul></ul>
         <div class="summary-actions">
-          <button id="downloadAllButton" class="button button-light" data-i18n="download_all">Télécharger tous les fichiers</button>
-          <button id="restartButton" class="button button-secondary-light" data-i18n="restart">↻ Recommencer</button>
+          <button id="downloadAllButton" class="button button-light" data-i18n="download_all">Télécharger tout</button>
+          <button id="restartButton" class="button button-secondary-light" data-i18n="restart">↻ Réinitialiser</button>
         </div>
       </div>
     </section>
@@ -67,8 +68,8 @@
     </a>
   </div>
     <div class="footer-text">
-      <p id="footer-text-1">Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme</p>
-      <a id="footer-link" href="https://dl.fareva.com/admin.php" target="_blank">DL FAREVA</a>
+      <p id="footer-text-1">Partage sécurisé de fichiers volumineux : utilisez la plateforme.</p>
+      <a id="footer-link" href="https://dl.fareva.com/admin.php" target="_blank" title="Accès sécurisé au partage de fichiers">DL FAREVA</a>
     </div>
   </footer>
 

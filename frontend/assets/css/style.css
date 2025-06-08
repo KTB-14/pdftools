@@ -11,6 +11,7 @@ body {padding-top: 100px; display: flex; flex-direction: column; font-family: 'S
 .header-space{height:100px}
 .return-button{color:#fff;text-decoration:none;margin-bottom:.5rem}
 .return-button:hover{text-decoration:underline}
+.header-content{display:flex;justify-content:space-between;align-items:center}
 
 /* LAYOUT GÉNÉRAL */
 .container{max-width:800px;margin:2rem auto;padding:0 1rem}
