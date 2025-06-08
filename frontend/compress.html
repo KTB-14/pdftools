@@ -7,8 +7,6 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Flag-icons CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
   
   <!-- Security -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; img-src 'self';">
@@ -21,10 +19,10 @@
       <a href="index.html" class="return-button">← Retour à l'accueil</a>
       <div class="lang-switch">
         <button data-lang="fr" class="flag-btn" title="Français">
-          <span class="fi fi-fr"></span>
+          <img src="img/fr.svg" alt="Français" />
         </button>
         <button data-lang="en" class="flag-btn" title="English">
-          <span class="fi fi-gb"></span>
+          <img src="img/gb.svg" alt="English" />
         </button>
       </div>
     </div>
@@ -35,6 +33,10 @@
 
   <main class="container">
     <section class="upload-section">
+      <!-- Texte -->
+      <p class="footer-text-title">Mise à disposition plateforme Compression PDF</p>
+      <p class="footer-text-warning">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
+
       <!-- DROPZONE -->
       <div id="dropzone" class="dropzone">
         <p id="drop-text">Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted" id="or-text">ou</span></p>
@@ -65,9 +67,8 @@
     </a>
   </div>
     <div class="footer-text">
-      <p id="footer-text-1">Mise à disposition plateforme Compression PDF</p>
-      <p id="footer-text-2">Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.</p>
-      <a id="footer-link" href="https://intranet.fareva.com/" target="_blank">Accès direct Fareva Intranet</a>
+      <p id="footer-text-1">Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme</p>
+      <a id="footer-link" href="https://dl.fareva.com/admin.php" target="_blank">DL FAREVA</a>
     </div>
   </footer>
 

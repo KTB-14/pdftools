@@ -31,7 +31,8 @@ const texts = {
     footerLine1: "Mise à disposition plateforme Compression PDF",
     footerLine2:
       "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
-    footerLink: "Accès direct Fareva Intranet",
+    footerInfo: "Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme",
+    footerLink: "DL FAREVA",
     errors: { 
       SIGNED_PDF: "PDF signé -> Traitement non prise en charge",
       TOO_LARGE: "Fichier trop volumineux",
@@ -67,7 +68,8 @@ const texts = {
     footerLine1: "PDF Compression Platform Available",
     footerLine2:
       "Please do not use public web platforms for your sensitive PDF files.",
-    footerLink: "Direct access to Fareva Intranet",
+    footerInfo: "To share large files securely, use the",
+    footerLink: "DL FAREVA",
     errors: {  
       SIGNED_PDF: "Digitally signed PDF — not modified",
       TOO_LARGE: "File too large",
@@ -88,9 +90,12 @@ const downloadAllButton = document.getElementById("downloadAllButton");
 const restartButton = document.getElementById("restartButton");
 const summaryDiv = document.getElementById("summary");
 
-// Éléments du pied de page (pour mise à jour langue)
+// Éléments du pied de page et messages d'information
 const footerLogo = document.querySelector(".footer-logo img");
-const footerTextParagraphs = document.querySelectorAll(".footer-text p");
+const footerInfoText = document.getElementById("footer-text-1");
+const footerLinkEl = document.getElementById("footer-link");
+const infoTitle = document.querySelector(".footer-text-title");
+const infoWarning = document.querySelector(".footer-text-warning");
 
 // Boutons de changement de langue (drapeaux)
 const langButtons = document.querySelectorAll(".flag-btn");
@@ -146,11 +151,11 @@ function updateStaticText() {
   if (downloadAllButton) downloadAllButton.textContent = t.downloadAll;
   if (restartButton) restartButton.textContent = t.restart;
 
-  // --- PIED DE PAGE ---
-  if (footerTextParagraphs[0]) footerTextParagraphs[0].textContent = t.footerLine1;
-  if (footerTextParagraphs[1]) footerTextParagraphs[1].textContent = t.footerLine2;
-  const footerLink = document.getElementById("footer-link");
-  if (footerLink && t.footerLink) footerLink.textContent = t.footerLink;
+  // --- PIED DE PAGE ET MESSAGES ---
+  if (infoTitle) infoTitle.textContent = t.footerLine1;
+  if (infoWarning) infoWarning.textContent = t.footerLine2;
+  if (footerInfoText) footerInfoText.textContent = t.footerInfo;
+  if (footerLinkEl && t.footerLink) footerLinkEl.textContent = t.footerLink;
 
   // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
   const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");

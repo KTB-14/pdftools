@@ -13,7 +13,8 @@ const translations = {
     '↻ Recommencer': '↻ Recommencer',
     'Mise à disposition plateforme Compression PDF': 'Mise à disposition plateforme Compression PDF',
     'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.': 'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.',
-    'Accès direct Fareva Intranet': 'Accès direct Fareva Intranet'
+    'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme': 'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme',
+    'DL FAREVA': 'DL FAREVA'
   },
   en: {
     'Compression PDF': 'PDF Compression',
@@ -26,7 +27,8 @@ const translations = {
     '↻ Recommencer': '↻ Restart',
     'Mise à disposition plateforme Compression PDF': 'PDF Compression Platform Access',
     'Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.': 'Please do not use public web platforms for your sensitive PDF files.',
-    'Accès direct Fareva Intranet': 'Direct access to Fareva Intranet'
+    'Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme': 'To share large files securely, use the platform',
+    'DL FAREVA': 'DL FAREVA'
   }
 };
 
@@ -63,18 +65,22 @@ function setLanguage(lang) {
   const restart = document.getElementById('restartButton');
   if (restart) restart.textContent = translations[lang]['↻ Recommencer'];
 
-  const footer1 = document.getElementById('footer-text-1');
-  if (footer1)
-    footer1.textContent = translations[lang]['Mise à disposition plateforme Compression PDF'];
+  const infoTitle = document.querySelector('.footer-text-title');
+  if (infoTitle)
+    infoTitle.textContent = translations[lang]['Mise à disposition plateforme Compression PDF'];
 
-  const footer2 = document.getElementById('footer-text-2');
-  if (footer2)
-    footer2.textContent =
+  const infoWarning = document.querySelector('.footer-text-warning');
+  if (infoWarning)
+    infoWarning.textContent =
       translations[lang]['Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.'];
+
+  const footerInfo = document.getElementById('footer-text-1');
+  if (footerInfo)
+    footerInfo.textContent = translations[lang]['Pour partager des fichiers volumineux de manière sécurisée, utilisez la plateforme'];
 
   const footerLink = document.getElementById('footer-link');
   if (footerLink)
-    footerLink.textContent = translations[lang]['Accès direct Fareva Intranet'];
+    footerLink.textContent = translations[lang]['DL FAREVA'];
 }
 
 // Détection du clic sur les drapeaux
