@@ -89,6 +89,7 @@ python3
 python-is-python3
 python3-venv
 python3-pip
+redis-server
 git
 autoconf
 automake
