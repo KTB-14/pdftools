@@ -6,7 +6,8 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="icon" href="img/favicon.ico">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; form-action 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none';">
+    <!-- Removed frame-ancestors from meta CSP as it doesn't work there -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; form-action 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self';">
 </head>
 <body>
 <div class="header-banner">

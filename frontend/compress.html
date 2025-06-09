@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="icon" href="img/favicon.ico">
   
-  <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; form-action 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none';">
+  <!-- Security - Removed frame-ancestors as it doesn't work in meta tags -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; form-action 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self';">
   
   <meta name="description" content="Compressez vos PDF et ajoutez une couche OCR pour les rendre consultables" />
 </head>

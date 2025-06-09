@@ -30,7 +30,7 @@ else
     echo "Apache2 déjà installé."
 fi
 
-# Activation des modules
+# Activation des modules nécessaires (ajout du module headers)
 echo "Activation des modules nécessaires..."
 sudo a2enmod proxy proxy_http headers rewrite
 
@@ -63,5 +63,4 @@ if command -v ufw > /dev/null; then
 fi
 
 echo
-echo "Apache2 est maintenant configuré pour PDFTools."
-
+echo "Apache2 est maintenant configuré pour PDFTools avec les en-têtes de sécurité."
