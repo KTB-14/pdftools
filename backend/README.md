@@ -1,20 +1,28 @@
-# PDFTools — Plateforme OCR & Compression de PDF
+# backend
 
-**PDFTools** est une application Web simple et modulaire permettant aux utilisateurs de téléverser des fichiers PDF et d’obtenir une version optimisée grâce à l’OCR et à la compression (via `ocrmypdf`). Le système est extensible à d'autres services PDF.
+## A PROPOS / OBJECTIFS
+Implémente l’API FastAPI ainsi que le worker Celery pour l’OCR et la compression de PDF.
 
-## Fonctionnalités actuelles
+## SCOPE
+Utilisé par les développeurs backend et par les administrateurs lors du déploiement.
 
-- Téléversement de plusieurs fichiers PDF
-- Traitement asynchrone (via Celery)
-- OCR + compression automatique (`ocrmypdf`)
-- Suivi du statut du job en temps réel
-- Interface Web HTML simple
+## PRÉREQUIS
+- Python 3.11 ou plus
+- Redis en service pour Celery
 
-## Technologies
+## CONTENU DU DOSSIER
+- `app/` : code de l’application (routes, services, utils).
+- `scripts/` : utilitaires administratifs (purge des anciens jobs).
+- `tests/` : tests unitaires.
+- `worker/` : définition des tâches Celery.
+- `logs/` : destination des logs d’exécution.
 
-- **FastAPI** (backend REST)
-- **Celery** (worker OCR)
-- **Redis** (queue + backend)
-- **ocrmypdf** (OCR & compression PDF)
-- **Uvicorn** (serveur ASGI)
-- **HTML/JavaScript** (frontend simple)
+## INSTRUCTIONS PRINCIPALES
+- Lancer l’API : `uvicorn app.main:app --reload` depuis ce dossier (appli dev).
+- Exécuter un worker : `celery -A worker.tasks worker --loglevel=INFO`.
+- Purger les anciens jobs : `python scripts/purge_old_jobs.py`.
+
+## NOTES
+Les chemins des dossiers (données, frontend) sont configurés dans `app/config.py`. Adapter la variable `CELERY_BROKER_URL` si Redis n’est pas local.
+
+

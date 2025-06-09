@@ -1,15 +1,18 @@
 [Unit]
+# Service systemd démarrant l'API FastAPI via Uvicorn
 Description=FastAPI backend for PDFTools OCR
 After=network.target
 
 [Service]
 WorkingDirectory=/opt/pdftools/backend
 Environment=PYTHONPATH=/opt/pdftools/backend
-ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+EnvironmentFile=/opt/pdftools/.env
+ExecStart=/opt/pdftools/venv/bin/uvicorn app.main:app --host ${API_HOST} --port ${API_PORT}
 Restart=always
 
 StandardOutput=append:/opt/pdftools/backend/logs/ocr.log
 StandardError=append:/opt/pdftools/backend/logs/ocr.log
 
 [Install]
-WantedBy=multi-user.target 
+WantedBy=multi-user.target
+

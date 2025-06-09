@@ -7,18 +7,18 @@ let currentLang = "fr";
 // Dictionnaire de textes FR/EN
 const texts = {
   fr: {
-    dropzonePrompt: `Glissez-déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span>`,
-    selectButton: "Sélectionner un ou plusieurs fichiers",
-    acceptedFormat: "Format accepté : PDF uniquement",
+    dropzonePrompt: `Déposez vos fichiers PDF ici<br/><span class="text-muted">ou</span>`,
+    selectButton: "Sélectionner des fichiers",
+    acceptedFormat: "Format accepté : PDF",
     uploading: "Téléversement en cours…",
     uploadProgress: (pct, remaining) => `Téléversement : ${pct} % — Temps estimé : ${remaining} s`,
     uploadStart: "Début du téléversement…",
     uploadDone: "Téléversement terminé",
     processing: "Traitement en cours…",
     processingDone: "Traitement terminé",
-    summaryTitle: "Résumé des fichiers traités :",
-    downloadAll: "Télécharger tous les fichiers",
-    restart: "↻ Recommencer",
+    summaryTitle: "Fichiers traités :",
+    downloadAll: "Télécharger tout",
+    restart: "↻ Réinitialiser",
     fileSizeInfo: (orig, comp, reduction) =>
       `${orig} → ${comp} (${reduction}% de réduction)`,
     downloading: "Téléchargement en cours…",
@@ -28,9 +28,10 @@ const texts = {
     downloadError: "Erreur de téléchargement",
     errorPrefix: "Erreur : ",
     notProcessed: "Non traité", 
-    footerLine1: "Mise à disposition plateforme Compression PDF",
-    footerLine2:
-      "Veuillez ne pas utiliser de plateformes Web publiques pour vos fichiers PDF sensibles.",
+    footerLine1: "Plateforme dédiée à la compression de fichiers PDF.",
+    footerLine2: "Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.",
+    footerInfo: "Partage sécurisé de fichiers volumineux : utilisez la plateforme.",
+    footerLink: "DL FAREVA",
     errors: { 
       SIGNED_PDF: "PDF signé -> Traitement non prise en charge",
       TOO_LARGE: "Fichier trop volumineux",
@@ -42,18 +43,18 @@ const texts = {
     },
   },
   en: {
-    dropzonePrompt: `Drag & drop your PDF files here<br/><span class="text-muted">or</span>`,
-    selectButton: "Select one or more files",
-    acceptedFormat: "Accepted format: PDF only",
+    dropzonePrompt: `Drop your PDF files here<br/><span class="text-muted">or</span>`,
+    selectButton: "Select files",
+    acceptedFormat: "Accepted format: PDF",
     uploading: "Uploading…",
     uploadProgress: (pct, remaining) => `Upload: ${pct}% — Estimated time: ${remaining}s`,
     uploadStart: "Starting upload…",
     uploadDone: "Upload complete ",
     processing: "Processing…",
     processingDone: "Processing complete",
-    summaryTitle: "Summary of processed files:",
-    downloadAll: "Download all files",
-    restart: "↻ Restart",
+    summaryTitle: "Processed files:",
+    downloadAll: "Download all",
+    restart: "↻ Reset",
     fileSizeInfo: (orig, comp, reduction) =>
       `${orig} → ${comp} (${reduction}% reduction)`,
     downloading: "Downloading…",
@@ -63,9 +64,10 @@ const texts = {
     downloadError: "Download error",
     errorPrefix: "Error: ",
     notProcessed: "Not processed",   
-    footerLine1: "PDF Compression Platform Available",
-    footerLine2:
-      "Please do not use public web platforms for your sensitive PDF files.",
+    footerLine1: "PDF Compression Platform",
+    footerLine2: "Please avoid using public web services for your sensitive PDF files.",
+    footerInfo: "Secure large file sharing: use the platform",
+    footerLink: "DL FAREVA",
     errors: {  
       SIGNED_PDF: "Digitally signed PDF — not modified",
       TOO_LARGE: "File too large",
@@ -79,16 +81,19 @@ const texts = {
 };
 
 const dropzone = document.getElementById("dropzone");
-const fileInput = document.getElementById("fileInput");
-const selectBtn = document.getElementById("selectFile");
+let fileInput = document.getElementById("fileInput");
+let selectBtn = document.getElementById("selectFile");
 const fileList = document.getElementById("fileList");
 const downloadAllButton = document.getElementById("downloadAllButton");
 const restartButton = document.getElementById("restartButton");
 const summaryDiv = document.getElementById("summary");
 
-// Éléments du pied de page (pour mise à jour langue)
+// Éléments du pied de page et messages d'information
 const footerLogo = document.querySelector(".footer-logo img");
-const footerTextParagraphs = document.querySelectorAll(".footer-text p");
+const footerInfoText = document.getElementById("footer-text-1");
+const footerLinkEl = document.getElementById("footer-link");
+const infoTitle = document.querySelector(".footer-text-title");
+const infoWarning = document.querySelector(".footer-text-warning");
 
 // Boutons de changement de langue (drapeaux)
 const langButtons = document.querySelectorAll(".flag-btn");
@@ -126,24 +131,29 @@ function updateStaticText() {
   `;
 
   // Ré-associer l'input et le bouton sélectionné (car recréés)
-  document
-    .getElementById("selectFile")
-    .addEventListener("click", () => fileInput.click());
-  document.getElementById("fileInput").addEventListener("change", (e) => {
-    if (e.target.files.length) {
-      uploadFiles(e.target.files);
-    }
-  });
+  selectBtn = document.getElementById("selectFile");
+  fileInput = document.getElementById("fileInput");
+
+  if (selectBtn && fileInput) {
+    selectBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files.length) {
+        uploadFiles(e.target.files);
+      }
+    });
+  }
 
   // --- RÉSUMÉ ---
   const summaryTitle = summaryDiv.querySelector("h2");
-  summaryTitle.textContent = t.summaryTitle;
-  downloadAllButton.textContent = t.downloadAll;
-  restartButton.textContent = t.restart;
+  if (summaryTitle) summaryTitle.textContent = t.summaryTitle;
+  if (downloadAllButton) downloadAllButton.textContent = t.downloadAll;
+  if (restartButton) restartButton.textContent = t.restart;
 
-  // --- PIED DE PAGE ---
-  footerTextParagraphs[0].textContent = t.footerLine1;
-  footerTextParagraphs[1].textContent = t.footerLine2;
+  // --- PIED DE PAGE ET MESSAGES ---
+  if (infoTitle) infoTitle.textContent = t.footerLine1;
+  if (infoWarning) infoWarning.textContent = t.footerLine2;
+  if (footerInfoText) footerInfoText.textContent = t.footerInfo;
+  if (footerLinkEl && t.footerLink) footerLinkEl.textContent = t.footerLink;
 
   // --- Si un upload est déjà en cours, on rafraîchit le statut global ---
   const globalInfo = document.querySelector(".status-text.processing, .status-text.uploaded, .status-text.uploading");
@@ -189,7 +199,7 @@ function createFileItem(file, id) {
       <div class="check-icon">✓</div>
     </div>
     <div class="progress-container">
-      <div class="progress-fill" style="width:0%"></div>
+      <div class="progress-fill"></div>
     </div>
   `;
 
@@ -211,7 +221,7 @@ function resetInterface() {
   fileList.innerHTML = "";
   summaryDiv.classList.add("hidden");
   dropzone.classList.remove("hidden");
-  fileInput.value = "";
+  if (fileInput) fileInput.value = "";
   updateStaticText();
 }
 

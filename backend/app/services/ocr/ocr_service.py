@@ -1,3 +1,5 @@
+"""Service métier réalisant l'OCR et la compression des PDF."""
+
 import os
 import json
 from pathlib import Path
@@ -8,10 +10,16 @@ from ocrmypdf.exceptions import DigitalSignatureError  # EXISTANT
 from app.config import config
 from app.logger import logger
 
+# =============================== OCR SERVICE =================================
+# Classe prenant en charge l'OCR et la compression des PDF. Elle lit les
+# fichiers d'entrée, applique ``ocrmypdf`` et écrit les résultats dans un
+# ``status.json`` pour suivi par l'API.
+
 MAX_FILE_SIZE_MB = 50  # EXISTANT
 
 class OCRService:
     def __init__(self, job_id: str):
+        """Prépare les chemins et charge le mapping ``file_ids``."""
         self.job_id = job_id
         self.job_dir = config.OCR_ROOT / job_id
         self.input_dir = self.job_dir / config.INPUT_SUBDIR
@@ -20,6 +28,8 @@ class OCRService:
 
         os.makedirs(self.output_dir, exist_ok=True)
         logger.info(f"[{self.job_id}] 📁 Dossier de sortie vérifié : {self.output_dir}")
+
+        # Chargement du mapping des noms d'origine vers les IDs générés
         self.file_ids = {}
         file_ids_path = self.job_dir / "file_ids.json"
         if file_ids_path.exists():
@@ -27,11 +37,12 @@ class OCRService:
                 self.file_ids = json.load(f)
 
     def _write_status(self, status: str, details: str = None, files: list = None):
+        """Écrit ou met à jour le fichier ``status.json``."""
         data = {
             "job_id": self.job_id,
             "status": status,
             "details": details,
-            "files": files
+            "files": files,
         }
         try:
             with open(self.status_file, "w", encoding="utf-8") as f:
@@ -41,10 +52,12 @@ class OCRService:
             logger.exception(f"[{self.job_id}] ❌ Échec écriture status.json : {e}")
 
     def process(self) -> None:
+        """Boucle principale de traitement OCR."""
         self._write_status("processing", "OCR en cours")
         logger.info(f"[{self.job_id}] 🚀 Début du traitement OCR")
 
         try:
+            # Liste des fichiers à traiter
             files = list(os.listdir(self.input_dir))
             if not files:
                 raise FileNotFoundError("Aucun fichier PDF trouvé dans le dossier d'entrée")
@@ -52,6 +65,7 @@ class OCRService:
             output_files = []
 
             for filename in files:
+                # Préparation des chemins pour ce fichier
                 input_path = self.input_dir / filename
                 path = Path(filename)
                 stem = path.stem
@@ -66,6 +80,7 @@ class OCRService:
                 logger.info(f"[{self.job_id}] 🧾 OCR : {input_path.name} → {out_name}")
 
                 # ----------------------------- VALIDATIONS ----------------------------- #
+                # Vérifie la taille et la validité du PDF avant OCR
                 file_error: str | None = None 
 
                 try:
@@ -163,8 +178,10 @@ class OCRService:
                 logger.info(f"[{self.job_id}] ✅ OCR terminé : {output_path.name}")
 
             self._write_status("done", "Traitement OCR terminé avec succès", output_files)
+            # Status final écrit : ``done`` avec la liste détaillée des fichiers
 
         except Exception as e:
             logger.exception(f"[{self.job_id}] ❌ Erreur pendant le traitement OCR")
             self._write_status("error", str(e))
             raise
+

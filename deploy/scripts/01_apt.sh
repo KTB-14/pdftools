@@ -1,0 +1,159 @@
+#!/bin/bash
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
+VENV_DIR="$PROJECT_ROOT/venv"
+LOGFILE="$BACKEND_DIR/logs/ocr.log"
+
+echo
+echo "==================================================================="
+echo "============== INSTALLATION DES DÉPENDANCES APT ==================="
+echo "==================================================================="
+echo
+
+# Vérification du sources.list avec sauvegarde
+check_sources_list() {
+    if [ ! -s /etc/apt/sources.list ]; then
+        if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then
+            echo "Système Ubuntu 24.04 détecté avec ubuntu.sources."
+        else
+            echo "/etc/apt/sources.list vide. Sauvegarde et régénération..."
+            TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+            sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak.$TIMESTAMP || true
+            cat <<EOF | sudo tee /etc/apt/sources.list
+deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+EOF
+            echo "Nouveau sources.list créé."
+        fi
+    else
+        echo "/etc/apt/sources.list détecté et non vide."
+    fi
+}
+
+check_sources_list
+
+wait_for_apt() {
+  while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+    echo "⏳ Attente de libération du lock APT..."
+    sleep 5
+  done
+}
+
+safe_install() {
+  local package="$1"
+  if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "install ok installed"; then
+    echo "$package déjà installé, on passe."
+  else
+    echo "    ➔ Installation : $package"
+    if sudo apt-get install -y "$package"; then
+      echo "$package installé avec succès."
+    else
+      echo "Échec de l'installation de $package. Vérification alternative..."
+      if which "$package" >/dev/null 2>&1; then
+        echo "$package est présent dans le système (binaire trouvé), on considère OK."
+      else
+        echo "$package non trouvable, échec critique."
+        exit 1
+      fi
+    fi
+  fi
+}
+
+
+# Activer universe et multiverse
+echo "➤ Activation des dépôts Universe et Multiverse..."
+sudo add-apt-repository -y main
+sudo add-apt-repository -y universe
+sudo add-apt-repository -y multiverse
+
+# Mise à jour système
+echo "➤ Vérification du lock APT..."
+wait_for_apt
+
+echo "➤ Mise à jour de la liste des paquets..."
+sudo apt-get update -y
+
+# Installation de Python 3
+echo "➤ Installation de Python 3 + pip + venv pour Ubuntu 24.04..."
+
+# Liste des paquets restants
+packages=(
+python3
+python-is-python3
+python3-venv
+python3-pip
+redis-server
+git
+autoconf
+automake
+libtool
+build-essential
+zlib1g-dev
+libssl-dev
+libffi-dev
+cups
+ghostscript
+unpaper
+qpdf
+pdftk
+poppler-utils
+xpdf
+exiftool
+libimage-exiftool-perl
+libmagic1
+libpoppler-cpp-dev
+libharfbuzz-dev
+libfribidi-dev
+libxcb1-dev
+inkscape
+strace
+tesseract-ocr
+tesseract-ocr-fra
+tesseract-ocr-eng
+ocrad
+pngquant
+imagemagick
+libjpeg-dev
+libjpeg-turbo-progs
+libwebp-dev
+libopenjp2-7-dev
+libtiff-tools
+libtiff-dev
+libqpdf-dev
+libleptonica-dev
+libfreetype6-dev
+liblcms2-dev
+libpng-dev
+libheif1
+fonts-dejavu
+fonts-liberation
+)
+
+for pkg in "${packages[@]}"; do
+  safe_install "$pkg"
+done
+
+# Installation de jbig2enc
+echo
+echo "➤ Installation de jbig2enc (optimisation OCR PDF)..."
+cd /opt
+if [ -d "jbig2enc" ]; then
+  echo "    ➔ jbig2enc existe déjà, suppression pour réinstallation."
+  sudo rm -rf jbig2enc
+fi
+git clone https://github.com/agl/jbig2enc.git
+cd jbig2enc
+sudo ./autogen.sh
+sudo ./configure
+sudo make -j"$(nproc)"
+sudo make install
+
+echo
+echo "Installation complète des dépendances APT + jbig2enc terminée."
