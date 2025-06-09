@@ -7,6 +7,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="icon" href="img/favicon.ico">
   
   <!-- Security -->
@@ -19,10 +20,10 @@
     <div class="header-content">
       <a href="index.html" class="return-button">← Retour à l'accueil</a>
       <div class="lang-switch">
-        <button data-lang="fr" class="flag-btn" title="Français">
+        <button data-lang="fr" class="flag-btn" title="Français" aria-label="Changer la langue en français">
           <img src="img/fr.svg" alt="Français" />
         </button>
-        <button data-lang="en" class="flag-btn" title="English">
+        <button data-lang="en" class="flag-btn" title="English" aria-label="Switch language to English">
           <img src="img/gb.svg" alt="English" />
         </button>
       </div>
@@ -34,23 +35,23 @@
 
   <main class="container">
     <section class="upload-section">
-      <!-- Texte -->
+      <!-- Information text -->
       <p class="footer-text-title">Plateforme dédiée à la compression de fichiers PDF.</p>
       <p class="footer-text-warning">Merci de ne pas utiliser de services Web publics pour vos fichiers PDF sensibles.</p>
 
       <!-- DROPZONE -->
-      <div id="dropzone" class="dropzone">
+      <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="Zone de dépôt de fichiers">
         <p id="drop-text">Déposez vos fichiers PDF ici<br/><span class="text-muted" id="or-text">ou</span></p>
         <button id="selectFile" class="button" data-i18n="select_files">Sélectionner des fichiers</button>
-        <input type="file" id="fileInput" accept="application/pdf" multiple hidden />
+        <input type="file" id="fileInput" accept="application/pdf" multiple hidden aria-label="Sélectionner des fichiers PDF" />
         <p class="text-muted" id="accepted-format">Format accepté : PDF</p>
       </div>
 
-      <!-- LISTE DES FICHIERS -->
-      <div id="fileList" class="file-list"></div>
+      <!-- FILE LIST -->
+      <div id="fileList" class="file-list" role="region" aria-label="Liste des fichiers"></div>
 
-      <!-- RÉSUMÉ -->
-      <div id="summary" class="summary hidden">
+      <!-- SUMMARY -->
+      <div id="summary" class="summary hidden" role="region" aria-label="Résumé du traitement">
         <h2 id="summary-title">Fichiers traités :</h2>
         <ul></ul>
         <div class="summary-actions">
@@ -61,20 +62,22 @@
     </section>
   </main>
 
-<footer class="footer-info">
-  <div class="footer-logo">
-    <a href="https://intranet.fareva.com/" target="_blank">
-      <img src="img/logo_vdp_page.jpg" alt="Logo VDP" />
-    </a>
-  </div>
+  <footer class="footer-info">
+    <div class="footer-logo">
+      <a href="https://intranet.fareva.com/" target="_blank" rel="noopener noreferrer">
+        <img src="img/logo_vdp_page.jpg" alt="Logo VDP" />
+      </a>
+    </div>
     <div class="footer-text">
       <p id="footer-text-1">Partage sécurisé de fichiers volumineux : utilisez la plateforme.</p>
-      <a id="footer-link" href="https://dl.fareva.com/admin.php" target="_blank" title="Accès sécurisé au partage de fichiers">DL FAREVA</a>
+      <a id="footer-link" href="https://dl.fareva.com/admin.php" target="_blank" rel="noopener noreferrer" title="Accès sécurisé au partage de fichiers">DL FAREVA</a>
     </div>
   </footer>
 
   <!-- Scripts -->
-  <script src="assets/js/compress.js" defer></script>
-  <script src="assets/js/lang.js" defer></script>
+  <script src="assets/js/managers/LanguageManager.js"></script>
+  <script src="assets/js/managers/UIManager.js"></script>
+  <script src="assets/js/managers/FileManager.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
