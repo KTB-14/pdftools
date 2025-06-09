@@ -68,20 +68,20 @@ safe_install() {
 
 
 # Activer universe et multiverse
-echo "➤ Activation des dépôts Universe et Multiverse..."
+echo "Activation des dépôts Universe et Multiverse..."
 sudo add-apt-repository -y main
 sudo add-apt-repository -y universe
 sudo add-apt-repository -y multiverse
 
 # Mise à jour système
-echo "➤ Vérification du lock APT..."
+echo "Vérification du lock APT..."
 wait_for_apt
 
-echo "➤ Mise à jour de la liste des paquets..."
+echo "Mise à jour de la liste des paquets..."
 sudo apt-get update -y
 
 # Installation de Python 3
-echo "➤ Installation de Python 3 + pip + venv pour Ubuntu 24.04..."
+echo "Installation de Python 3 + pip + venv pour Ubuntu 24.04..."
 
 # Liste des paquets restants
 packages=(
@@ -142,7 +142,7 @@ done
 
 # Installation de jbig2enc
 echo
-echo "➤ Installation de jbig2enc (optimisation OCR PDF)..."
+echo "Installation de jbig2enc (optimisation OCR PDF)..."
 cd /opt
 if [ -d "jbig2enc" ]; then
   echo "    ➔ jbig2enc existe déjà, suppression pour réinstallation."

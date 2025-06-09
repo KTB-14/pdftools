@@ -19,7 +19,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Trap sur erreurs
-trap 'echo -e "${RED}❌ Une erreur est survenue. Abandon.${NC}"; exit 1' ERR
+trap 'echo -e "${RED}Une erreur est survenue. Abandon.${NC}"; exit 1' ERR
 
 # Fonction de log avec timestamp
 to_log() {
@@ -32,23 +32,23 @@ to_log() {
 
 
 if [ "$EUID" -ne 0 ]; then
-  echo "❌ Ce script doit être exécuté avec sudo."
+  echo "Ce script doit être exécuté avec sudo."
   exit 1
 fi
 
 # ================================ VÉRIFICATION PRÉREQUIS ================================
 
 check_prerequisites() {
-  echo -e "${BLUE}🔍 Vérification des prérequis...${NC}"
+  echo -e "${BLUE}Vérification des prérequis...${NC}"
 
   for cmd in python3 pip3 apache2ctl systemctl; do
-    if ! command -v $cmd &> /dev/null; then
-      echo -e "${RED}❌ Prérequis manquant : $cmd n'est pas installé.${NC}"
-      exit 1
-    fi
+      if ! command -v $cmd &> /dev/null; then
+        echo -e "${RED}Prérequis manquant : $cmd n'est pas installé.${NC}"
+        exit 1
+      fi
   done
 
-  echo -e "${GREEN}✅ Prérequis OK.${NC}"
+  echo -e "${GREEN}Prérequis OK.${NC}"
 }
 
 # ================================ MENU PRINCIPAL ================================
@@ -123,9 +123,9 @@ uninstall_services() {
 
 check_services() {
   to_log "Vérification de l'état des services"
-  systemctl status ocr-api.service --no-pager || echo -e "${RED}❌ ocr-api.service non actif${NC}"
-  systemctl status celery-ocr.service --no-pager || echo -e "${RED}❌ celery-ocr.service non actif${NC}"
-  systemctl list-timers --all | grep purge-ocr || echo -e "${RED}❌ purge-ocr.timer non actif${NC}"
+  systemctl status ocr-api.service --no-pager || echo -e "${RED}ocr-api.service non actif${NC}"
+  systemctl status celery-ocr.service --no-pager || echo -e "${RED}celery-ocr.service non actif${NC}"
+  systemctl list-timers --all | grep purge-ocr || echo -e "${RED}purge-ocr.timer non actif${NC}"
 }
 
 restart_services() {
@@ -133,7 +133,7 @@ restart_services() {
   sudo systemctl restart ocr-api.service
   sudo systemctl restart celery-ocr.service
   sudo systemctl restart purge-ocr.timer
-  echo -e "${GREEN}✅ Services redémarrés.${NC}"
+  echo -e "${GREEN}Services redémarrés.${NC}"
 }
 
 stop_services() {
@@ -144,7 +144,7 @@ stop_services() {
   # Stop processes Uvicorn & Celery en brut si besoin
   sudo pkill -f "uvicorn" || true
   sudo pkill -f "celery" || true
-  echo -e "${GREEN}✅ Tous les services et processus arrêtés.${NC}"
+  echo -e "${GREEN}Tous les services et processus arrêtés.${NC}"
 }
 
 show_logs() {
@@ -161,7 +161,7 @@ purge_jobs() {
 delete_all_jobs() {
   to_log "Suppression de tous les jobs OCR"
   rm -rf "$PROJECT_ROOT/data/jobs/*"
-  echo -e "${GREEN}✅ Tous les jobs supprimés.${NC}"
+  echo -e "${GREEN}Tous les jobs supprimés.${NC}"
 }
 
 # ================================ BOUCLE MENU ================================
@@ -187,7 +187,7 @@ while true; do
     11) purge_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
     12) delete_all_jobs; read -p "Appuyez sur Entrée pour continuer..." ;;
     13) echo -e "${BLUE}Bye !${NC}"; exit 0 ;;
-    *) echo -e "${RED}❌ Option invalide.${NC}"; read -p "Appuyez sur Entrée pour réessayer..." ;;
+    *) echo -e "${RED}Option invalide.${NC}"; read -p "Appuyez sur Entrée pour réessayer..." ;;
   esac
 done
 

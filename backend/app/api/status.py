@@ -15,7 +15,7 @@ router = APIRouter()
 @router.get("/status/{job_id}", response_model=StatusOut)
 def get_status(job_id: str):
     """Retourne le contenu du fichier ``status.json`` associé au job."""
-    logger.info(f"[{job_id}] 🔍 Requête de statut reçue")
+    logger.info(f"[{job_id}] Requête de statut reçue")
 
     # Lecture directe du fichier status.json généré par OCRService
     status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
@@ -23,7 +23,7 @@ def get_status(job_id: str):
         try:
             with open(status_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            logger.info(f"[{job_id}] 📄 Lecture réussie de status.json")
+            logger.info(f"[{job_id}] Lecture réussie de status.json")
             return StatusOut(
                 job_id=job_id,
                 status=JobStatus(data.get("status", "unknown")),
@@ -31,10 +31,10 @@ def get_status(job_id: str):
                 files=data.get("files")
             )
         except Exception as e:
-            logger.exception(f"[{job_id}] ❌ Erreur lecture status.json : {e}")
+            logger.exception(f"[{job_id}] Erreur lecture status.json : {e}")
             raise HTTPException(status_code=500, detail=f"Erreur lecture status.json : {str(e)}")
 
-    logger.warning(f"[{job_id}] ❌ Aucune info de statut trouvée")
+    logger.warning(f"[{job_id}] Aucune info de statut trouvée")
     # Si aucun status.json n'est présent, le job est inconnu ou expiré
     raise HTTPException(status_code=404, detail="Job non trouvé")
  

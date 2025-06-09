@@ -1,10 +1,10 @@
 # =======================
-# 🚀 Core Base
+# Core Base
 # =======================
 -r base.txt                 # Base de production (FastAPI, Celery, OCR, etc.)
 
 # =======================
-# 🧪 Test & Développement
+# Test & Développement
 # =======================
 pytest                       # Framework de tests unitaires
 pytest-asyncio               # Support des tests asynchrones pour FastAPI
@@ -13,7 +13,7 @@ flake8                       # Linter pour vérifier la conformité du code Pyth
 mypy                         # Typage statique (type checking)
 
 # =======================
-# 📚 Future Features — Outils supplémentaires
+# Future Features — Outils supplémentaires
 # =======================
 img2pdf                      # Conversion d'images en PDF (futur traitement)
 pi-heif                      # Support des formats d'image HEIF/HEIC (ex: iPhone photos)

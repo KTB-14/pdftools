@@ -378,7 +378,7 @@ async function checkStatus(jobId, fileItems) {
         const sizeDiv = fileItem.querySelector(".file-size");         // (déclaré en premier)
         const progressFill = fileItem.querySelector(".progress-fill");// (déclaré en premier)
 
-        if (fileInfo.error) {  // --- ✅ NOUVEAU : gestion fichier en erreur
+        if (fileInfo.error) {  // Gestion d'un fichier en erreur
           spinner.style.display = "none";
           checkIcon.classList.remove("show");
 
