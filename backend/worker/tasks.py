@@ -19,23 +19,23 @@ celery_app = Celery(
 @celery_app.task(bind=True, name="ocr_task", acks_late=True)
 def ocr_task(self, job_id: str):
     """Tâche asynchrone exécutant OCRService sur un dossier de job."""
-    logger.info(f"[{job_id}] ➤ Tâche OCR lancée")
+    logger.info(f"[{job_id}] Tâche OCR lancée")
 
     try:
         self.update_state(state="PROCESSING", meta="Démarrage du traitement OCR")
-        logger.info(f"[{job_id}] ➤ Traitement OCR en cours...")
+        logger.info(f"[{job_id}] Traitement OCR en cours...")
 
         ocr = OCRService(job_id)
         ocr.process()
 
-        logger.info(f"[{job_id}] ✅ OCR terminé avec succès")
+        logger.info(f"[{job_id}] OCR terminé avec succès")
         return {"status": "done"}  
 
     except Exception as exc:
-        logger.exception(f"[{job_id}] ❌ Erreur lors du traitement OCR : {exc}")
+        logger.exception(f"[{job_id}] Erreur lors du traitement OCR : {exc}")
         self.update_state(state=states.FAILURE, meta=str(exc))
         raise Ignore()
 
     finally:
-        logger.info(f"[{job_id}] 🔚 Fin de tâche OCR (avec ou sans succès)")
+        logger.info(f"[{job_id}] Fin de tâche OCR (avec ou sans succès)")
  
