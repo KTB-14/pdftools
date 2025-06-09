@@ -1,5 +1,5 @@
 # =======================
-# 🚀 Core Web & Async API
+# Core Web & Async API
 # =======================
 fastapi==0.115.12            # Framework API web (ASGI)
 uvicorn==0.34.2              # Serveur ASGI pour FastAPI
@@ -7,7 +7,7 @@ celery==5.5.2                # Worker de tâches asynchrones
 redis==6.1.0                  # Client Redis pour Celery Broker
 
 # =======================
-# 📄 PDF Processing & OCR
+# PDF Processing & OCR
 # =======================
 ocrmypdf==16.10.1            # OCR et compression PDF
 reportlab==4.4.1             # Génération de fichiers PDF
@@ -16,7 +16,7 @@ Pillow==11.2.1                # Manipulation d'images (utilisé par OCRmyPDF)
 pikepdf>=8.5.6,<9.0           # Manipulation PDF (compression sans perte)
 
 # =======================
-# 📤 Upload & Configuration
+# Upload & Configuration
 # =======================
 python-multipart==0.0.20     # Gestion d'upload multipart/form-data
 python-dotenv==1.1.0         # Chargement des fichiers .env
@@ -24,18 +24,18 @@ pydantic==2.11.4             # Validation de données (modèles)
 pydantic-settings==2.9.1     # Paramètres et configuration via Pydantic
 
 # =======================
-# 🛠️ Typing & Inspection
+# Typing & Inspection
 # =======================
 typing-extensions==4.13.2     # Extensions typing (Backward Compatibility)
 typing-inspection==0.4.0      # Inspection avancée des hints de types
 
 # =======================
-# 📜 Logging & Monitoring
+# Logging & Monitoring
 # =======================
 loguru==0.7.3                # Logger moderne et structuré
 
 # =======================
-# 🔒 Cryptography & Dependencies bas niveau
+# Cryptography & Dependencies bas niveau
 # =======================
 charset-normalizer==3.4.2    # Détection et normalisation d'encodage de texte
 cryptography==45.0.2         # Cryptographie (utilisé par HTTPS, JWT...)

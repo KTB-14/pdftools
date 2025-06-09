@@ -13,10 +13,10 @@ echo "============== DÉSINSTALLATION DE LA CONFIG APACHE ================"
 echo "==================================================================="
 echo
 
-echo "➤ Désactivation du site Apache PDFTools..."
+echo "Désactivation du site Apache PDFTools..."
 sudo a2dissite "$APACHE_SITE"
 
-echo "➤ Reload d'Apache pour prise en compte..."
+echo "Reload d'Apache pour prise en compte..."
 sudo systemctl reload apache2
 
 echo

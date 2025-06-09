@@ -15,7 +15,7 @@ import os
 # Initialisation de l'application FastAPI
 # ``app`` est utilisé par Uvicorn pour servir l'API.
 app = FastAPI(title="PDFTools – OCR & Compression")
-logger.info("🚀 Démarrage de l'application FastAPI PDFTools")
+logger.info("Démarrage de l'application FastAPI PDFTools")
 
 # Création automatique du dossier des jobs si inexistant.
 # ``OCR_ROOT`` est défini dans ``app/config.py`` et peut être sur un autre disque.
@@ -35,7 +35,7 @@ logger.info(f"Dossier OCR_ROOT vérifié/créé à : {config.OCR_ROOT}")
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
 app.include_router(status.router, prefix="/api", tags=["Status"])
 app.include_router(download.router, prefix="/api", tags=["Download"])
-logger.info("✅ Routes API enregistrées : /api/upload, /api/status, /api/download")
+logger.info("Routes API enregistrées : /api/upload, /api/status, /api/download")
 
 # Middleware CORS : autorise ou restreint les appels externes à l'API.
 app.add_middleware(
@@ -46,7 +46,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-logger.info(f"🎯 CORS activé pour : {config.ALLOWED_ORIGINS}")
+logger.info(f"CORS activé pour : {config.ALLOWED_ORIGINS}")
 
 # Route racine
 @app.get("/")

@@ -21,7 +21,7 @@ def download_single_or_multiple(job_id: str):
     output_dir = config.OCR_ROOT / job_id / config.OUTPUT_SUBDIR
     status_path = config.OCR_ROOT / job_id / config.STATUS_FILENAME
 
-    logger.info(f"[{job_id}] 📨 Demande de téléchargement")
+    logger.info(f"[{job_id}] Demande de téléchargement")
 
     if not output_dir.exists():
         raise HTTPException(status_code=404, detail="Dossier de sortie introuvable")
@@ -34,18 +34,18 @@ def download_single_or_multiple(job_id: str):
 
         if len(files) == 1:
             file = files[0]
-            logger.info(f"[{job_id}] ✅ Un seul fichier trouvé : {file.name}")
+            logger.info(f"[{job_id}] Un seul fichier trouvé : {file.name}")
             return FileResponse(
                 path=str(file),
                 filename=file.name,
                 media_type="application/pdf"
             )
         else:
-            logger.warning(f"[{job_id}] ⚠️ Plusieurs fichiers détectés → demande redirigée")
+            logger.warning(f"[{job_id}] Plusieurs fichiers détectés, demande redirigée")
             # On informe le client qu'il doit passer par l'endpoint spécifique
             raise HTTPException(status_code=409, detail="Plusieurs fichiers disponibles. Utilisez /download/{job_id}/{file_id}")
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur pendant la tentative de téléchargement : {e}")
+        logger.exception(f"[{job_id}] Erreur pendant la tentative de téléchargement : {e}")
         raise HTTPException(status_code=500, detail=f"Erreur : {e}")
 
 @router.get("/download/{job_id}/file/{file_id}")
@@ -92,6 +92,6 @@ def download_by_file_id(job_id: str, file_id: str):
     except HTTPException:
             raise
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur pendant le téléchargement par ID : {e}")
+        logger.exception(f"[{job_id}] Erreur pendant le téléchargement par ID : {e}")
         raise HTTPException(status_code=500, detail=f"Erreur : {str(e)}")
     

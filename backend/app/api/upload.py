@@ -27,22 +27,22 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
     job_dir = config.OCR_ROOT / job_id
     job_in_dir = job_dir / config.INPUT_SUBDIR
 
-    logger.info(f"[{job_id}] 📥 Nouvelle requête d'upload reçue")
-    logger.info(f"[{job_id}] 📁 Dossier prévu pour les fichiers : {job_in_dir}")
+    logger.info(f"[{job_id}] Nouvelle requête d'upload reçue")
+    logger.info(f"[{job_id}] Dossier prévu pour les fichiers : {job_in_dir}")
 
     try:
         # Création du dossier d'entrée
         job_in_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"[{job_id}] ✅ Dossier de destination créé")
+        logger.info(f"[{job_id}] Dossier de destination créé")
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur création du dossier")
+        logger.exception(f"[{job_id}] Erreur création du dossier")
         raise HTTPException(status_code=500, detail=f"Erreur création du dossier : {e}")
 
     # Chargement du mapping ``filename -> id`` envoyé par le frontend
     try:
         file_ids = json.loads(file_ids)
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur parsing file_ids")
+        logger.exception(f"[{job_id}] Erreur parsing file_ids")
         raise HTTPException(status_code=400, detail="Format des file_ids invalide")
 
     # Sécuriser les noms pour file_ids.json
@@ -56,9 +56,9 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
     try:
         with open(file_ids_path, "w", encoding="utf-8") as f:
             json.dump(fixed_file_ids, f)
-        logger.info(f"[{job_id}] ✅ file_ids.json sauvegardé")
+        logger.info(f"[{job_id}] file_ids.json sauvegardé")
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur sauvegarde file_ids.json")
+        logger.exception(f"[{job_id}] Erreur sauvegarde file_ids.json")
         raise HTTPException(status_code=500, detail=f"Erreur sauvegarde file_ids.json : {e}")
 
     # Sauvegarder les fichiers uploadés
@@ -70,17 +70,17 @@ async def upload_files(files: List[UploadFile] = File(...), file_ids: str = Form
         try:
             with dest.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-            logger.info(f"[{job_id}] 📄 Fichier sauvegardé : {safe_filename}")
+            logger.info(f"[{job_id}] Fichier sauvegardé : {safe_filename}")
         except Exception as e:
-            logger.exception(f"[{job_id}] ❌ Erreur lors de la sauvegarde de {safe_filename}")
+            logger.exception(f"[{job_id}] Erreur lors de la sauvegarde de {safe_filename}")
             raise HTTPException(status_code=500, detail=f"Erreur sauvegarde fichier : {e}")
 
     # Lancer la tâche OCR avec Celery en arrière-plan
     try:
         ocr_task.delay(job_id)
-        logger.info(f"[{job_id}] 🚀 Tâche Celery lancée")
+        logger.info(f"[{job_id}] Tâche Celery lancée")
     except Exception as e:
-        logger.exception(f"[{job_id}] ❌ Erreur lancement tâche Celery")
+        logger.exception(f"[{job_id}] Erreur lancement tâche Celery")
         raise HTTPException(status_code=500, detail=f"Erreur Celery lancement tâche OCR : {e}")
 
     return JobOut(job_id=job_id, status=JobStatus.pending)

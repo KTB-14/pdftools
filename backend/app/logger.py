@@ -39,5 +39,5 @@ logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
 # Log de démarrage (utile pour confirmer le niveau utilisé)
-logger.info(f"✅ Logger initialisé — Niveau : {config.LOG_LEVEL} — Fichier : {logfile}") 
+logger.info(f"Logger initialisé — Niveau : {config.LOG_LEVEL} — Fichier : {logfile}")
 
