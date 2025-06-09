@@ -1,0 +1,13 @@
+[Unit]
+Description=Celery Worker for PDFTools OCR
+After=network.target redis.service
+
+[Service]
+WorkingDirectory=/opt/pdftools/backend
+
+ExecStart=/usr/bin/python3 -m celery -A worker.tasks worker --loglevel=INFO
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+ 
