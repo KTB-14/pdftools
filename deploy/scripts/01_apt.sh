@@ -37,8 +37,6 @@ EOF
     fi
 }
 
-
-
 wait_for_apt() {
   while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
     echo "⏳ Attente de libération du lock APT..."
@@ -65,6 +63,10 @@ safe_install() {
     fi
   fi
 }
+
+
+sudo mkdir -p /opt/pdftools/backend/logs
+sudo chown -R $(whoami):$(whoami) /opt/pdftools/backend/logs
 
 check_sources_list
 
@@ -129,6 +131,21 @@ zlib1g-dev
 for pkg in "${packages[@]}"; do
   safe_install "$pkg"
 done
+
+# Installation de jbig2enc
+echo
+echo "Installation de jbig2enc (optimisation OCR PDF)..."
+cd /opt
+if [ -d "jbig2enc" ]; then
+  echo "    ➔ jbig2enc existe déjà, suppression pour réinstallation."
+  sudo rm -rf jbig2enc
+fi
+git clone https://github.com/agl/jbig2enc.git
+cd jbig2enc
+sudo ./autogen.sh
+sudo ./configure
+sudo make -j"$(nproc)"
+sudo make install
 
 echo
 echo "Installation complète des dépendances APT terminée."

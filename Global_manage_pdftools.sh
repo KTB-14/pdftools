@@ -87,7 +87,7 @@ show_menu() {
 # ================================ ACTIONS ================================
 
 select_env() {
-  to_log "Selection de l'environnement dev/prod"
+  to_log "Selection de l'environnement prod"
   bash "$PROJECT_ROOT/deploy/scripts/00_select_env.sh"
 }
 

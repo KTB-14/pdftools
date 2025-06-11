@@ -1,5 +1,5 @@
 /* ------------- CONFIG ------------------------------------------------- */
-const API_BASE = "/api";
+const API_BASE = "pdf/api";
 
 // Langue courante (fr ou en)
 let currentLang = "fr";

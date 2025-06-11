@@ -30,6 +30,14 @@ else
     echo "Apache2 déjà installé."
 fi
 
+# Vérification de Listen 81
+if ! grep -q "Listen 81" "$PORT_CONF"; then
+    echo "➔ Ajout de 'Listen 81' dans $PORT_CONF..."
+    echo "Listen 81" >> "$PORT_CONF"
+else
+    echo "Port 81 déjà configuré dans ports.conf"
+fi
+
 # Activation des modules
 echo "Activation des modules nécessaires..."
 sudo a2enmod proxy proxy_http headers rewrite

@@ -37,7 +37,7 @@ echo "==================================================================="
 echo
 
 # 0 - Sélection de l'environnement
-log "0. Sélection de l'environnement (DEV ou PROD)"
+log "0. Sélection de l'environnement PROD"
 bash "$SCRIPTS_DIR/00_select_env.sh"
 
 # 1 - Installation des dépendances système APT

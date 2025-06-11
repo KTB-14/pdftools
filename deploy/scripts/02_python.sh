@@ -31,7 +31,14 @@ echo "Création de l'environnement virtuel..."
 python3 -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 
+echo "==================================================================="
+echo "====  DEMANDER ouverture du PORT au niveau du FIREWALL (CORP) ====="
+echo "====            SINON  Installation Dependances ECHOUE        ====="
+echo "==================================================================="
+
 # Mise à jour pip
+# A demander ouverture du port au niveau du Firewall afin de permettre installation des dependances pip
+
 echo "Mise à jour de pip..."
 pip install --upgrade pip
 
