@@ -10,7 +10,7 @@ redis==6.1.0                  # Client Redis pour Celery Broker
 # PDF Processing & OCR
 # =======================
 ocrmypdf==16.10.1            # OCR et compression PDF
-reportlab==4.4.1             # Génération de fichiers PDF
+reportlab==4.4.1 \
 pdfminer.six==20250506        # Extraction de texte des PDF
 Pillow==11.2.1                # Manipulation d'images (utilisé par OCRmyPDF)
 pikepdf>=8.5.6,<9.0           # Manipulation PDF (compression sans perte)
@@ -41,3 +41,9 @@ charset-normalizer==3.4.2    # Détection et normalisation d'encodage de texte
 cryptography==45.0.2         # Cryptographie (utilisé par HTTPS, JWT...)
 cffi==1.17.1                  # C Foreign Function Interface (support bas niveau)
 pycparser==2.22               # Parser C pour CFFI (compilation dépendances)
+
+# =======================
+# Test & Développement
+# =======================
+pytest                       # Framework de tests unitaires
+pytest-asyncio               # Support des tests asynchrones pour FastAPI

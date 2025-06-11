@@ -37,7 +37,7 @@ EOF
     fi
 }
 
-check_sources_list
+
 
 wait_for_apt() {
   while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
@@ -66,6 +66,7 @@ safe_install() {
   fi
 }
 
+check_sources_list
 
 # Activer universe et multiverse
 echo "Activation des dépôts Universe et Multiverse..."
@@ -85,75 +86,49 @@ echo "Installation de Python 3 + pip + venv pour Ubuntu 24.04..."
 
 # Liste des paquets restants
 packages=(
-python3
 python-is-python3
-python3-venv
+python3
 python3-pip
-redis-server
-git
-autoconf
-automake
-libtool
+python3-venv
 build-essential
-zlib1g-dev
-libssl-dev
-libffi-dev
-cups
-ghostscript
-unpaper
-qpdf
-pdftk
-poppler-utils
-xpdf
-exiftool
-libimage-exiftool-perl
-libmagic1
-libpoppler-cpp-dev
-libharfbuzz-dev
-libfribidi-dev
-libxcb1-dev
-inkscape
-strace
-tesseract-ocr
-tesseract-ocr-fra
-tesseract-ocr-eng
-ocrad
-pngquant
-imagemagick
-libjpeg-dev
-libjpeg-turbo-progs
-libwebp-dev
-libopenjp2-7-dev
-libtiff-tools
-libtiff-dev
-libqpdf-dev
-libleptonica-dev
-libfreetype6-dev
-liblcms2-dev
-libpng-dev
-libheif1
 fonts-dejavu
 fonts-liberation
+ghostscript
+imagemagick
+libffi-dev
+libfreetype6-dev
+libfribidi-dev
+libharfbuzz-dev
+libheif1
+libjpeg-dev
+libjpeg-turbo-progs
+liblcms2-dev
+libleptonica-dev
+libopenjp2-7-dev
+libpng-dev
+libpoppler-cpp-dev
+libqpdf-dev
+libssl-dev
+libtiff-dev
+libtiff-tools
+libwebp-dev
+libxcb1-dev
+libjbig2enc-dev
+pdftk
+pngquant
+poppler-utils
+redis-server
+tesseract-ocr
+tesseract-ocr-eng
+tesseract-ocr-fra
+unpaper
+xpdf
+zlib1g-dev
 )
 
 for pkg in "${packages[@]}"; do
   safe_install "$pkg"
 done
 
-# Installation de jbig2enc
 echo
-echo "Installation de jbig2enc (optimisation OCR PDF)..."
-cd /opt
-if [ -d "jbig2enc" ]; then
-  echo "    ➔ jbig2enc existe déjà, suppression pour réinstallation."
-  sudo rm -rf jbig2enc
-fi
-git clone https://github.com/agl/jbig2enc.git
-cd jbig2enc
-sudo ./autogen.sh
-sudo ./configure
-sudo make -j"$(nproc)"
-sudo make install
-
-echo
-echo "Installation complète des dépendances APT + jbig2enc terminée."
+echo "Installation complète des dépendances APT terminée."

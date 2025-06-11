@@ -16,13 +16,18 @@ echo "============== INSTALLATION ENV PYTHON & LIBS ===================="
 echo "==================================================================="
 echo
 
+echo "Suppression des fichiers pyc suspects..."
+find "$PROJECT_ROOT" -name "*.pyc" -delete || true
+
 # Création et activation de l'environnement virtuel
 echo "Création de l'environnement virtuel Python..."
 if [ -d "$VENV_DIR" ]; then
-  echo "    ➔ Environnement existant détecté, suppression pour recréation."
+  echo "   Environnement existant détecté, suppression pour recréation."
   rm -rf "$VENV_DIR"
 fi
 
+echo "Création de l'environnement virtuel..."
+[ -d "$VENV_DIR" ] && rm -rf "$VENV_DIR"
 python3 -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 
@@ -38,8 +43,12 @@ if [ ! -f "$REQUIREMENTS_FILE" ]; then
     exit 1
 fi
 
-echo "Installation des dépendances Python depuis $REQUIREMENTS_FILE..."
-pip install -r "$REQUIREMENTS_FILE"
+echo "Installation des libs Python depuis $REQUIREMENTS_FILE"
+pip install --no-cache-dir -r "$REQUIREMENTS_FILE"
+
+echo "Audit sécurité des dépendances Python..."
+pip install pip-audit >/dev/null 2>&1 || true
+pip-audit || echo "Pas de vulnérabilités connues détectées."
 
 echo
 echo "Installation des dépendances Python terminée avec succès."
