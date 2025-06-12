@@ -10,7 +10,7 @@ redis==6.1.0                  # Client Redis pour Celery Broker
 # PDF Processing & OCR
 # =======================
 ocrmypdf==16.10.1            # OCR et compression PDF
-reportlab==4.4.1 \
+reportlab==4.4.1 
 pdfminer.six==20250506        # Extraction de texte des PDF
 Pillow==11.2.1                # Manipulation d'images (utilisé par OCRmyPDF)
 pikepdf>=8.5.6,<9.0           # Manipulation PDF (compression sans perte)
