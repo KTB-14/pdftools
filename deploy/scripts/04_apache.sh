@@ -13,8 +13,8 @@ echo "=========== INSTALLATION CONFIGURATION APACHE2 PDFTOOLS ==========="
 echo "==================================================================="
 echo
 
-APACHE_CONF_SRC="$PROJECT_ROOT/deploy/apache/pdftools.conf"
-APACHE_CONF_DEST="/etc/apache2/sites-available/pdftools.conf"
+APACHE_CONF_SRC="$PROJECT_ROOT/deploy/apache/*.conf"
+APACHE_CONF_DEST="/etc/apache2/sites-available/*.conf"
 
 # Vérification des privilèges root
 if [ "$EUID" -ne 0 ]; then
@@ -47,8 +47,8 @@ echo "Copie de la configuration Apache PDFTools..."
 sudo cp "$APACHE_CONF_SRC" "$APACHE_CONF_DEST"
 
 # Activation du site
-echo "Activation du site PDFTools..."
-sudo a2ensite pdftools.conf
+#echo "Activation du site PDFTools..."
+#sudo a2ensite pdftools.conf
 
 # Désactivation du site par défaut si actif
 if sudo a2query -s 000-default.conf > /dev/null 2>&1; then
