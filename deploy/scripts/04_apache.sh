@@ -13,8 +13,8 @@ echo "=========== INSTALLATION CONFIGURATION APACHE2 PDFTOOLS ==========="
 echo "==================================================================="
 echo
 
-APACHE_CONF_SRC="$PROJECT_ROOT/deploy/apache/*.conf"
-APACHE_CONF_DEST="/etc/apache2/sites-available/*.conf"
+APACHE_CONF_SRC="$PROJECT_ROOT/deploy/apache/pdftools.conf"
+APACHE_CONF_DEST="/etc/apache2/sites-available/pdftools.conf"
 
 # Vérification des privilèges root
 if [ "$EUID" -ne 0 ]; then
@@ -30,14 +30,6 @@ else
     echo "Apache2 déjà installé."
 fi
 
-# Vérification de Listen 81
-if ! grep -q "Listen 81" "$PORT_CONF"; then
-    echo "➔ Ajout de 'Listen 81' dans $PORT_CONF..."
-    echo "Listen 81" >> "$PORT_CONF"
-else
-    echo "Port 81 déjà configuré dans ports.conf"
-fi
-
 # Activation des modules
 echo "Activation des modules nécessaires..."
 sudo a2enmod proxy proxy_http headers rewrite
@@ -47,8 +39,8 @@ echo "Copie de la configuration Apache PDFTools..."
 sudo cp "$APACHE_CONF_SRC" "$APACHE_CONF_DEST"
 
 # Activation du site
-#echo "Activation du site PDFTools..."
-#sudo a2ensite pdftools.conf
+echo "Activation du site PDFTools..."
+sudo a2ensite pdftools.conf
 
 # Désactivation du site par défaut si actif
 if sudo a2query -s 000-default.conf > /dev/null 2>&1; then
@@ -73,3 +65,4 @@ fi
 echo
 echo "Apache2 est maintenant configuré pour PDFTools."
 
+# Fin du script
