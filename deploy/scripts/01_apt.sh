@@ -115,7 +115,6 @@ libtiff-dev
 libtiff-tools
 libwebp-dev
 libxcb1-dev
-libjbig2enc-dev
 pdftk
 pngquant
 poppler-utils

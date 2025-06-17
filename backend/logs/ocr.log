@@ -1,0 +1,65 @@
+[2025-06-17 22:32:33,005] INFO in logger: Logger initialisé — Niveau : INFO — Fichier : C:\Users\kbroo\OneDrive - FAREVA\BKIF\DONE_Sujet_3_GLPI-Changement-926_( OCRmyPDF )\Brouillon-Docs-Autres\Nouvelle Methode Application Python Backend\devtest\pdftools\backend\logs\ocr.log
+[2025-06-17 22:32:33,122] INFO in download: [job1] Demande de téléchargement
+[2025-06-17 22:32:33,123] INFO in download: [job1] Un seul fichier trouvé : a.pdf
+[2025-06-17 22:32:33,128] INFO in download: [job1] Demande de téléchargement
+[2025-06-17 22:32:33,128] WARNING in download: [job1] Plusieurs fichiers détectés, demande redirigée
+[2025-06-17 22:32:33,128] ERROR in download: [job1] Erreur pendant la tentative de téléchargement : 409: Plusieurs fichiers disponibles. Utilisez /download/{job_id}/{file_id}
+Traceback (most recent call last):
+  File "C:\Users\kbroo\OneDrive - FAREVA\BKIF\DONE_Sujet_3_GLPI-Changement-926_( OCRmyPDF )\Brouillon-Docs-Autres\Nouvelle Methode Application Python Backend\devtest\pdftools\backend\app\api\download.py", line 46, in download_single_or_multiple
+    raise HTTPException(status_code=409, detail="Plusieurs fichiers disponibles. Utilisez /download/{job_id}/{file_id}")
+fastapi.exceptions.HTTPException: 409: Plusieurs fichiers disponibles. Utilisez /download/{job_id}/{file_id}
+[2025-06-17 22:32:33,169] INFO in status: [job1] Requête de statut reçue
+[2025-06-17 22:32:33,180] INFO in status: [job1] Lecture réussie de status.json
+[2025-06-17 22:32:33,183] INFO in status: [unknown] Requête de statut reçue
+[2025-06-17 22:32:33,183] WARNING in status: [unknown] Aucune info de statut trouvée
+[2025-06-17 22:32:33,189] INFO in upload: [jid] Nouvelle requête d'upload reçue
+[2025-06-17 22:32:33,190] INFO in upload: [jid] Dossier prévu pour les fichiers : C:\Users\kbroo\AppData\Local\Temp\pytest-of-kbroo\pytest-0\test_upload_success0\jid\input_ocr
+[2025-06-17 22:32:33,190] INFO in upload: [jid] Dossier de destination créé
+[2025-06-17 22:32:33,191] INFO in upload: [jid] file_ids.json sauvegardé
+[2025-06-17 22:32:33,192] INFO in upload: [jid] Fichier sauvegardé : test.pdf
+[2025-06-17 22:32:33,192] INFO in upload: [jid] Tâche Celery lancée
+[2025-06-17 22:32:33,196] INFO in id_generator: Job ID généré : 13c753837b7c_20250617-223233
+[2025-06-17 22:32:33,196] INFO in upload: [13c753837b7c_20250617-223233] Nouvelle requête d'upload reçue
+[2025-06-17 22:32:33,196] INFO in upload: [13c753837b7c_20250617-223233] Dossier prévu pour les fichiers : C:\Users\kbroo\AppData\Local\Temp\pytest-of-kbroo\pytest-0\test_upload_bad_ids0\13c753837b7c_20250617-223233\input_ocr
+[2025-06-17 22:32:33,197] INFO in upload: [13c753837b7c_20250617-223233] Dossier de destination créé
+[2025-06-17 22:32:33,197] ERROR in upload: [13c753837b7c_20250617-223233] Erreur parsing file_ids
+Traceback (most recent call last):
+  File "C:\Users\kbroo\OneDrive - FAREVA\BKIF\DONE_Sujet_3_GLPI-Changement-926_( OCRmyPDF )\Brouillon-Docs-Autres\Nouvelle Methode Application Python Backend\devtest\pdftools\backend\app\api\upload.py", line 43, in upload_files
+    file_ids = json.loads(file_ids)
+  File "C:\Users\kbroo\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\kbroo\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 344, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kbroo\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 362, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2025-06-17 22:32:33,230] INFO in id_generator: Job ID généré : 3a7bbf7877bb_20250617-223233
+[2025-06-17 22:32:33,234] INFO in ocr_service: [job] Dossier de sortie vérifié : C:\Users\kbroo\AppData\Local\Temp\pytest-of-kbroo\pytest-0\test_write_status0\job\output_ocr
+[2025-06-17 22:32:33,235] INFO in ocr_service: [job] Status mis à jour : done
+[2025-06-17 22:32:33,250] INFO in ocr_service: [job] Dossier de sortie vérifié : C:\Users\kbroo\AppData\Local\Temp\pytest-of-kbroo\pytest-0\test_process_ok0\job\output_ocr
+[2025-06-17 22:32:33,251] INFO in ocr_service: [job] Status mis à jour : processing
+[2025-06-17 22:32:33,251] INFO in ocr_service: [job] Début du traitement OCR
+[2025-06-17 22:32:33,251] INFO in ocr_service: [job] OCR : f.pdf -> f_compressed.pdf
+[2025-06-17 22:32:33,251] INFO in ocr_service: [job] PDF non taggé : OCR normal avec deskew et skip_text
+[2025-06-17 22:32:33,251] INFO in ocr_service: [job] OCR terminé : f_compressed.pdf
+[2025-06-17 22:32:33,252] INFO in ocr_service: [job] Status mis à jour : done
+[2025-06-17 22:32:33,257] INFO in purge_old_jobs: Lancement de la purge des anciens jobs...
+[2025-06-17 22:32:33,258] INFO in purge_old_jobs: Job supprimé : old (âge : 1 h)
+[2025-06-17 22:32:33,258] INFO in purge_old_jobs: Purge terminée — 1 job(s) supprimé(s)
+[2025-06-17 22:32:33,268] INFO in tasks: [j1] Tâche OCR lancée
+[2025-06-17 22:32:33,268] INFO in tasks: [j1] Traitement OCR en cours...
+[2025-06-17 22:32:33,268] INFO in tasks: [j1] OCR terminé avec succès
+[2025-06-17 22:32:33,269] INFO in tasks: [j1] Fin de tâche OCR (avec ou sans succès)
+[2025-06-17 22:32:33,272] INFO in tasks: [j2] Tâche OCR lancée
+[2025-06-17 22:32:33,272] INFO in tasks: [j2] Traitement OCR en cours...
+[2025-06-17 22:32:33,272] ERROR in tasks: [j2] Erreur lors du traitement OCR : fail
+Traceback (most recent call last):
+  File "C:\Users\kbroo\OneDrive - FAREVA\BKIF\DONE_Sujet_3_GLPI-Changement-926_( OCRmyPDF )\Brouillon-Docs-Autres\Nouvelle Methode Application Python Backend\devtest\pdftools\backend\worker\tasks.py", line 29, in ocr_task
+    ocr.process()
+    ~~~~~~~~~~~^^
+  File "C:\Users\kbroo\OneDrive - FAREVA\BKIF\DONE_Sujet_3_GLPI-Changement-926_( OCRmyPDF )\Brouillon-Docs-Autres\Nouvelle Methode Application Python Backend\devtest\pdftools\backend\tests\test_tasks.py", line 29, in process
+    raise RuntimeError("fail")
+RuntimeError: fail
+[2025-06-17 22:32:33,273] INFO in tasks: [j2] Fin de tâche OCR (avec ou sans succès)

@@ -61,7 +61,7 @@ show_menu() {
   echo "==================================================================="
   echo
   echo "====================== INSTALLATION & PRÉPARATION ======================"
-  echo " 0) Sélectionner l'environnement (DEV / PROD)"
+  echo " 0) Sélectionner l'environnement PROD"
   echo " 1) Installer les dépendances système (APT)"
   echo " 2) Installer les dépendances Python (venv + pip)"
   echo " 3) Installer/Configurer Apache2 (reverse proxy)"
