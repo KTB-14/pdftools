@@ -14,7 +14,7 @@ Avoir l’application à la racine du projet et l’environnement Python prépar
 - `status.py` : consultation de l’état d’un job.
 - `download.py` : récupération des fichiers compressés.
 - `__init__.py` : définition du router principal.
-
+ 
 ## INSTRUCTIONS PRINCIPALES
 Les routes sont incluses via `app.include_router` dans `main.py`. Chaque route retourne des modèles Pydantic définis dans `../models`.
 
